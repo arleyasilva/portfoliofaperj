@@ -1,0 +1,87 @@
+{
+  "jobs": [
+    {
+      "id": 1,
+      "title": "Desenvolvedor Front-end React",
+      "description": "Desenvolvimento de interfaces web com React.js e Next.js",
+      "company": "Tech Solutions Ltda",
+      "companyId": 1,
+      "location": "São Paulo/SP",
+      "remote": true,
+      "salary": 8500,
+      "type": "CLT",
+      "category": "TI",
+      "categoryId": 1,
+      "postedAt": "2023-06-01",
+      "deadline": "2023-06-30",
+      "requirements": ["React", "TypeScript", "CSS", "Git"],
+      "benefits": ["VR", "VT", "Plano de saúde"],
+      "applications": 15
+    },
+    {
+      "id": 2,
+      "title": "UX/UI Designer",
+      "description": "Criação de interfaces e experiência do usuário",
+      "company": "Digital Creative",
+      "companyId": 2,
+      "location": "Rio de Janeiro/RJ",
+      "remote": false,
+      "salary": 7500,
+      "type": "PJ",
+      "category": "Design",
+      "categoryId": 2,
+      "postedAt": "2023-06-05",
+      "deadline": "2023-07-10",
+      "requirements": ["Figma", "Adobe XD", "Prototipação"],
+      "benefits": ["VR", "Home office 2x/semana"],
+      "applications": 8
+    },
+    {
+      "id": 3,
+      "title": "Analista de Dados",
+      "description": "Análise e processamento de dados corporativos",
+      "company": "Data Insights S.A.",
+      "companyId": 3,
+      "location": "Belo Horizonte/MG",
+      "remote": true,
+      "salary": 9200,
+      "type": "CLT",
+      "category": "TI",
+      "categoryId": 1,
+      "postedAt": "2023-06-10",
+      "deadline": "2023-07-05",
+      "requirements": ["Python", "SQL", "Power BI"],
+      "benefits": ["VR", "VT", "Plano de saúde", "Bônus anual"],
+      "applications": 12
+    }
+  ],
+  "categories": [
+    { "id": 1, "name": "TI", "count": 125 },
+    { "id": 2, "name": "Design", "count": 45 },
+    { "id": 3, "name": "Marketing", "count": 32 }
+  ],
+  "companies": [
+    { "id": 1, "name": "Tech Solutions Ltda", "jobsCount": 8 },
+    { "id": 2, "name": "Digital Creative", "jobsCount": 3 },
+    { "id": 3, "name": "Data Insights S.A.", "jobsCount": 5 }
+  ],
+  "stats": {
+    "jobsByLocation": [
+      { "location": "São Paulo/SP", "count": 78 },
+      { "location": "Rio de Janeiro/RJ", "count": 45 },
+      { "location": "Belo Horizonte/MG", "count": 32 },
+      { "location": "Remoto", "count": 56 }
+    ],
+    "jobsByCategory": [
+      { "category": "TI", "count": 125 },
+      { "category": "Design", "count": 45 },
+      { "category": "Marketing", "count": 32 }
+    ],
+    "jobsBySalaryRange": [
+      { "range": "Até 5.000", "count": 35 },
+      { "range": "5.001 - 8.000", "count": 78 },
+      { "range": "8.001 - 12.000", "count": 45 },
+      { "range": "Acima de 12.000", "count": 12 }
+    ]
+  }
+}
