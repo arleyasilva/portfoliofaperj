@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico4.tsx
 import {
   Box,
   Card,
@@ -10,8 +9,8 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -21,6 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Interfaces (não precisam ser alteradas)
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,6 +30,7 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
+// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
@@ -75,68 +76,65 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
+// Dados de exemplo, baseados em indicadores-sexo.html
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const qtdBolF = [4473, 4100, 4581, 7165, 7656, 8007];
+const qtdBolM = [3709, 3309, 3705, 5025, 5181, 5846];
 
-// Dados de exemplo, baseados em dashboard-data.js
-const centrosPesquisaTop = [
-  'FIOCRUZ', 'FAPERJ', 'IECPN', 'CBPF', 'IMPA', 'INCA', 'PESAGRO', 'INMETRO', 'EMBRAPA', 'CBPF'
-];
-const instBolsasCentrosTop = [
-  69440987, 52655559, 378475, 6794075, 9370930, 4802850, 17045700, 5026640, 5906980, 6254748
-];
-const instAuxiliosCentrosTop = [
-  80176690, 677769, 27190613, 17721912, 9959292, 12785087, 18792, 11646782, 8819543, 6276803
-];
+const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
 
-const data = centrosPesquisaTop.map((centro, i) => ({
-  name: centro,
-  bolsas: instBolsasCentrosTop[i],
-  auxilios: instAuxiliosCentrosTop[i],
+// Reestruturando os dados para o formato esperado pelo Recharts
+const data = anos.map((ano, i) => ({
+  name: ano,
+  Feminino: qtdBolF[i],
+  Masculino: qtdBolM[i],
 }));
 
-const Grafico4 = (): JSX.Element => {
+const Grafico17 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 4 sendo recarregados...'); };
+  const handleRefresh = () => { console.log('Dados do Gráfico 17 sendo recarregados...'); };
 
   return (
     <ChartCard
-      title="Gráfico 4 — Centros de Pesquisa — Bolsas × Auxílios"
-      borderColor="#0c6d83"
+      title="Gráfico 17 — Quantidade de bolsas por ano"
+      borderColor={PAIR_B.F}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: 500}}>
+      <Box sx={{ height: 300 }}>
         <ResponsiveContainer>
-          <BarChart
+          <LineChart
             data={data}
-            margin={{ top: 20, right: 10, left: 20, bottom: 20 }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" interval={0} angle={-25} textAnchor="end" height={60} />
-            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
-            <Tooltip formatter={v => moneyAbbrevBR(v)} />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
             <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
-            <Bar dataKey="bolsas" fill="#5eb3e6" name="Bolsas" />
-            <Bar dataKey="auxilios" fill="#f6b343" name="Auxílios" />
-          </BarChart>
+            <Line
+              type="monotone"
+              dataKey="Feminino"
+              stroke={PAIR_B.F}
+              strokeWidth={3}
+              name="Feminino (qtd.)"
+              dot={{ stroke: PAIR_B.F, strokeWidth: 2 }}
+            />
+            <Line
+              type="monotone"
+              dataKey="Masculino"
+              stroke={PAIR_B.M}
+              strokeWidth={3}
+              name="Masculino (qtd.)"
+              dot={{ stroke: PAIR_B.M, strokeWidth: 2 }}
+            />
+          </LineChart>
         </ResponsiveContainer>
       </Box>
     </ChartCard>
   );
 };
 
-export default Grafico4;
+export default Grafico17;

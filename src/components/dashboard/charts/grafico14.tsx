@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico5.tsx
 import {
   Box,
   Card,
@@ -10,12 +9,18 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
-  ResponsiveContainer,
-  Treemap,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Interfaces (não precisam ser alteradas)
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -25,6 +30,7 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
+// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
@@ -84,102 +90,54 @@ const moneyAbbrevBR = (n: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
 };
 
-const microAreas = [
-  'Ciências Agrárias', 'Ciências Biológicas', 'Ciências da Saúde', 'Ciências Exatas e da Terra',
-  'Ciências Humanas', 'Ciências Sociais Aplicadas', 'Engenharias', 'Linguística, Letras e Artes', 'Não Definido'
+// Dados de exemplo, baseados em indicadores-sexo.html
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const auxF = [
+  26334118, 46955062, 163709195, 115074182, 55546766, 74570105
 ];
-const investMicro = [
-  90277163, 421101543, 182994777, 216823286, 96839834, 55435059, 220490639, 13042147, 88018897
+const auxM = [
+  61070382, 108217147, 299781576, 155015937, 102502629, 132749173
 ];
+const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
 
-const data = microAreas.map((area, i) => ({
-  name: area,
-  value: investMicro[i],
+// Reestruturando os dados para o formato esperado pelo Recharts
+const data = anos.map((ano, i) => ({
+  name: ano,
+  Feminino: auxF[i],
+  Masculino: auxM[i],
 }));
 
-const CustomizedTreemapContent: React.FC<any> = (props) => {
-  const { x, y, width, height, name, value, colors, index } = props;
-  const fontSize = 12;
-
-  if (width < 30 || height < 30) {
-    return null;
-  }
-
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        style={{
-          fill: colors[index % colors.length],
-          stroke: '#fff',
-          strokeWidth: 2,
-        }}
-      />
-      <foreignObject x={x} y={y} width={width} height={height}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          color: '#fff',
-          textAlign: 'center',
-          padding: '5px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          <span style={{ fontSize: `${fontSize}px`, fontWeight: 'bold', lineHeight: '1.2' }}>
-            {name}
-          </span>
-          <span style={{ fontSize: `${fontSize * 0.9}px`, lineHeight: '1.2' }}>
-            {moneyAbbrevBR(value)}
-          </span>
-        </div>
-      </foreignObject>
-    </g>
-  );
-};
-
-const Grafico5 = (): JSX.Element => {
+const Grafico14 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 5 sendo recarregados...'); };
-
-  const COLORS = [
-    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4',
-    '#ea7ccc', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff', '#ffc53a', '#c34e7f'
-  ];
+  const handleRefresh = () => { console.log('Dados do Gráfico 14 sendo recarregados...'); };
 
   return (
     <ChartCard
-      title="Gráfico 5 — Investimento Global por micro-áreas (Treemap)"
-      borderColor="#5EB3E6"
+      title="Gráfico 14 — Auxílios (R$) por ano"
+      borderColor={PAIR_B.F}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
       <Box sx={{ height: 300 }}>
         <ResponsiveContainer>
-          <Treemap
+          <BarChart
             data={data}
-            dataKey="value"
-            nameKey="name"
-            isAnimationActive={false}
-            content={<CustomizedTreemapContent colors={COLORS} />}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
-            <Tooltip
-              formatter={(value, name) => [moneyAbbrevBR(value as number), name]}
-              wrapperStyle={{ border: '1px solid #ccc' }}
-            />
-          </Treemap>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="name" />
+            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
+            <Tooltip formatter={v => moneyAbbrevBR(v as number)} />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
+            <Bar dataKey="Feminino" fill={PAIR_B.F} name="Feminino (R$)" barSize={22} />
+            <Bar dataKey="Masculino" fill={PAIR_B.M} name="Masculino (R$)" barSize={22} />
+          </BarChart>
         </ResponsiveContainer>
       </Box>
     </ChartCard>
   );
 };
 
-export default Grafico5;
+export default Grafico14;

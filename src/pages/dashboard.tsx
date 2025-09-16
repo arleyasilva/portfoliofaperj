@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
-import Layout from '../components/Layout';
+import Layout from '../components/Layout'; // <-- AQUI! A linha que estava faltando
+
 import Grafico1 from '../components/dashboard/charts/grafico1';
 import Grafico2 from '../components/dashboard/charts/grafico2';
 import Grafico3 from '../components/dashboard/charts/grafico3';
@@ -41,6 +42,17 @@ const DashboardPage = () => {
     { name: 'Jan', value: 1200 },
     { name: 'Fev', value: 1500 },
     { name: 'Mar', value: 1800 },
+  ];
+  
+  const grafico3Data = [
+    { name: 'UFRJ', bolsas: 350484568, auxilios: 529726853 },
+    { name: 'UERJ', bolsas: 183334009, auxilios: 181426942 },
+  ];
+
+  const grafico4Data = [
+    { name: 'A', value: 100 },
+    { name: 'B', value: 200 },
+    { name: 'C', value: 150 },
   ];
 
   return (
@@ -125,11 +137,11 @@ const DashboardPage = () => {
           </Grid>
 
           <Grid item xs={12} sm={6} md={6}>
-            <Grafico3 title="Gráfico 3 — Top 10 Universidades" data={dataExemplo} />
+            <Grafico3 title="Gráfico 3 — Top 10 Universidades" data={grafico3Data} />
           </Grid>
           
           <Grid item xs={12} sm={6} md={6}>
-            <Grafico4 title="Gráfico 4 — Investimento Global por micro-áreas (Treemap)" data={dataExemplo} />
+            <Grafico4 title="Gráfico 4 — Investimento Global por micro-áreas (Treemap)" data={grafico4Data} />
           </Grid>
         </Grid>
 

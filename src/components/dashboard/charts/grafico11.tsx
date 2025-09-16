@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico4.tsx
 import {
   Box,
   Card,
@@ -21,6 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Interfaces (não precisam ser alteradas)
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,6 +30,7 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
+// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
@@ -75,63 +76,59 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
+const m = (n: number) => new Intl.NumberFormat('pt-BR').format(Math.abs(n));
 
-// Dados de exemplo, baseados em dashboard-data.js
-const centrosPesquisaTop = [
-  'FIOCRUZ', 'FAPERJ', 'IECPN', 'CBPF', 'IMPA', 'INCA', 'PESAGRO', 'INMETRO', 'EMBRAPA', 'CBPF'
-];
-const instBolsasCentrosTop = [
-  69440987, 52655559, 378475, 6794075, 9370930, 4802850, 17045700, 5026640, 5906980, 6254748
-];
-const instAuxiliosCentrosTop = [
-  80176690, 677769, 27190613, 17721912, 9959292, 12785087, 18792, 11646782, 8819543, 6276803
-];
+// Dados de exemplo, baseados em indicadores-sexo.html
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const totalAnoF_Qtd = [266, 271, 1166, 857, 453, 732];
+const totalAnoM_Qtd = [447, 419, 1368, 866, 552, 758];
 
-const data = centrosPesquisaTop.map((centro, i) => ({
-  name: centro,
-  bolsas: instBolsasCentrosTop[i],
-  auxilios: instAuxiliosCentrosTop[i],
+// Reestruturando os dados para o formato esperado pelo Recharts
+const data = anos.map((ano, i) => ({
+  name: ano,
+  Feminino: -totalAnoF_Qtd[i], // Valores negativos para o lado esquerdo
+  Masculino: totalAnoM_Qtd[i],
 }));
 
-const Grafico4 = (): JSX.Element => {
+const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
+
+const Grafico11 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 4 sendo recarregados...'); };
+  const handleRefresh = () => { console.log('Dados do Gráfico 11 sendo recarregados...'); };
 
   return (
     <ChartCard
-      title="Gráfico 4 — Centros de Pesquisa — Bolsas × Auxílios"
-      borderColor="#0c6d83"
+      title="Gráfico 11 — Quantidade fomentos por ano"
+      borderColor={PAIR_B.M}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: 500}}>
+      <Box sx={{ height: 300 }}>
         <ResponsiveContainer>
           <BarChart
+            layout="vertical" // <-- Torna o gráfico um tornado
             data={data}
-            margin={{ top: 20, right: 10, left: 20, bottom: 20 }}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" interval={0} angle={-25} textAnchor="end" height={60} />
-            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
-            <Tooltip formatter={v => moneyAbbrevBR(v)} />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
-            <Bar dataKey="bolsas" fill="#5eb3e6" name="Bolsas" />
-            <Bar dataKey="auxilios" fill="#f6b343" name="Auxílios" />
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              type="number"
+              tickFormatter={v => m(v as number)} // <-- Formata para valor absoluto
+            />
+            <YAxis
+              type="category"
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+            />
+            <Tooltip
+              formatter={v => m(v as number)} // <-- Formata para valor absoluto no tooltip
+            />
+            <Legend verticalAlign="top" />
+            <Bar dataKey="Masculino" fill={PAIR_B.M} stack="q" barSize={18} />
+            <Bar dataKey="Feminino" fill={PAIR_B.F} stack="q" barSize={18} />
           </BarChart>
         </ResponsiveContainer>
       </Box>
@@ -139,4 +136,4 @@ const Grafico4 = (): JSX.Element => {
   );
 };
 
-export default Grafico4;
+export default Grafico11;

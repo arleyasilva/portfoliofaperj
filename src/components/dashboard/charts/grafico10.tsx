@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico5.tsx
 import {
   Box,
   Card,
@@ -16,6 +15,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Interfaces (não precisam ser alteradas)
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -25,6 +25,7 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
+// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
@@ -84,19 +85,21 @@ const moneyAbbrevBR = (n: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
 };
 
-const microAreas = [
-  'Ciências Agrárias', 'Ciências Biológicas', 'Ciências da Saúde', 'Ciências Exatas e da Terra',
-  'Ciências Humanas', 'Ciências Sociais Aplicadas', 'Engenharias', 'Linguística, Letras e Artes', 'Não Definido'
-];
-const investMicro = [
-  90277163, 421101543, 182994777, 216823286, 96839834, 55435059, 220490639, 13042147, 88018897
+// Dados de exemplo, baseados em indicadores-sexo.html
+// Valores totais calculados manualmente para este exemplo
+const totalF = 26334118 + 46955062 + 163709195 + 115074182 + 55546766 + 74570105 + 62517849 + 65865655 + 70653340 + 118236993 + 135446362 + 143022069;
+const totalM = 61070382 + 108217147 + 299781576 + 155015937 + 102502629 + 132749173 + 62131089 + 62068028 + 65599530 + 100616212 + 114743520 + 118349722;
+const totalG = totalF + totalM;
+
+const data = [
+  { name: 'Feminino', value: totalF },
+  { name: 'Masculino', value: totalM }
 ];
 
-const data = microAreas.map((area, i) => ({
-  name: area,
-  value: investMicro[i],
-}));
+const PAIR_A = { F: '#D81B60', M: '#1F78B4' };
+const COLORS = [PAIR_A.F, PAIR_A.M];
 
+// Rótulos personalizados para os retângulos
 const CustomizedTreemapContent: React.FC<any> = (props) => {
   const { x, y, width, height, name, value, colors, index } = props;
   const fontSize = 12;
@@ -104,6 +107,8 @@ const CustomizedTreemapContent: React.FC<any> = (props) => {
   if (width < 30 || height < 30) {
     return null;
   }
+
+  const percentage = (value / totalG * 100).toFixed(1);
 
   return (
     <g>
@@ -113,7 +118,7 @@ const CustomizedTreemapContent: React.FC<any> = (props) => {
         width={width}
         height={height}
         style={{
-          fill: colors[index % colors.length],
+          fill: colors[index],
           stroke: '#fff',
           strokeWidth: 2,
         }}
@@ -138,26 +143,24 @@ const CustomizedTreemapContent: React.FC<any> = (props) => {
           <span style={{ fontSize: `${fontSize * 0.9}px`, lineHeight: '1.2' }}>
             {moneyAbbrevBR(value)}
           </span>
+          <span style={{ fontSize: `${fontSize * 0.9}px`, lineHeight: '1.2' }}>
+            ({percentage}%)
+          </span>
         </div>
       </foreignObject>
     </g>
   );
 };
 
-const Grafico5 = (): JSX.Element => {
+const Grafico10 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 5 sendo recarregados...'); };
-
-  const COLORS = [
-    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4',
-    '#ea7ccc', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff', '#ffc53a', '#c34e7f'
-  ];
+  const handleRefresh = () => { console.log('Dados do Gráfico 10 sendo recarregados...'); };
 
   return (
     <ChartCard
-      title="Gráfico 5 — Investimento Global por micro-áreas (Treemap)"
-      borderColor="#5EB3E6"
+      title="Gráfico 10 — Total R$ fomentos por sexo"
+      borderColor={COLORS[0]}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
@@ -182,4 +185,4 @@ const Grafico5 = (): JSX.Element => {
   );
 };
 
-export default Grafico5;
+export default Grafico10;
