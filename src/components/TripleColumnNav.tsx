@@ -81,11 +81,8 @@ const TripleColumnNav = (): JSX.Element => {
   // 5. Tipagem para a variável que armazena os dados das colunas
   const columnsData: ColumnData[] = [
     {
-<<<<<<< HEAD
       title: 'Diretoria Científica',
-=======
       title: 'Linhas de Pesquisa',
->>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
       image: images.linhasPesquisa,
       items: [
         { id: 'pesquisa-1', label: 'Título da pesquisa', subItems: [{ id: 'sub1', label: 'Sub-item 1.1' }, { id: 'sub2', label: 'Sub-item 1.2' }] },
@@ -97,11 +94,8 @@ const TripleColumnNav = (): JSX.Element => {
       ],
     },
     {
-<<<<<<< HEAD
       title: 'Diretoria de Tecnologia',
-=======
       title: 'Linhas de Fomento',
->>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
       image: images.linhasFomento,
       items: [
         { id: 'fomento-1', label: 'Linha 001', subItems: [] },
@@ -110,11 +104,8 @@ const TripleColumnNav = (): JSX.Element => {
       ],
     },
     {
-<<<<<<< HEAD
       title: 'Destaques FAPERJ',
-=======
       title: 'Resultados e Produtos',
->>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
       image: images.resultadosProdutos,
       items: [
         { id: 'resultado-1', label: 'Resultado', subItems: [] },

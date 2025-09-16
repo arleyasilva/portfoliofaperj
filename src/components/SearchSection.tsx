@@ -85,11 +85,8 @@ const SearchSection = (): JSX.Element => {
               flexGrow: 1
             }}
           >
-<<<<<<< HEAD
             Programas
-=======
             Ver outros
->>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
           </Button>
         </Box>
       </Container>
