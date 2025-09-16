@@ -45,6 +45,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
+<<<<<<< HEAD
     height: 450,
   }}>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -56,6 +57,11 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           fontFamily: 'Roboto, sans-serif'
         }}
       >
+=======
+  }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
         {title}
       </Typography>
       <IconButton
@@ -71,7 +77,11 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </IconButton>
     </Box>
     <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+<<<<<<< HEAD
     <Box sx={{ flex: 1 }} height={400}>
+=======
+    <Box sx={{ flex: 1 }} height={400} >
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -85,6 +95,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
+<<<<<<< HEAD
 // Função para formatar os valores para milhões
 const moneyAbbrevBR = (n: number) => {
   const abs = Math.abs(n);
@@ -100,15 +111,24 @@ const moneyAbbrevBR = (n: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
 };
 
+=======
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
 // Definindo a estrutura dos dados do gráfico com tipagem (TypeScript)
 interface ChartData {
   ano: string;
   total: number;
+<<<<<<< HEAD
   totalLine: number;
 }
 
 // Novos dados para o gráfico
 const rawData = [
+=======
+}
+
+// Novos dados para o gráfico, baseados na imagem
+const data: ChartData[] = [
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
   { ano: '2019', total: 212.8 },
   { ano: '2020', total: 285.2 },
   { ano: '2021', total: 614.3 },
@@ -117,6 +137,7 @@ const rawData = [
   { ano: '2024', total: 477.8 },
 ];
 
+<<<<<<< HEAD
 // Ajustando a linha para ficar acima das barras
 const data = rawData.map(item => ({
   ...item,
@@ -124,10 +145,18 @@ const data = rawData.map(item => ({
 }));
 
 const Grafico1 = (): JSX.Element => {
+=======
+const Grafico1 = (): JSX.Element => {
+  // Dados de estado de exemplo para usar no ChartCard
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   
   const handleRefresh = () => {
+<<<<<<< HEAD
+=======
+    // Lógica para recarregar os dados do gráfico
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
     console.log('Dados do Gráfico 1 sendo recarregados...');
   };
 
@@ -139,6 +168,7 @@ const Grafico1 = (): JSX.Element => {
       error={error}
       onRefresh={handleRefresh}
     >
+<<<<<<< HEAD
       <Box sx={{ height: 400 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -148,12 +178,24 @@ const Grafico1 = (): JSX.Element => {
               tickFormatter={(value) => `R$ ${value} mi`}
               domain={[0, 800]}
               tick={{ fontSize: 12, fontFamily: 'Roboto' }} // <-- AQUI
+=======
+      <Box sx={{ height: 400, width : 500}}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="ano" tick={{ fontSize: 12 }} />
+            <YAxis
+              tickFormatter={(value) => `R$ ${value} mi`}
+              domain={[0, 800]}
+              tick={{ fontSize: 12 }}
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
             />
             <Tooltip
               formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}
               labelFormatter={(label) => `Ano: ${label}`}
             />
             <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
+<<<<<<< HEAD
             <Bar
               dataKey="total"
               fill="#1e88e5"
@@ -166,6 +208,13 @@ const Grafico1 = (): JSX.Element => {
             <Line 
               type="monotone"
               dataKey="totalLine"
+=======
+            <Bar dataKey="total" fill="#1e88e5" name="Total Investido" barSize={35} label={false}/>
+            
+            <Line 
+              type="monotone"
+              dataKey="total"
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
               stroke="#861539"
               strokeWidth={3}
               dot={{ stroke: '#861539', strokeWidth: 2 }}

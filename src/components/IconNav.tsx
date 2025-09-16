@@ -15,10 +15,19 @@ interface NavItem {
 }
 
 const IconNav = (): JSX.Element => {
+<<<<<<< HEAD
   // O array 'navItems' foi editado para remover os itens solicitados
   const navItems: NavItem[] = [
     { label: 'PESQUISADORES', icon: <PersonOutlineIcon />, href: '#busca' },
     { label: 'INDICADORES', icon: <BarChartIcon />, href: '/dashboard' },
+=======
+  // Tipamos o array 'navItems' para garantir que cada objeto siga a interface
+  const navItems: NavItem[] = [
+    { label: 'PESQUISADORES', icon: <PersonOutlineIcon />, href: '/pesquisadores' },
+    { label: 'PAINEL EM REDE', icon: <BarChartIcon />, href: '#painel-em-rede' },
+    { label: 'EDITAIS DA FAPERJ', icon: <CalendarTodayIcon />, href: '/editais' },
+    { label: 'PAINEIS UTILIZADOS', icon: <TrendingUpIcon />, href: '/dashboard' },
+>>>>>>> 93c902d49c1c71fc308d3c2a3dd7817106cd0e40
     { label: 'BUSCA', icon: <SearchIcon />, href: '#busca' },
   ];
 
