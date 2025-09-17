@@ -23,13 +23,13 @@ const IndicadoresSexoPage = () => {
     return (
         <Layout>
             <Head>
-                <title>Indicadores por Sexo</title>
+                <title>Indicadores 2 </title>
                 <meta name="description" content="Página com gráficos de comparação por sexo." />
             </Head>
 
             <Container maxWidth="xl" sx={{ py: 4 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Indicadores e Sexo
+                    Indicadores 2
                 </Typography>
                 <Grid container spacing={4} justifyContent="center">
                     <Grid item xs={12} sm={6} md={6}>

@@ -8,25 +8,19 @@ import {
 import { styled } from '@mui/material/styles';
 import React from 'react';
 
-// Interfaces (não precisam ser alteradas)
-interface StatsData {
-  projetos: number;
-  editais: number;
-  pesquisasContempladas: number;
-  bolsas: number;
-  fomentos: number;
-}
-interface StatisticalCardsProps {
-  statsData: StatsData;
-}
-interface CardData {
-  value: number | undefined;
-  label: string;
-}
+// Estilo para o cartão grande do topo
+const TopCard = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#2989b5',
+  color: 'white',
+  padding: theme.spacing(4),
+  textAlign: 'center',
+  borderRadius: theme.shape.borderRadius * 2,
+  boxShadow: theme.shadows[3],
+}));
 
-// Estilos dos cards (não precisam ser alterados)
+// Estilos dos cartões menores
 const StatCard = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#52839b',
+  backgroundColor: '#2989b5',
   color: 'white',
   padding: theme.spacing(3),
   textAlign: 'center',
@@ -38,81 +32,118 @@ const StatCard = styled(Paper)(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const StatisticalCards: React.FC<StatisticalCardsProps> = ({ statsData }) => {
-  const cardData: CardData[] = [
-    { value: statsData?.projetos, label: 'Projetos' },
-    { value: statsData?.editais, label: 'Editais lançados' },
-    { value: statsData?.pesquisasContempladas, label: 'Pesquisas contempladas' },
-    { value: statsData?.bolsas, label: 'Bolsas' },
-    { value: statsData?.fomentos, label: 'Em fomentos' },
+// Função auxiliar para formatar os valores
+const formatValue = (value: number, isCurrency: boolean = false) => {
+  // Se o valor for uma moeda e maior que 1 bilhão, formata com "Bi"
+  if (isCurrency && value >= 1000000000) {
+    const formattedValue = (value / 1000000000).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return `R$ ${formattedValue} Bi`;
+  }
+  // Formata valores de moeda com separador de milhar
+  if (isCurrency) {
+    return `R$ ${value.toLocaleString('pt-BR')}`;
+  }
+  // Formata números simples com separador de milhar
+  return value.toLocaleString('pt-BR');
+};
+
+const StatisticalCards: React.FC = () => {
+  // Use os valores numéricos puros aqui
+  const valorTotal = 2507282140;
+  
+  const cardData = [
+    { value: 1380000000, label: 'Projetos Contemplados', isCurrency: true },
+    { value: 1120000000, label: 'Total em Bolsas', isCurrency: true },
+    { value: 62922, label: 'Bolsas' },
+    { value: 8392, label: 'Projetos' },
+    { value: 886, label: 'Editais Lançados' },
   ];
 
   return (
     <Box sx={{ py: 6, backgroundColor: 'transparent' }}>
       <Container
-           maxWidth="lg"
-           sx={{
-           // ...
-           border: '2px solid #8B1A3F',
-           borderRadius: 2,
-           position: 'relative',
-           height: 'auto', // Garanta que a altura seja flexível
-           pt: 4,
-           pb: 8,
-           px: { xs: 4, sm: 8, md: 10 },
+        maxWidth="lg"
+        sx={{
+          border: '3px solid #8B1A3F',
+          borderRadius: 2,
+          position: 'relative',
+          height: 'auto',
+          pt: 4,
+          pb: 8,
+          px: { xs: 4, sm: 8, md: 10 },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center', // <<< Adicione esta linha
-          }}
-        >
-        {/*
-          Container do Título:
-          Posicionado para "quebrar" a borda superior.
-        */}
+          justifyContent: 'center',
+        }}
+      >
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            position: 'absolute', // Posicionamento absoluto dentro do Container
+            position: 'absolute',
             top: 0, 
-            left: '50%', // Centraliza horizontalmente
-            transform: 'translate(-50%, -50%)', // Ajusta a centralização, levando em conta a altura do box
-            backgroundColor: 'white', // O fundo branco faz o texto "cobrir" a linha da borda
-            px: 2, // Espaçamento para o texto não encostar nas linhas
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: 'white',
+            px: 2,
           }}
         >
           <Typography
             variant="h4"
             sx={{
-              fontWeight: 700,
-              color: '#4169E1', // Cor azul
+              fontWeight: 750,
+              color: '#000000c9',
               whiteSpace: 'nowrap',
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
             }}
           >
             FAPERJ em números
           </Typography>
         </Box>
 
-        {/* Cards de estatística */}
-        <Grid container spacing={2} justifyContent="center" sx={{ mt: 0, px: 0 }}>
-          {cardData.map((card, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
-              <StatCard>
-                <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                  {
-                    card.label === 'Em fomentos'
-                      ? `R$ ${(card.value || 0).toLocaleString()}`
-                      : (card.value || 0).toLocaleString()
-                  }
-                </Typography>
-                <Typography variant="subtitle1" sx={{ mt: 1 }}>
-                  {card.label}
-                </Typography>
-              </StatCard>
-            </Grid>
-          ))}
+        <Grid container spacing={2} justifyContent="center" sx={{ mt: 0, mx: { xs: -4, sm: -8, md: -10 } }}>
+          <Grid item xs={12}>
+            <TopCard sx={{ width: 980 }}>
+              <Typography variant="h3" sx={{ fontWeight: 700, fontSize: { xs: '2rem', md: '3rem' } }}>
+                {/* Chama a função para formatar o valor de moeda */}
+                {formatValue(valorTotal, true)}
+              </Typography>
+              <Typography variant="h6" sx={{ mt: 1, fontSize: { xs: '1rem', md: '1.25rem' } }}>
+                Investimento do Governo do Estado do Rio de Janeiro em Ciência, Tecnologia e Inovação
+              </Typography>
+            </TopCard>
+          </Grid>
+          
+          <Grid
+            container
+            item
+            xs={12}
+            justifyContent="center"
+            alignItems="stretch"
+            spacing={2}
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '16px',
+              mt: 0,
+            }}
+          >
+            {cardData.map((card, index) => (
+              <Box key={index} sx={{ gridColumn: 'span 1' }}>
+                <StatCard>
+                  <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    {/* Usa a função para formatar os valores, passando `true` se for moeda */}
+                    {formatValue(card.value, card.isCurrency)}
+                  </Typography>
+                  <Typography variant="subtitle2" sx={{ mt: 1 }}>
+                    {card.label}
+                  </Typography>
+                </StatCard>
+              </Box>
+            ))}
+          </Grid>
         </Grid>
       </Container>
     </Box>

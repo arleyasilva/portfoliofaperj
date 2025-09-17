@@ -20,7 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,12 +30,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -45,24 +44,45 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '12px'
+            }}
+          >
+            Gráfico 14 - Valor total de auxílios concedidos pela FAPERJ por sexo e ano – 2019 a 2024
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '12px'
+            }}
+          >
+             (em milhões de reais)
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -76,6 +96,22 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
+// Dados para o Gráfico 14
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const auxF = [26334118, 46955062, 163709195, 115074182, 55546766, 74570105];
+const auxM = [61070382, 108217147, 299781576, 155015937, 102502629, 132749173];
+
+// Combine os dados para o Recharts
+const data = anos.map((ano, index) => ({
+  ano: ano,
+  'Feminino (R$)': auxF[index] / 1_000_000,
+  'Masculino (R$)': auxM[index] / 1_000_000,
+}));
+
+// Paleta de cores do Gráfico 14
+const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
+
+// Função para formatar os valores para milhões
 const moneyAbbrevBR = (n: number) => {
   const abs = Math.abs(n);
   if (abs >= 1_000_000_000) {
@@ -90,49 +126,52 @@ const moneyAbbrevBR = (n: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
 };
 
-// Dados de exemplo, baseados em indicadores-sexo.html
-const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
-const auxF = [
-  26334118, 46955062, 163709195, 115074182, 55546766, 74570105
-];
-const auxM = [
-  61070382, 108217147, 299781576, 155015937, 102502629, 132749173
-];
-const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
-
-// Reestruturando os dados para o formato esperado pelo Recharts
-const data = anos.map((ano, i) => ({
-  name: ano,
-  Feminino: auxF[i],
-  Masculino: auxM[i],
-}));
-
 const Grafico14 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 14 sendo recarregados...'); };
+
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 14 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 14 - Valor total de auxílios concedidos pela FAPERJ por sexo e ano – 2019 a 2024 (em milhões de reais)";
 
   return (
     <ChartCard
-      title="Gráfico 14 — Auxílios (R$) por ano"
+      title={chartTitle}
       borderColor={PAIR_B.F}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
-          <BarChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-          >
+      <Box sx={{ height: 300, width: 550 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" />
-            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
-            <Tooltip formatter={v => moneyAbbrevBR(v as number)} />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
-            <Bar dataKey="Feminino" fill={PAIR_B.F} name="Feminino (R$)" barSize={22} />
-            <Bar dataKey="Masculino" fill={PAIR_B.M} name="Masculino (R$)" barSize={22} />
+            <XAxis dataKey="ano" tick={{ fontSize: 12, fontFamily: 'Roboto' }} />
+            <YAxis
+              tickFormatter={(value) => `R$ ${value} mi`}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+            />
+            <Tooltip
+              formatter={(value: number, name: string) => [moneyAbbrevBR(value * 1_000_000), name]}
+              labelFormatter={(label) => `Ano: ${label}`}
+            />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingTop: 20 }} />
+            <Bar
+              dataKey="Feminino (R$)"
+              fill={PAIR_B.F}
+              name="Feminino (R$)"
+              barSize={20}
+              radius={[5, 5, 0, 0]}
+            />
+            <Bar
+              dataKey="Masculino (R$)"
+              fill={PAIR_B.M}
+              name="Masculino (R$)"
+              barSize={20}
+              radius={[5, 5, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </Box>

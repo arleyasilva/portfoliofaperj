@@ -53,6 +53,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
 
 const CardHeader = styled(Box)<CardHeaderProps>(({ theme, image }) => ({
   height: 150,
+  width: 320,
   backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${image})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
@@ -82,7 +83,7 @@ const TripleColumnNav = (): JSX.Element => {
   const columnsData: ColumnData[] = [
     {
       title: 'Diretoria Científica',
-      title: 'Linhas de Pesquisa',
+      
       image: images.linhasPesquisa,
       items: [
         { id: 'pesquisa-1', label: 'Título da pesquisa', subItems: [{ id: 'sub1', label: 'Sub-item 1.1' }, { id: 'sub2', label: 'Sub-item 1.2' }] },
@@ -95,7 +96,7 @@ const TripleColumnNav = (): JSX.Element => {
     },
     {
       title: 'Diretoria de Tecnologia',
-      title: 'Linhas de Fomento',
+    
       image: images.linhasFomento,
       items: [
         { id: 'fomento-1', label: 'Linha 001', subItems: [] },
@@ -105,7 +106,7 @@ const TripleColumnNav = (): JSX.Element => {
     },
     {
       title: 'Destaques FAPERJ',
-      title: 'Resultados e Produtos',
+     
       image: images.resultadosProdutos,
       items: [
         { id: 'resultado-1', label: 'Resultado', subItems: [] },

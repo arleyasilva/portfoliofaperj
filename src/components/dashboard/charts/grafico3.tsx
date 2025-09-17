@@ -20,7 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,12 +30,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (Agora embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -43,25 +42,48 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
+    height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        {/* Título dividido em duas linhas */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            Gráfico 3 - Quantidade de bolsas e auxílios concedidos
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            pela FAPERJ por Universidades – 2019 a 2024 (em número de concessões)
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={400}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -75,66 +97,77 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-// Função para formatar os valores para milhões
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
-
-// Dados de exemplo, baseados em dashboard-data.js
+// Dados para o Gráfico 3
 const universidades = [
-  'UFRJ','UERJ','UFF','PUC-RIO','UENF','UFRRJ','UNIRIO','FAETEC','UEZO','IME'
+  'UFRJ', 'UERJ', 'UFF', 'PUC-RIO', 'UENF', 'UFRRJ', 'UNIRIO', 'IFF', 'IFRJ', 'FGV'
 ];
 const instBolsasUni = [
-  350484568, 183334009, 116551414, 53487449, 56432021, 28250112, 17010884, 19262720, 7130854, 3842850
+  349824168, 190464863, 116551414, 53487449, 56432021, 27774147, 17010884, 6297125, 4716614, 5390870
 ];
 const instAuxiliosUni = [
-  529726853, 181426942, 141384460, 66855056, 45214119, 35356084, 22157177, 11619049, 6154878, 5660551
+  529726854, 187581821, 141884461, 66855056, 45214120, 35356084, 22157177, 6805941, 4338132, 1805154
 ];
 
-// Reestruturando os dados para o formato esperado pelo Recharts
-const data = universidades.map((uni, i) => ({
-  name: uni,
-  bolsas: instBolsasUni[i],
-  auxilios: instAuxiliosUni[i],
+// Combine os dados para o Recharts
+const data3 = universidades.map((uni, index) => ({
+  universidade: uni,
+  'Bolsas': instBolsasUni[index] / 1_000_000,
+  'Auxílios': instAuxiliosUni[index] / 1_000_000,
 }));
-
 
 const Grafico3 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 3 sendo recarregados...'); };
+
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 3 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 3 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Universidades – 2019 a 2024 (em número de concessões)";
 
   return (
     <ChartCard
-      title="Gráfico 3 — Universidades — Bolsas × Auxílios"
+      title={chartTitle}
       borderColor="#5eb3e6"
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: 450 }}>
-        <ResponsiveContainer>
-          <BarChart
-            data={data}
-            margin={{ top: 20, right: 10, left: 20, bottom: 20 }}
-          >
+      <Box sx={{ height: 300, width: 600 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data3} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="name" interval={0} angle={-25} textAnchor="end" height={60} />
-            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
-            <Tooltip formatter={v => moneyAbbrevBR(v)} />
+            <XAxis
+              dataKey="universidade"
+              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
+              angle={-25}
+              textAnchor="end"
+              height={50}
+              interval={0}
+            />
+            <YAxis
+              tickFormatter={(value) => `${value.toLocaleString('pt-BR')} mi`}
+              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
+            />
+            <Tooltip
+              formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}
+              labelFormatter={(label) => `Universidade: ${label}`}
+            />
             <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
-            <Bar dataKey="bolsas" fill="#5eb3e6" name="Bolsas" />
-            <Bar dataKey="auxilios" fill="#f6b343" name="Auxílios" />
+            <Bar
+              dataKey="Bolsas"
+              fill="#5eb3e6"
+              name="Bolsas (R$)"
+              barSize={15}
+              radius={[5, 5, 0, 0]}
+            />
+            <Bar
+              dataKey="Auxílios"
+              fill="#f6b343"
+              name="Auxílios (R$)"
+              barSize={15}
+              radius={[5, 5, 0, 0]}
+            />
           </BarChart>
         </ResponsiveContainer>
       </Box>

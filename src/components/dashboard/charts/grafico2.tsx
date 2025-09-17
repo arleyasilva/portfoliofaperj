@@ -8,10 +8,16 @@ import {
   Alert,
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+} from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces
+// Componente ChartCard corrigido, declarado fora de Grafico1.
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -21,12 +27,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -34,25 +39,35 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
+    height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h5" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Typography
+          sx={{
+            fontWeight: 600,
+            color: '#4169E1',
+            fontFamily: 'Roboto, sans-serif',
+            fontSize: '10px'
+          }}
+        >
+          {title}
+        </Typography>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={400} width={600}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -66,92 +81,95 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-// Definindo a estrutura dos dados
-interface ChartData {
-  name: string;
-  value: number;
-}
+// Função para formatar os valores para milhões
+const moneyAbbrevBR = (n: number) => {
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) {
+    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
+  }
+  if (abs >= 1_000_000) {
+    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
+  }
+  if (abs >= 1_000) {
+    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
+  }
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
+};
 
-// Dados de exemplo, baseados na imagem
-const data: ChartData[] = [
-  { name: 'Ciências Agrárias', value: 90.3 },
-  { name: 'Ciências Biológicas', value: 421.1 },
-  { name: 'Ciências da Saúde', value: 183 },
-  { name: 'Ciências Exatas e da Terra', value: 216.8 },
-  { name: 'Ciências Humanas', value: 96.8 },
-  { name: 'Ciências Sociais', value: 55.4 },
-  { name: 'Engenharias', value: 220.5 },
-  { name: 'Linguística, Letras e Artes', value: 13 },
-  { name: 'Não Definido', value: 88 },
+// Dados para o Gráfico 2
+const microAreas = [
+  'Ciências Agrárias', 'Ciências Biológicas', 'Ciências da Saúde',
+  'Ciências Exatas e da Terra', 'Ciências Humanas',
+  'Ciências Sociais Aplicadas', 'Engenharias',
+  'Linguística, Letras e Artes', 'Não Definido'
 ];
 
-// Paleta de cores para cada fatia do gráfico
-const COLORS = [
-  '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF197C', '#19B5FF', '#A93226', '#E74C3C',
+const investMicro = [
+  171065011, 695867342, 287295761, 387647302, 291647447, 127091748,
+  336550269, 58884325, 151232936
 ];
 
-// Função para renderizar os rótulos
-const renderCustomizedLabel = ({ name, percent, outerRadius, x, y, cx, cy }: any) => {
-  const RADIAN = Math.PI / 180;
-  const radius = outerRadius + 20; // Posição do rótulo
-  const midAngle = Math.atan2(y - cy, x - cx);
-  const textX = cx + radius * Math.cos(midAngle);
-  const textY = cy + radius * Math.sin(midAngle);
+// Paleta de cores para o gráfico de pizza
+const COLORS = ['#f14b61', '#f6b343', '#2cb66d', '#5eb3e6', '#2aa5c9', '#9b7bd4', '#ef8636', '#5fb0a9', '#C86E43'];
 
-  return (
-    <text
-      x={textX}
-      y={textY}
-      fill="black"
-      textAnchor={textX > cx ? 'start' : 'end'}
-      dominantBaseline="middle"
-      fontSize={12}
-    >
-      {`${name} ${Math.round(percent * 100)}%`}
-    </text>
-  );
+// Combine os dados em um array de objetos para Recharts
+const data = microAreas.map((area, index) => ({
+  name: area,
+  value: investMicro[index],
+}));
+
+// Função de formatação para os rótulos de cada fatia
+const renderCustomizedLabel = ({ name, value }) => {
+  return `${name} R$ ${(value / 1_000_000).toFixed(1)} mi`;
 };
 
 const Grafico2 = (): JSX.Element => {
-  // Dados de estado de exemplo para usar no ChartCard
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  
+
   const handleRefresh = () => {
-    // Lógica para recarregar os dados do gráfico
     console.log('Dados do Gráfico 2 sendo recarregados...');
   };
-  
+
+  const chartTitle = "Gráfico 2 - Distribuição do valor total investido pela FAPERJ por microáreas do conhecimento – 2019 a 2024 (em milhões de reais)";
+
   return (
     <ChartCard
-      title="Gráfico 2 — Total investido por micro-áreas"
-      borderColor="#FFBB28"
+      title={chartTitle}
+      borderColor="#ef8636"
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 400, width: 620 }}>
+      <Box sx={{ height: 300, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
+            <Tooltip
+              formatter={(value, name, props) => [
+                moneyAbbrevBR(value),
+                props.payload.name
+              ]}
+              labelFormatter={(label) => `Área: ${label}`}
+            />
+            {/* Removido o componente <Legend> */}
             <Pie
               data={data}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius={90} // <-- AQUI! Aumentei o raio interno para 80px
-              outerRadius={130} // <-- E AQUI! Aumentei o raio externo para 150px
-              paddingAngle={1}
-              labelLine={true} 
+              innerRadius={60}
+              outerRadius={100}
+              paddingAngle={2}
+              fill="#8884d8"
               label={renderCustomizedLabel}
+              labelLine={true} // Adiciona as linhas de conexão
+              isAnimationActive={true}
             >
               {data.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip
-              formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, 'Total Investido']}
-            />
           </PieChart>
         </ResponsiveContainer>
       </Box>

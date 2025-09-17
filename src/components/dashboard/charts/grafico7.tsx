@@ -15,12 +15,11 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,12 +29,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -45,24 +43,46 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        {/* Título dividido em duas linhas */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            Gráfico 7 - Evolução do valor total investido em auxílios pela FAPERJ por ano – 2019 a 2024 (em milhões
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+              de reais)
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -76,6 +96,17 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
+// Dados para o Gráfico 7
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const auxiliosPorAnoValor = [87912777, 156992731, 477829365, 275908869, 171084308, 215295293];
+
+// Combine os dados para o Recharts
+const data = anos.map((ano, index) => ({
+  ano: ano,
+  'Valor (R$)': auxiliosPorAnoValor[index] / 1_000_000,
+}));
+
+// Função para formatar os valores para milhões
 const moneyAbbrevBR = (n: number) => {
   const abs = Math.abs(n);
   if (abs >= 1_000_000_000) {
@@ -90,49 +121,46 @@ const moneyAbbrevBR = (n: number) => {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
 };
 
-// Dados de exemplo, baseados em indicadores-data.js
-const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
-const auxiliosPorAnoValor = [
-  87912777, 156992731, 477829365, 275908869, 171084308, 215295293
-];
-
-// Reestruturando os dados para o formato esperado pelo Recharts
-const data = anos.map((ano, i) => ({
-  name: ano,
-  auxilios: auxiliosPorAnoValor[i]
-}));
-
 const Grafico7 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 7 sendo recarregados...'); };
+
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 7 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 7 - Evolução do valor total investido em auxílios pela FAPERJ por ano – 2019 a 2024 (em milhões de reais)";
 
   return (
     <ChartCard
-      title="Gráfico 7 — Evolução do valor investido em auxílios (por ano)"
+      title={chartTitle}
       borderColor="#C86E43"
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis tickFormatter={v => moneyAbbrevBR(v)} />
-            <Tooltip formatter={v => moneyAbbrevBR(v)} />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
+      <Box sx={{ height: 300, width: 530}}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="ano" tick={{ fontSize: 12, fontFamily: 'Roboto' }} />
+            <YAxis
+              tickFormatter={(value) => `R$ ${value} mi`}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+            />
+            <Tooltip
+              formatter={(value: number) => [
+                moneyAbbrevBR(value * 1_000_000),
+                'Valor (R$)'
+              ]}
+              labelFormatter={(label) => `Ano: ${label}`}
+            />
             <Line
               type="monotone"
-              dataKey="auxilios"
+              dataKey="Valor (R$)"
               stroke="#C86E43"
               strokeWidth={3}
-              name="Valor Auxílios"
-              dot={{ stroke: '#C86E43', strokeWidth: 2 }}
+              dot={{ stroke: '#C86E43', strokeWidth: 2, r: 4 }}
             />
           </LineChart>
         </ResponsiveContainer>

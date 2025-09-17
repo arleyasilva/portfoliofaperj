@@ -115,7 +115,7 @@ const Grafico9 = (): JSX.Element => {
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
+      <Box sx={{ height: 300, width: 1130 }}>
         <ResponsiveContainer>
           <LineChart
             data={data}

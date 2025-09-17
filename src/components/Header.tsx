@@ -39,11 +39,10 @@ const Header = (): JSX.Element => {
 
   // 5. Tipagem para o array de itens do menu
   const menuItems: MenuItemType[] = [
-    { text: 'Estatísticas', href: '#estatisticas' },
-    { text: 'Gráficos', href: '#graficos' },
-    { text: 'Busca', href: '#busca' },
+     { text: 'Página Inicial', href: '/' },
+    { text: 'Indicadores', href: '/dashboard' },
+    { text: 'Politica de dados', href: '/politica-de-dados' },
     { text: 'Sobre', href: '/sobre' },
-    { text: 'Contato', href: '/contato' },
   ];
 
   return (
@@ -76,10 +75,10 @@ const Header = (): JSX.Element => {
       </Box>
 
       {/* Barra principal com logo e menu hambúrguer */}
-      <AppBar 
-        position="static" 
-        color="transparent" // <<<<< Altera a cor para transparente
-        sx={{ boxShadow: 'none' }} // <<<<< Remove a sombra para um visual mais limpo
+      <AppBar
+        position="static"
+        color="transparent"
+        sx={{ boxShadow: 'none' }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{
@@ -89,13 +88,23 @@ const Header = (): JSX.Element => {
             px: { xs: 2, sm: 3, md: 4 }
           }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Image
-                src="/images/logo-novo.png"
-                alt="Logo FAPERJ"
-                width={200}
-                height={50}
-                style={{ objectFit: 'contain' }}
-              />
+              <MuiLink
+                href="https://faperj.br" // <-- AQUI! Link para o site da FAPERJ
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  src="/images/logo-novo.png"
+                  alt="Logo FAPERJ"
+                  width={200}
+                  height={50}
+                  style={{ objectFit: 'contain' }}
+                />
+              </MuiLink>
             </Box>
 
             {/* Ícone de menu hambúrguer à direita (visível em todas as telas) */}
@@ -112,7 +121,7 @@ const Header = (): JSX.Element => {
           </Toolbar>
         </Container>
       </AppBar>
-      
+
       {/* Componente Menu que desce ao clicar no ícone */}
       <Menu
         anchorEl={anchorEl}
@@ -126,23 +135,23 @@ const Header = (): JSX.Element => {
         }}
         open={isMenuOpen}
         onClose={handleMenuClose}
-        sx={{ mt: 5 }} 
+        sx={{ mt: 5 }}
         PaperProps={{
-        sx: {
-        width: 150, // Ajuste este valor para a largura desejada
-        },
-        }}// Distância do menu para o cabeçalho
+          sx: {
+            width: 150,
+          },
+        }}
         >
         {menuItems.map((item) => (
-        <MuiLink href={item.href} key={item.text} color="inherit" underline="none">
-        <MenuItem 
-        onClick={handleMenuClose}
-        sx={{ justifyContent: 'center' }} // Adiciona a propriedade de alinhamento à direita
-        >
-        {item.text}
-        </MenuItem>
-        </MuiLink>
-      ))}
+          <MuiLink href={item.href} key={item.text} color="inherit" underline="none">
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{ justifyContent: 'center' }}
+            >
+              {item.text}
+            </MenuItem>
+          </MuiLink>
+        ))}
       </Menu>
     </Box>
   );

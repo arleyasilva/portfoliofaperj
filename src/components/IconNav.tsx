@@ -17,8 +17,8 @@ interface NavItem {
 const IconNav = (): JSX.Element => {
   // O array 'navItems' foi editado para remover os itens solicitados
   const navItems: NavItem[] = [
-    { label: 'PESQUISADORES', icon: <PersonOutlineIcon />, href: '/pesquisadores' },
-    { label: 'INDICADORES', icon: <BarChartIcon />, href: '#painel-em-rede' },
+    { label: 'PESQUISADORES', icon: <PersonOutlineIcon />, href: '#busca' },
+    { label: 'INDICADORES', icon: <BarChartIcon />, href: '/dashboard' },
     { label: 'BUSCA', icon: <SearchIcon />, href: '#busca' },
   ];
 

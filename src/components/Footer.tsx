@@ -34,7 +34,7 @@ const Footer = (): JSX.Element => {
       <Container maxWidth="lg">
         {/* Seção de links no topo */}
         <Typography variant="body2" sx={{ mb: 2, fontSize: '0.8rem' }}>
-          <MuiLink href="#" color="inherit" underline="hover" sx={{ mx: 1 }}>
+          <MuiLink href="/" color="inherit" underline="hover" sx={{ mx: 1 }}>
             Página Inicial
           </MuiLink>
           |

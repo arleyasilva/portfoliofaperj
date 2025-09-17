@@ -9,13 +9,13 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
-  ResponsiveContainer,
   Treemap,
+  ResponsiveContainer,
   Tooltip,
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -25,12 +25,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -40,24 +39,35 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -71,44 +81,41 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
+// Dados do Gráfico 10
+const auxF = [26334118, 46955062, 163709195, 115074182, 55546766, 74570105];
+const valBolF = [62517849, 65865655, 70653340, 118236993, 135446362, 143022069];
+const auxM = [61070382, 108217147, 299781576, 155015937, 102502629, 132749173];
+const valBolM = [62131089, 62068028, 65599530, 100616212, 114743520, 118349722];
 
-// Dados de exemplo, baseados em indicadores-sexo.html
-// Valores totais calculados manualmente para este exemplo
-const totalF = 26334118 + 46955062 + 163709195 + 115074182 + 55546766 + 74570105 + 62517849 + 65865655 + 70653340 + 118236993 + 135446362 + 143022069;
-const totalM = 61070382 + 108217147 + 299781576 + 155015937 + 102502629 + 132749173 + 62131089 + 62068028 + 65599530 + 100616212 + 114743520 + 118349722;
-const totalG = totalF + totalM;
+// Cálculos dos totais
+const totalF = auxF.reduce((a, b) => a + (b || 0), 0) + valBolF.reduce((a, b) => a + (b || 0), 0);
+const totalM = auxM.reduce((a, b) => a + (b || 0), 0) + valBolM.reduce((a, b) => a + (b || 0), 0);
 
-const data = [
-  { name: 'Feminino', value: totalF },
-  { name: 'Masculino', value: totalM }
-];
-
+// Paleta de cores do Gráfico 10
 const PAIR_A = { F: '#D81B60', M: '#1F78B4' };
 const COLORS = [PAIR_A.F, PAIR_A.M];
 
-// Rótulos personalizados para os retângulos
-const CustomizedTreemapContent: React.FC<any> = (props) => {
-  const { x, y, width, height, name, value, colors, index } = props;
+// Estrutura de dados hierárquica para o Treemap
+const data = [
+  {
+    name: 'Total Fomento',
+    children: [
+      { name: 'Feminino', value: totalF, fill: PAIR_A.F },
+      { name: 'Masculino', value: totalM, fill: PAIR_A.M },
+    ],
+  },
+];
+
+// Rótulo personalizado para os retângulos
+const CustomizedTreemapContent = (props) => {
+  const { x, y, width, height, value, name, colors, index } = props;
   const fontSize = 12;
 
   if (width < 30 || height < 30) {
     return null;
   }
 
-  const percentage = (value / totalG * 100).toFixed(1);
+  const percentage = (value / (totalF + totalM) * 100).toFixed(1);
 
   return (
     <g>
@@ -125,13 +132,14 @@ const CustomizedTreemapContent: React.FC<any> = (props) => {
       />
       <foreignObject x={x} y={y} width={width} height={height}>
         <div style={{
+          width: '100%',
+          height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
           alignItems: 'center',
-          height: '100%',
-          color: '#fff',
+          justifyContent: 'center',
           textAlign: 'center',
+          color: '#fff',
           padding: '5px',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
@@ -152,6 +160,21 @@ const CustomizedTreemapContent: React.FC<any> = (props) => {
   );
 };
 
+// Função para formatar os valores
+const moneyAbbrevBR = (n: number) => {
+  const abs = Math.abs(n);
+  if (abs >= 1_000_000_000) {
+    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
+  }
+  if (abs >= 1_000_000) {
+    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
+  }
+  if (abs >= 1_000) {
+    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
+  }
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
+};
+
 const Grafico10 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -159,20 +182,23 @@ const Grafico10 = (): JSX.Element => {
 
   return (
     <ChartCard
-      title="Gráfico 10 — Total R$ fomentos por sexo"
+      title="Gráfico 10 - Distribuição do valor total de fomento da FAPERJ por sexo – 2019 a 2024 (em milhões de reais)"
       borderColor={COLORS[0]}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
+      <Box sx={{ height: 300, width: 530 }}>
+        <ResponsiveContainer width="100%" height="100%">
           <Treemap
             data={data}
             dataKey="value"
             nameKey="name"
-            isAnimationActive={false}
+            aspectRatio={4 / 3}
+            stroke="#fff"
+            fill="#8884d8"
             content={<CustomizedTreemapContent colors={COLORS} />}
+            isAnimationActive={false}
           >
             <Tooltip
               formatter={(value, name) => [moneyAbbrevBR(value as number), name]}

@@ -4,6 +4,7 @@ import { Container, Grid, Typography } from '@mui/material';
 import Layout from '../components/Layout';
 
 // Importe os gráficos que já temos e os placeholders futuros
+import Grafico5 from '../components/dashboard/charts/grafico5'; // Importação adicionada
 import Grafico6 from '../components/dashboard/charts/grafico6';
 // A partir daqui, são placeholders para os próximos gráficos
 import Grafico7 from '../components/dashboard/charts/grafico7';
@@ -20,7 +21,7 @@ const IndicadoresPage = () => {
     return (
         <Layout>
             <Head>
-                <title>Indicadores FAPERJ</title>
+                <title>Indicadores</title>
                 <meta name="description" content="Página com os gráficos de indicadores." />
             </Head>
 
@@ -29,6 +30,14 @@ const IndicadoresPage = () => {
                     Indicadores
                 </Typography>
                 <Grid container spacing={4} justifyContent="center">
+                    {/* Adição do Grafico5 */}
+                    <Grid item xs={12} sm={6} md={6}>
+                        <Grafico5 
+                            title="Gráfico 5 — Título do Gráfico 5" 
+                            data={dataIndicadoresExemplo} 
+                        />
+                    </Grid>
+
                     <Grid item xs={12} sm={6} md={6}>
                         <Grafico6
                             title="Gráfico 6 — Valor investido por área e quantidade"

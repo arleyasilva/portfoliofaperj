@@ -20,7 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -30,12 +30,11 @@ interface ChartCardProps {
   onRefresh: () => void;
 }
 
-// Componente ChartCard (embutido)
 const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -45,24 +44,45 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '12px'
+            }}
+          >
+            Gráfico 17 - Quantidade de bolsas concedidas pela FAPERJ por sexo e ano – 2019 a 2024
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '12px'
+            }}
+          >
+             (em número de bolsas)
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -76,59 +96,66 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-// Dados de exemplo, baseados em indicadores-sexo.html
+// Dados para o Gráfico 17
 const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
 const qtdBolF = [4473, 4100, 4581, 7165, 7656, 8007];
 const qtdBolM = [3709, 3309, 3705, 5025, 5181, 5846];
 
-const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
-
-// Reestruturando os dados para o formato esperado pelo Recharts
-const data = anos.map((ano, i) => ({
-  name: ano,
-  Feminino: qtdBolF[i],
-  Masculino: qtdBolM[i],
+// Combine os dados para o Recharts
+const data = anos.map((ano, index) => ({
+  ano: ano,
+  'Feminino': qtdBolF[index],
+  'Masculino': qtdBolM[index],
 }));
+
+// Paleta de cores do Gráfico 17
+const PAIR_B = { F: '#F28E2B', M: '#2E7D32' };
 
 const Grafico17 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 17 sendo recarregados...'); };
+
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 17 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 17 - Quantidade de bolsas concedidas pela FAPERJ por sexo e ano – 2019 a 2024 (em número de bolsas)";
 
   return (
     <ChartCard
-      title="Gráfico 17 — Quantidade de bolsas por ano"
+      title={chartTitle}
       borderColor={PAIR_B.F}
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
-          <LineChart
-            data={data}
-            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
+      <Box sx={{ height: 300, width: 550 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="ano" tick={{ fontSize: 12, fontFamily: 'Roboto' }} />
+            <YAxis
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+              label={{ value: 'Quantidade', angle: -90, position: 'insideLeft' }}
+            />
+            <Tooltip
+              formatter={(value: number) => [value, 'Quantidade']}
+              labelFormatter={(label) => `Ano: ${label}`}
+            />
+            <Legend verticalAlign="top" wrapperStyle={{ paddingTop: 20 }} />
             <Line
               type="monotone"
               dataKey="Feminino"
               stroke={PAIR_B.F}
               strokeWidth={3}
-              name="Feminino (qtd.)"
-              dot={{ stroke: PAIR_B.F, strokeWidth: 2 }}
+              dot={{ stroke: PAIR_B.F, strokeWidth: 2, r: 4 }}
             />
             <Line
               type="monotone"
               dataKey="Masculino"
               stroke={PAIR_B.M}
               strokeWidth={3}
-              name="Masculino (qtd.)"
-              dot={{ stroke: PAIR_B.M, strokeWidth: 2 }}
+              dot={{ stroke: PAIR_B.M, strokeWidth: 2, r: 4 }}
             />
           </LineChart>
         </ResponsiveContainer>

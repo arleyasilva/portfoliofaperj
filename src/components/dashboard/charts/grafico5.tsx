@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico5.tsx
 import {
   Box,
   Card,
@@ -10,12 +9,18 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
-  ResponsiveContainer,
-  Treemap,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -29,7 +34,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -39,24 +44,46 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        {/* Título dividido em duas linhas */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+            Gráfico 5 - Quantidade de projetos contemplados pela FAPERJ por ano – 2019 a 2024 em (número
+          </Typography>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '10px'
+            }}
+          >
+             de projetos)
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: 500 }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -70,112 +97,54 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   </Card>
 );
 
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
+// Dados para o Gráfico 5
+const anos = ['2019', '2020', '2021', '2022', '2023', '2024'];
+const projetosPorAno = [717, 711, 2565, 1763, 1093, 1543];
 
-const microAreas = [
-  'Ciências Agrárias', 'Ciências Biológicas', 'Ciências da Saúde', 'Ciências Exatas e da Terra',
-  'Ciências Humanas', 'Ciências Sociais Aplicadas', 'Engenharias', 'Linguística, Letras e Artes', 'Não Definido'
-];
-const investMicro = [
-  90277163, 421101543, 182994777, 216823286, 96839834, 55435059, 220490639, 13042147, 88018897
-];
-
-const data = microAreas.map((area, i) => ({
-  name: area,
-  value: investMicro[i],
+// Combine os dados para o Recharts
+const data5 = anos.map((ano, index) => ({
+  ano: ano,
+  projetos: projetosPorAno[index],
 }));
-
-const CustomizedTreemapContent: React.FC<any> = (props) => {
-  const { x, y, width, height, name, value, colors, index } = props;
-  const fontSize = 12;
-
-  if (width < 30 || height < 30) {
-    return null;
-  }
-
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        style={{
-          fill: colors[index % colors.length],
-          stroke: '#fff',
-          strokeWidth: 2,
-        }}
-      />
-      <foreignObject x={x} y={y} width={width} height={height}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          color: '#fff',
-          textAlign: 'center',
-          padding: '5px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          <span style={{ fontSize: `${fontSize}px`, fontWeight: 'bold', lineHeight: '1.2' }}>
-            {name}
-          </span>
-          <span style={{ fontSize: `${fontSize * 0.9}px`, lineHeight: '1.2' }}>
-            {moneyAbbrevBR(value)}
-          </span>
-        </div>
-      </foreignObject>
-    </g>
-  );
-};
 
 const Grafico5 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 5 sendo recarregados...'); };
 
-  const COLORS = [
-    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4',
-    '#ea7ccc', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff', '#ffc53a', '#c34e7f'
-  ];
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 5 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 5 - Quantidade de projetos contemplados pela FAPERJ por ano – 2019 a 2024 (em número de projetos)";
 
   return (
     <ChartCard
-      title="Gráfico 5 — Investimento Global por micro-áreas (Treemap)"
-      borderColor="#5EB3E6"
+      title={chartTitle}
+      borderColor="#f6b343"
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
-          <Treemap
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            isAnimationActive={false}
-            content={<CustomizedTreemapContent colors={COLORS} />}
-          >
-            <Tooltip
-              formatter={(value, name) => [moneyAbbrevBR(value as number), name]}
-              wrapperStyle={{ border: '1px solid #ccc' }}
+      <Box sx={{ height: 300, width: '100%' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data5} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="ano" tick={{ fontSize: 10, fontFamily: 'Roboto' }} />
+            <YAxis
+              label={{ value: 'Projetos', angle: -90, position: 'insideLeft', fill: '#000' }}
+              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
             />
-          </Treemap>
+            <Tooltip
+              formatter={(value: number) => [value, 'Projetos']}
+              labelFormatter={(label) => `Ano: ${label}`}
+            />
+            <Bar
+              dataKey="projetos"
+              fill="#f6b343"
+              barSize={28}
+              radius={[6, 6, 0, 0]}
+            />
+          </BarChart>
         </ResponsiveContainer>
       </Box>
     </ChartCard>
