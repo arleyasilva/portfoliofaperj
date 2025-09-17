@@ -53,20 +53,20 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
               fontWeight: 600,
               color: '#4169E1',
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '12px'
             }}
           >
-            Gráfico 4 - Quantidade de bolsas e auxílios concedidos
+            Gráfico 4 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros
           </Typography>
           <Typography
             sx={{
               fontWeight: 600,
               color: '#4169E1',
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '12px'
             }}
           >
-            pela FAPERJ por Centros de pesquisa e outras instituções
+             de pesquisa e outras instituções
           </Typography>
         </Box>
         <IconButton
@@ -147,7 +147,7 @@ const Grafico4 = (): JSX.Element => {
             />
             <YAxis
               tickFormatter={(value) => `${value.toLocaleString('pt-BR')} mi`}
-              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
             />
             <Tooltip
               formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}

@@ -1,4 +1,3 @@
-// src/components/dashboard/charts/grafico5.tsx
 import {
   Box,
   Card,
@@ -10,12 +9,19 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import {
-  ResponsiveContainer,
-  Treemap,
+  ScatterChart,
+  Scatter,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
+  ResponsiveContainer,
+  Cell,
+  LabelList,
 } from 'recharts';
 import React, { useState } from 'react';
 
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -29,7 +35,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -39,24 +45,35 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     border: '1px solid rgba(255, 255, 255, 0.2)',
     height: 350,
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#4169E1',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '12px'
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white'
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%', position: 'relative' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -66,120 +83,111 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+      <Typography
+        sx={{
+          position: 'absolute',
+          bottom: 0,
+          right: 0,
+          fontSize: '10px',
+          fontStyle: 'italic',
+          color: '#6c7c82'
+        }}
+      >
+        Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]
+      </Typography>
     </Box>
   </Card>
 );
 
-const moneyAbbrevBR = (n: number) => {
-  const abs = Math.abs(n);
-  if (abs >= 1_000_000_000) {
-    return 'R$ ' + (n / 1_000_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' bi';
-  }
-  if (abs >= 1_000_000) {
-    return 'R$ ' + (n / 1_000_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi';
-  }
-  if (abs >= 1_000) {
-    return 'R$ ' + (n / 1_000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil';
-  }
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(n);
-};
-
-const microAreas = [
-  'Ciências Agrárias', 'Ciências Biológicas', 'Ciências da Saúde', 'Ciências Exatas e da Terra',
-  'Ciências Humanas', 'Ciências Sociais Aplicadas', 'Engenharias', 'Linguística, Letras e Artes', 'Não Definido'
-];
-const investMicro = [
-  90277163, 421101543, 182994777, 216823286, 96839834, 55435059, 220490639, 13042147, 88018897
+// Dados fictícios para o Gráfico 18, baseados na imagem
+const data = [
+  { name: 'BAIXADA LITORÂNEA', Qtd: 50, 'Valor (R$)': 15000000, size: 500 },
+  { name: 'CENTRO-SUL', Qtd: 20, 'Valor (R$)': 2000000, size: 300 },
+  { name: 'NOROESTE', Qtd: 80, 'Valor (R$)': 10000000, size: 600 },
+  { name: 'MÉDIO PARAÍBA', Qtd: 120, 'Valor (R$)': 20000000, size: 700 },
+  { name: 'METRO 2', Qtd: 800, 'Valor (R$)': 120000000, size: 1000 },
+  { name: 'NORTE', Qtd: 600, 'Valor (R$)': 80000000, size: 800 },
+  { name: 'SERRANA', Qtd: 90, 'Valor (R$)': 12000000, size: 550 },
+  { name: 'METRO 1', Qtd: 5000, 'Valor (R$)': 1000000000, size: 1500 },
 ];
 
-const data = microAreas.map((area, i) => ({
-  name: area,
-  value: investMicro[i],
-}));
+const renderCustomizedLabel = ({ x, y, name }) => (
+  <text x={x} y={y - 10} textAnchor="middle" fill="black" fontSize={10}>
+    {name}
+  </text>
+);
 
-const CustomizedTreemapContent: React.FC<any> = (props) => {
-  const { x, y, width, height, name, value, colors, index } = props;
-  const fontSize = 12;
-
-  if (width < 30 || height < 30) {
-    return null;
-  }
-
-  return (
-    <g>
-      <rect
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        style={{
-          fill: colors[index % colors.length],
-          stroke: '#fff',
-          strokeWidth: 2,
-        }}
-      />
-      <foreignObject x={x} y={y} width={width} height={height}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          color: '#fff',
-          textAlign: 'center',
-          padding: '5px',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          <span style={{ fontSize: `${fontSize}px`, fontWeight: 'bold', lineHeight: '1.2' }}>
-            {name}
-          </span>
-          <span style={{ fontSize: `${fontSize * 0.9}px`, lineHeight: '1.2' }}>
-            {moneyAbbrevBR(value)}
-          </span>
-        </div>
-      </foreignObject>
-    </g>
-  );
-};
-
-const Grafico5 = (): JSX.Element => {
+const Grafico18 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const handleRefresh = () => { console.log('Dados do Gráfico 5 sendo recarregados...'); };
 
-  const COLORS = [
-    '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4',
-    '#ea7ccc', '#58d9f9', '#05c091', '#ff8a45', '#8d48e3', '#dd79ff', '#ffc53a', '#c34e7f'
-  ];
+  const handleRefresh = () => {
+    console.log('Dados do Gráfico 18 sendo recarregados...');
+  };
+
+  const chartTitle = "Gráfico 18 - Dispersão/Bolsas (QTD x Valor, eixos em log)";
+
+  const formatYAxisTick = (value) => {
+    if (value >= 1_000_000_000) {
+      return `R$ ${value / 1_000_000_000} bi`;
+    }
+    if (value >= 1_000_000) {
+      return `R$ ${value / 1_000_000} mi`;
+    }
+    return `R$ ${value}`;
+  };
 
   return (
     <ChartCard
-      title="Gráfico 5 — Investimento Global por micro-áreas (Treemap)"
-      borderColor="#5EB3E6"
+      title={chartTitle}
+      borderColor="#FF6347"
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300 }}>
-        <ResponsiveContainer>
-          <Treemap
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            isAnimationActive={false}
-            content={<CustomizedTreemapContent colors={COLORS} />}
+      <Box sx={{ height: 300, width: 1150, position: 'relative' }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <ScatterChart
+            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
           >
-            <Tooltip
-              formatter={(value, name) => [moneyAbbrevBR(value as number), name]}
-              wrapperStyle={{ border: '1px solid #ccc' }}
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              type="number"
+              dataKey="Qtd"
+              name="Quantidade"
+              scale="log"
+              domain={[10, 10000]}
+              allowDataOverflow={true}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+              label={{ value: '', position: 'insideBottom', offset: -5 }}
             />
-          </Treemap>
+            <YAxis
+              type="number"
+              dataKey="Valor (R$)"
+              name="Valor (R$)"
+              scale="log"
+              tickFormatter={formatYAxisTick}
+              domain={[1000000, 10000000000]}
+              allowDataOverflow={true}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+              label={{ value: 'Valor (R$)', angle: -90, position: 'insideLeft', offset: -15 }}
+            />
+            <Tooltip
+              cursor={{ strokeDasharray: '3 3' }}
+              formatter={(value, name) => [value, name]}
+            />
+            <Scatter
+              name="Bolsas"
+              data={data}
+              fill="#FF6347"
+            >
+              <LabelList dataKey="name" content={renderCustomizedLabel} />
+            </Scatter>
+          </ScatterChart>
         </ResponsiveContainer>
       </Box>
     </ChartCard>
   );
 };
 
-export default Grafico5;
+export default Grafico18;

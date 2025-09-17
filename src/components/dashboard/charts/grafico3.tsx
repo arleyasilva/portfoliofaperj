@@ -53,20 +53,20 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
               fontWeight: 600,
               color: '#4169E1',
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '12px'
             }}
           >
-            Gráfico 3 - Quantidade de bolsas e auxílios concedidos
+            Gráfico 3 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Universidades – 2019 a 2024
           </Typography>
           <Typography
             sx={{
               fontWeight: 600,
               color: '#4169E1',
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '12px'
             }}
           >
-            pela FAPERJ por Universidades – 2019 a 2024 (em número de concessões)
+             (em número de concessões)
           </Typography>
         </Box>
         <IconButton
@@ -135,7 +135,7 @@ const Grafico3 = (): JSX.Element => {
     >
       <Box sx={{ height: 300, width: 600 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data3} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+          <BarChart data={data3} margin={{ top: 12, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="universidade"
@@ -147,7 +147,7 @@ const Grafico3 = (): JSX.Element => {
             />
             <YAxis
               tickFormatter={(value) => `${value.toLocaleString('pt-BR')} mi`}
-              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
+              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
             />
             <Tooltip
               formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}

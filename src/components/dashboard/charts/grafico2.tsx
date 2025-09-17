@@ -48,7 +48,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
             fontWeight: 600,
             color: '#4169E1',
             fontFamily: 'Roboto, sans-serif',
-            fontSize: '10px'
+            fontSize: '12px'
           }}
         >
           {title}

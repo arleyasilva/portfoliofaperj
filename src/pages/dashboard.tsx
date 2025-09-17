@@ -20,6 +20,7 @@ import Grafico14 from '../components/dashboard/charts/grafico14';
 import Grafico15 from '../components/dashboard/charts/grafico15';
 import Grafico16 from '../components/dashboard/charts/grafico16';
 import Grafico17 from '../components/dashboard/charts/grafico17';
+import Grafico18 from '../components/dashboard/charts/grafico18';
 
 // Componentes de Layout e Navegação
 import {
@@ -55,7 +56,7 @@ const Header = (): JSX.Element => {
   };
 
   const menuItems: MenuItemType[] = [
-     { text: 'Página Inicial', href: '/' },
+    { text: 'Página Inicial', href: '/' },
     { text: 'Indicadores', href: '/dashboard' },
     { text: 'Politica de dados', href: '/politica-de-dados' },
     { text: 'Sobre', href: '/sobre' },
@@ -335,6 +336,9 @@ const DashboardPage = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <Grafico17 />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Grafico18 />
             </Grid>
           </Grid>
         );
