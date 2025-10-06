@@ -39,7 +39,7 @@ const Header = (): JSX.Element => {
 
   // 5. Tipagem para o array de itens do menu
   const menuItems: MenuItemType[] = [
-     { text: 'Página Inicial', href: '/' },
+    { text: 'Página Inicial', href: '/' },
     { text: 'Indicadores', href: '/dashboard' },
     { text: 'Politica de dados', href: '/politica-de-dados' },
     { text: 'Sobre', href: '/sobre' },
@@ -51,15 +51,17 @@ const Header = (): JSX.Element => {
       <Box sx={{
         bgcolor: '#6E0E2B',
         color: 'white',
-        py: 0.5,
+        // px e py controlam o espaçamento horizontal e vertical
+        px: { xs: 1, md: 0 },
+        py: { xs: 0.5, md: 0 },
         display: { xs: 'none', md: 'block' },
       }}>
         <Container maxWidth="xl">
+          {/* A Toolbar foi removida, usando apenas uma Box para controle mais direto */}
           <Box sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: 1
           }}>
             <IconButton size="small" href="#" color="inherit" aria-label="facebook">
               <FacebookIcon fontSize="small" />
@@ -78,18 +80,25 @@ const Header = (): JSX.Element => {
       <AppBar
         position="static"
         color="transparent"
-        sx={{ boxShadow: 'none' }}
+        sx={{
+          boxShadow: 'none',
+          paddingY: 0,
+        }}
       >
         <Container maxWidth="xl">
-          <Toolbar disableGutters sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            px: { xs: 2, sm: 3, md: 4 }
-          }}>
+          <Toolbar
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              paddingX: { xs: 2, sm: 3, md: 4 },
+              paddingY: 0,
+              minHeight: 'auto',
+            }}
+          >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <MuiLink
-                href="https://faperj.br" // <-- AQUI! Link para o site da FAPERJ
+                href="https://faperj.br"
                 target="_blank"
                 rel="noopener noreferrer"
                 sx={{
@@ -100,8 +109,8 @@ const Header = (): JSX.Element => {
                 <Image
                   src="/images/logo-novo.png"
                   alt="Logo FAPERJ"
-                  width={200}
-                  height={50}
+                  width={300}
+                  height={75}
                   style={{ objectFit: 'contain' }}
                 />
               </MuiLink>
@@ -141,7 +150,7 @@ const Header = (): JSX.Element => {
             width: 150,
           },
         }}
-        >
+      >
         {menuItems.map((item) => (
           <MuiLink href={item.href} key={item.text} color="inherit" underline="none">
             <MenuItem

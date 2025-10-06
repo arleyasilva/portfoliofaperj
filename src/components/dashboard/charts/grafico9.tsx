@@ -20,7 +20,7 @@ import {
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Interfaces (não precisam ser alteradas)
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -28,14 +28,14 @@ interface ChartCardProps {
   loading: boolean;
   error: Error | null;
   onRefresh: () => void;
+  sourceText: string;
 }
 
-// Componente ChartCard (embutido)
-const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
+const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh, sourceText }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
-    p: 3,
+    p: 1,
     minWidth: 0,
     boxShadow: 3,
     borderLeft: `4px solid ${borderColor}`,
@@ -43,26 +43,38 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
+    width: 550, // Largura padronizada
   }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Typography variant="h6" sx={{ fontWeight: 600, color: '#4169E1' }}>
-        {title}
-      </Typography>
-      <IconButton
-        onClick={onRefresh}
-        size="small"
-        sx={{
-          visibility: loading ? 'hidden' : 'visible',
-          color: 'white'
-        }}
-        aria-label="Recarregar dados"
-      >
-        <RefreshIcon fontSize="small" />
-      </IconButton>
+    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#124b6c', // Cor do título padronizada
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '16px', // Tamanho de fonte padronizado
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
+        <IconButton
+          onClick={onRefresh}
+          size="small"
+          sx={{
+            visibility: loading ? 'hidden' : 'visible',
+            color: 'white',
+          }}
+          aria-label="Recarregar dados"
+        >
+          <RefreshIcon fontSize="small" />
+        </IconButton>
+      </Box>
+      <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-    <Box sx={{ flex: 1 }} height={300}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -72,6 +84,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+    </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        {sourceText}
+      </Typography>
     </Box>
   </Card>
 );
@@ -107,15 +138,19 @@ const Grafico9 = (): JSX.Element => {
   const [error, setError] = useState<Error | null>(null);
   const handleRefresh = () => { console.log('Dados do Gráfico 9 sendo recarregados...'); };
 
+  const chartTitle = "Gráfico 9 — Evolução do valor investido em bolsas (por ano)";
+  const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
+
   return (
     <ChartCard
-      title="Gráfico 9 — Evolução do valor investido em bolsas (por ano)"
-      borderColor="#D81B60"
+      title={chartTitle}
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
+      sourceText={sourceText}
     >
-      <Box sx={{ height: 300, width: 1130 }}>
+      <Box sx={{ height: 300, width: '100%' }}>
         <ResponsiveContainer>
           <LineChart
             data={data}

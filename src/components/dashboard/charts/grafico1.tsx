@@ -43,16 +43,17 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
+        {/* Título com tamanho de fonte e alinhamento ajustados */}
         <Typography
           sx={{
             fontWeight: 600,
-            color: '#4169E1',
+            color: '#124b6c',
             fontFamily: 'Roboto, sans-serif',
-            fontSize: '12px'
+            fontSize: '16px' // Aumentado para 16px
           }}
         >
           {title}
@@ -71,7 +72,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 1, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 400, width: '100%' }}>
+    <Box sx={{ flex: 1, height: 350, width: '100%' }}> {/* Altura padronizada e largura garantida */}
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -141,14 +142,14 @@ const Grafico1 = (): JSX.Element => {
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: 500 }}>
+      <Box sx={{ height: 350, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 30, left: 20, bottom: 5 }}>
+          <BarChart data={data} margin={{ top: 12, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="ano" tick={{ fontSize: 12, fontFamily: 'Roboto' }} />
             <YAxis
               tickFormatter={(value) => `R$ ${value} mi`}
-              domain={[0, 800]}
+              domain={[0, 700]}
               tick={{ fontSize: 12, fontFamily: 'Roboto' }}
             />
             <Tooltip

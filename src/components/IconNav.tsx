@@ -1,25 +1,21 @@
 import { Box, Grid, Typography, IconButton, Link as MuiLink } from '@mui/material';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import SearchIcon from '@mui/icons-material/Search';
 import Link from 'next/link';
 import React from 'react';
+import Image from 'next/image'; // Importação do componente Image
 
 // Criamos uma interface para tipar cada item da navegação
 interface NavItem {
   label: string;
-  icon: React.ReactNode;
+  iconPath: string; // 'icon' foi alterado para 'iconPath' para maior clareza
   href: string;
 }
 
 const IconNav = (): JSX.Element => {
-  // O array 'navItems' foi editado para remover os itens solicitados
+  // Use os caminhos para seus ícones na pasta public
   const navItems: NavItem[] = [
-    { label: 'PESQUISADORES', icon: <PersonOutlineIcon />, href: '#busca' },
-    { label: 'INDICADORES', icon: <BarChartIcon />, href: '/dashboard' },
-    { label: 'BUSCA', icon: <SearchIcon />, href: '#busca' },
+    { label: 'PESQUISADORES', iconPath: '/images/Pesquisadores.png', href: '#busca' },
+    { label: 'INDICADORES', iconPath: '/images/Dados.png', href: '/dashboard' },
+    { label: 'BUSCA', iconPath: '/images/Busca.png', href: '#busca' },
   ];
 
   return (
@@ -54,7 +50,13 @@ const IconNav = (): JSX.Element => {
               }}
             >
               <IconButton sx={{ color: 'white', mb: 1 }}>
-                {item.icon}
+                {/* Usamos o componente Image do Next.js */}
+                <Image
+                  src={item.iconPath}
+                  alt={item.label}
+                  width={50} // Ajuste o tamanho conforme a necessidade
+                  height={50} // Ajuste o tamanho conforme a necessidade
+                />
               </IconButton>
               <Typography variant="body2" sx={{ fontWeight: 500 }}>
                 {item.label}

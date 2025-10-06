@@ -28,9 +28,10 @@ interface ChartCardProps {
   loading: boolean;
   error: Error | null;
   onRefresh: () => void;
+  sourceText: string;
 }
 
-const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
+const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh, sourceText }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
@@ -42,7 +43,8 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
+    width: 550, // Largura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
@@ -50,9 +52,9 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#4169E1',
+              color: '#124b6c', // Cor do título padronizada
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '16px', // Tamanho de fonte padronizado
             }}
           >
             {title}
@@ -63,7 +65,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           size="small"
           sx={{
             visibility: loading ? 'hidden' : 'visible',
-            color: 'white'
+            color: 'white',
           }}
           aria-label="Recarregar dados"
         >
@@ -82,6 +84,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+    </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        {sourceText}
+      </Typography>
     </Box>
   </Card>
 );
@@ -136,14 +157,16 @@ const Grafico8 = (): JSX.Element => {
   };
 
   const chartTitle = "Gráfico 8 - Valor total investido em auxílios pela FAPERJ por tipo de auxílio – 2019 a 2024 (em milhões de reais)";
+  const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (
     <ChartCard
       title={chartTitle}
-      borderColor="#C86E43"
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
+      sourceText={sourceText}
     >
       <Box sx={{ height: 300, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">

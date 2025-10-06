@@ -1,3 +1,4 @@
+@import url('https://fonts.cdnfonts.com/css/serpentine');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,6 +21,7 @@ body {
   margin: 0;
   min-height: 100vh;
   position: relative;
+  font-family: 'Serpentine', sans-serif; /* Adicionei a fonte como padrão para o body */
 }
 
 /* Imagem de fundo fixa */

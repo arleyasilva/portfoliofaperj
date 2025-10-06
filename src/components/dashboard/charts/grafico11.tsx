@@ -28,6 +28,7 @@ interface ChartCardProps {
   loading: boolean;
   error: Error | null;
   onRefresh: () => void;
+  sourceText: string;
 }
 
 const ChartCard: React.FC<ChartCardProps> = ({
@@ -37,6 +38,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
   loading,
   error,
   onRefresh,
+  sourceText,
 }) => (
   <Card
     sx={{
@@ -50,7 +52,8 @@ const ChartCard: React.FC<ChartCardProps> = ({
       position: 'relative',
       backdropFilter: 'blur(8px)',
       border: '1px solid rgba(255, 255, 255, 0.2)',
-      height: 350,
+      height: 400, // Altura padronizada
+      width: 550, // Largura padronizada
     }}
   >
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -66,22 +69,12 @@ const ChartCard: React.FC<ChartCardProps> = ({
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#4169E1',
+              color: '#124b6c', // Cor do título padronizada
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px',
+              fontSize: '16px', // Tamanho de fonte padronizado
             }}
           >
-            Gráfico 11 - Quantidade de fomentos concedidos pela FAPERJ por sexo e ano – 2019 a 2024
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 600,
-              color: '#4169E1',
-              fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px',
-            }}
-          >
-             (em número de concessões)
+            {title}
           </Typography>
         </Box>
         <IconButton
@@ -118,6 +111,25 @@ const ChartCard: React.FC<ChartCardProps> = ({
         children
       )}
     </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        {sourceText}
+      </Typography>
+    </Box>
   </Card>
 );
 
@@ -146,16 +158,18 @@ const Grafico11 = (): JSX.Element => {
 
   const chartTitle =
     'Gráfico 11 - Quantidade de fomentos concedidos pela FAPERJ por sexo e ano – 2019 a 2024 (em número de concessões)';
+  const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (
     <ChartCard
       title={chartTitle}
-      borderColor={PAIR_B.F}
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
+      sourceText={sourceText}
     >
-      <Box sx={{ height: 300, width: 550 }}>
+      <Box sx={{ height: 300, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             layout="vertical"
@@ -195,7 +209,7 @@ const Grafico11 = (): JSX.Element => {
               dataKey="Feminino"
               fill={PAIR_B.F}
               name="Feminino"
-              barSize={30} // barra mais grossa
+              barSize={30}
               radius={[0, 5, 5, 0]}
             />
 

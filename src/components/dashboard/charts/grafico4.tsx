@@ -42,31 +42,21 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
+    width: 550, // Largura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
-        {/* Título dividido em duas linhas */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#4169E1',
+              color: '#124b6c', // Cor do título padronizada
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px'
+              fontSize: '16px' // Tamanho de fonte padronizado
             }}
           >
-            Gráfico 4 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 600,
-              color: '#4169E1',
-              fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px'
-            }}
-          >
-             de pesquisa e outras instituções
+            {title}
           </Typography>
         </Box>
         <IconButton
@@ -83,7 +73,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 300, width: 560 }}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -93,6 +83,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+    </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]
+      </Typography>
     </Box>
   </Card>
 );
@@ -123,19 +132,19 @@ const Grafico4 = (): JSX.Element => {
     console.log('Dados do Gráfico 4 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 4 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros de pesquisa e outras instituções – 2019 a 2024 (em número de concessões)";
+  const chartTitle = "Gráfico 4 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros de pesquisa e outras instituções";
 
   return (
     <ChartCard
       title={chartTitle}
-      borderColor="#0c6d83"
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
       <Box sx={{ height: 300, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data4} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+          <BarChart data={data4} margin={{ top: 12, right: 10, left: 10, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
               dataKey="centro"
@@ -156,14 +165,14 @@ const Grafico4 = (): JSX.Element => {
             <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
             <Bar
               dataKey="Bolsas"
-              fill="#0e8aa7"
+              fill="#0e8aa7" // Cor original
               name="Bolsas (R$)"
               barSize={15}
               radius={[5, 5, 0, 0]}
             />
             <Bar
               dataKey="Auxílios"
-              fill="#0c6d83"
+              fill="#0c6d83" // Cor original
               name="Auxílios (R$)"
               barSize={15}
               radius={[5, 5, 0, 0]}

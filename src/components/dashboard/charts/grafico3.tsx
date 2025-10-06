@@ -42,31 +42,21 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
+    width: 550, // Largura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
-        {/* Título dividido em duas linhas */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#4169E1',
+              color: '#124b6c',
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px'
+              fontSize: '16px'
             }}
           >
-            Gráfico 3 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Universidades – 2019 a 2024
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 600,
-              color: '#4169E1',
-              fontFamily: 'Roboto, sans-serif',
-              fontSize: '12px'
-            }}
-          >
-             (em número de concessões)
+            {title}
           </Typography>
         </Box>
         <IconButton
@@ -83,7 +73,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 300 }}> {/* REMOVIDO: width: 600 */}
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -93,6 +83,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+    </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start', // Alinhamento à esquerda
+      p: 2, // Padding para afastar da borda
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]
+      </Typography>
     </Box>
   </Card>
 );
@@ -128,49 +137,47 @@ const Grafico3 = (): JSX.Element => {
   return (
     <ChartCard
       title={chartTitle}
-      borderColor="#5eb3e6"
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ flex: 1, height: 300, width: '100%' }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data3} margin={{ top: 12, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis
-              dataKey="universidade"
-              tick={{ fontSize: 10, fontFamily: 'Roboto' }}
-              angle={-25}
-              textAnchor="end"
-              height={50}
-              interval={0}
-            />
-            <YAxis
-              tickFormatter={(value) => `${value.toLocaleString('pt-BR')} mi`}
-              tick={{ fontSize: 12, fontFamily: 'Roboto' }}
-            />
-            <Tooltip
-              formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}
-              labelFormatter={(label) => `Universidade: ${label}`}
-            />
-            <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
-            <Bar
-              dataKey="Bolsas"
-              fill="#5eb3e6"
-              name="Bolsas (R$)"
-              barSize={15}
-              radius={[5, 5, 0, 0]}
-            />
-            <Bar
-              dataKey="Auxílios"
-              fill="#f6b343"
-              name="Auxílios (R$)"
-              barSize={15}
-              radius={[5, 5, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </Box>
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data3} margin={{ top: 12, right: 10, left: 10, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <XAxis
+            dataKey="universidade"
+            tick={{ fontSize: 10, fontFamily: 'Roboto' }}
+            angle={-25}
+            textAnchor="end"
+            height={50}
+            interval={0}
+          />
+          <YAxis
+            tickFormatter={(value) => `${value.toLocaleString('pt-BR')} mi`}
+            tick={{ fontSize: 12, fontFamily: 'Roboto' }}
+          />
+          <Tooltip
+            formatter={(value: number, name: string) => [`R$ ${value.toLocaleString('pt-BR')} mi`, name]}
+            labelFormatter={(label) => `Universidade: ${label}`}
+          />
+          <Legend verticalAlign="top" wrapperStyle={{ paddingBottom: 20 }} />
+          <Bar
+            dataKey="Bolsas"
+            fill="#2AA5C9" // Cor padronizada
+            name="Bolsas (R$)"
+            barSize={15}
+            radius={[5, 5, 0, 0]}
+          />
+          <Bar
+            dataKey="Auxílios"
+            fill="#124b6c" // Cor padronizada
+            name="Auxílios (R$)"
+            barSize={15}
+            radius={[5, 5, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
     </ChartCard>
   );
 };

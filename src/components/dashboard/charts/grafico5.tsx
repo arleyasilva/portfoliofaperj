@@ -15,7 +15,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 import React, { useState } from 'react';
@@ -42,31 +41,21 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 400, // Altura padronizada
+    width: 550, // Largura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
-        {/* Título dividido em duas linhas */}
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <Typography
             sx={{
               fontWeight: 600,
-              color: '#4169E1',
+              color: '#124b6c', // Cor do título padronizada
               fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
+              fontSize: '16px' // Tamanho de fonte padronizado
             }}
           >
-            Gráfico 5 - Quantidade de projetos contemplados pela FAPERJ por ano – 2019 a 2024 em (número
-          </Typography>
-          <Typography
-            sx={{
-              fontWeight: 600,
-              color: '#4169E1',
-              fontFamily: 'Roboto, sans-serif',
-              fontSize: '10px'
-            }}
-          >
-             de projetos)
+            {title}
           </Typography>
         </Box>
         <IconButton
@@ -83,7 +72,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 300, width: 500 }}>
+    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -93,6 +82,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
           <CircularProgress sx={{ color: 'white' }} />
         </Box>
       ) : children}
+    </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]
+      </Typography>
     </Box>
   </Card>
 );
@@ -120,7 +128,7 @@ const Grafico5 = (): JSX.Element => {
   return (
     <ChartCard
       title={chartTitle}
-      borderColor="#f6b343"
+      borderColor="#124b6c" // Borda padronizada
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
@@ -140,7 +148,7 @@ const Grafico5 = (): JSX.Element => {
             />
             <Bar
               dataKey="projetos"
-              fill="#f6b343"
+              fill="#f6b343" // Cor original
               barSize={28}
               radius={[6, 6, 0, 0]}
             />

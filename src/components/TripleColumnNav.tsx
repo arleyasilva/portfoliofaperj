@@ -33,16 +33,15 @@ interface ColumnData {
   items: (NavItem | NavItemExpandable)[];
 }
 
-interface BannerHeaderProps extends BoxProps {
-  image: string;
-}
+// A interface BannerHeaderProps não precisa mais da propriedade 'image'
+interface BannerHeaderProps extends BoxProps {}
 
-const BannerHeader = styled(Box)<BannerHeaderProps>(({ theme, image }) => ({
+// BannerHeader agora usa backgroundColor em vez de backgroundImage
+const BannerHeader = styled(Box)<BannerHeaderProps>(({ theme }) => ({ // Removemos 'image' do desestruturação
   height: 150,
   width: '100%',
-  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(${image})`,
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
+  backgroundColor: '#792a3d', // <<< AQUI: Cor de fundo sólida
+  // background-size, background-position, background-repeat não são mais necessários
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -62,15 +61,16 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 const CardHeader = styled(Box)(({ theme }) => ({
-  backgroundColor: '#00264d',
+  backgroundColor: '#2989b5',
   padding: theme.spacing(2),
   borderTopLeftRadius: theme.shape.borderRadius * 2,
   borderTopRightRadius: theme.shape.borderRadius * 2,
 }));
 
-const images = {
-  banner: '/images/banner-faperj.jpeg',
-};
+// A constante 'images' não é mais necessária para o banner
+// const images = {
+//   banner: '/images/banner-faperj.jpeg',
+// };
 
 // Componente de Botão 'Ver mais' estilizado
 const MoreButton = styled(Button)(({ theme }) => ({
@@ -446,7 +446,8 @@ const TripleColumnNav = (): JSX.Element => {
 
   return (
     <Container maxWidth="lg" sx={{ py: 6, backgroundColor: 'transparent' }}>
-      <BannerHeader image={images.banner}>
+      {/* Não é mais necessário passar a prop 'image' */}
+      <BannerHeader> 
         <Typography variant="h3" sx={{ color: 'white', fontWeight: 600 }}>
           FAPERJ EM PAUTA
         </Typography>

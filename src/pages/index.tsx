@@ -24,12 +24,7 @@ export default function Dashboard(): JSX.Element {
 
   const {
     statsData,
-    areaDistribution,
-    monthlyProjects,
-    highlightData,
-    loading,
-    error,
-    handleRefresh,
+
   } = useDashboardData();
   return (
     <>
@@ -78,7 +73,7 @@ export default function Dashboard(): JSX.Element {
       {/* LINHA SEPARADA PARA O GRÁFICO 2 */}
       <Box>
         <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" sx={{ px: 1 }}>
+          <Grid container spacing={0} justifyContent="center" >
             {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
             <Grid item xs={12} md={12} sx={{ width: 1200 }}>
               <Grafico2 />
@@ -90,12 +85,12 @@ export default function Dashboard(): JSX.Element {
       {/* LINHA PARA O GRÁFICO 3 E 4, LADO A LADO */}
       <Box>
         <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" sx={{ mt: 1 }}>
-            <Grid item xs={12} md={6} sx={{ width: 550 }}>
+          <Grid container spacing={0} justifyContent="center" >
+            <Grid item xs={12} md={6} sx={{ width: 560 }}>
               <Grafico3 />
             </Grid>
             
-            <Grid item xs={12} md={6} sx={{ width: 550 }}>
+            <Grid item xs={12} md={6} sx={{ width: 560 }}>
               <Grafico4 />
             </Grid>
           </Grid>
@@ -105,7 +100,7 @@ export default function Dashboard(): JSX.Element {
       {/* LINHA SEPARADA PARA O GRÁFICO 1 */}
       <Box>
         <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" sx={{ mt: 1 }}>
+          <Grid container spacing={0} justifyContent="center" >
             {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
             <Grid item xs={12} md={12} sx={{ width: 1200 }}>
               <Grafico1 />

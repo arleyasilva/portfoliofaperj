@@ -14,10 +14,11 @@ import {
   Tooltip,
   ResponsiveContainer,
   Cell,
+  // Certifique-se de que 'Legend' NÃO esteja nesta lista de importações
 } from 'recharts';
 import React, { useState } from 'react';
 
-// Componente ChartCard corrigido, declarado fora de Grafico1.
+// Componente ChartCard
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -39,20 +40,23 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 350,
+    height: 490, // Altura padronizada
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
-        <Typography
-          sx={{
-            fontWeight: 600,
-            color: '#4169E1',
-            fontFamily: 'Roboto, sans-serif',
-            fontSize: '12px'
-          }}
-        >
-          {title}
-        </Typography>
+        {/* O título está ajustado para o padrão do Gráfico 3 */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Typography
+            sx={{
+              fontWeight: 600,
+              color: '#124b6c',
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: '16px', // Tamanho de fonte aumentado
+            }}
+          >
+            {title}
+          </Typography>
+        </Box>
         <IconButton
           onClick={onRefresh}
           size="small"
@@ -67,7 +71,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
+    <Box sx={{ flex: 1, height: 440, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -119,7 +123,7 @@ const data = microAreas.map((area, index) => ({
 }));
 
 // Função de formatação para os rótulos de cada fatia
-const renderCustomizedLabel = ({ name, value }) => {
+const renderCustomizedLabel = ({ name, value }) => { // Removi 'percent' dos parâmetros pois não é usado aqui
   return `${name} R$ ${(value / 1_000_000).toFixed(1)} mi`;
 };
 
@@ -141,7 +145,7 @@ const Grafico2 = (): JSX.Element => {
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: '100%' }}>
+      <Box sx={{ height: 440, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Tooltip
@@ -151,19 +155,19 @@ const Grafico2 = (): JSX.Element => {
               ]}
               labelFormatter={(label) => `Área: ${label}`}
             />
-            {/* Removido o componente <Legend> */}
+            {/* AQUI: O componente Legend foi removido para evitar a legenda inferior */}
             <Pie
               data={data}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
-              innerRadius={60}
-              outerRadius={100}
+              innerRadius={80}
+              outerRadius={150}
               paddingAngle={2}
               fill="#8884d8"
               label={renderCustomizedLabel}
-              labelLine={true} // Adiciona as linhas de conexão
+              labelLine={true}
               isAnimationActive={true}
             >
               {data.map((entry, index) => (
