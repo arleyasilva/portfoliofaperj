@@ -6,7 +6,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Banner from '../components/Banner';
 
-
 import Grafico1 from '../components/dashboard/charts/grafico1';
 import Grafico2 from '../components/dashboard/charts/grafico2';
 import Grafico3 from '../components/dashboard/charts/grafico3';
@@ -20,105 +19,110 @@ import TripleColumnNav from '../components/TripleColumnNav';
 import SearchSection from '../components/SearchSection';
 import LattesSearch from '../components/LattesSearch';
 
-
-
 export default function Dashboard(): JSX.Element {
-  const theme = useTheme();
+  const theme = useTheme();
 
-  const {
-    statsData,
-    areaDistribution,
-    monthlyProjects,
-    highlightData,
-    loading,
-    error,
-    handleRefresh,
-  } = useDashboardData();
-  return (
-    <>
-    <Box
-      sx={{
-        minHeight: '100vh',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/images/fundo-branco.png)',
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -2,
-        },
-        '&::after': {
-          content: '""',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          zIndex: -1,
-        },
-      }}
-    >
+  const {
+    statsData,
+    areaDistribution,
+    monthlyProjects,
+    highlightData,
+    loading,
+    error,
+    handleRefresh,
+  } = useDashboardData();
+  return (
+    <>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundImage: 'url(/images/fundo-branco.png)',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          zIndex: -2,
+        },
+        '&::after': {
+          content: '""',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          zIndex: -1,
+        },
+      }}
+    >
+      
+      <Head>
+        <title>Portfolio FAPERJ em rede</title>
+        <meta name="description" content="Página de teste" />
+      </Head>
+
+      <Header />
+      <Banner />
+      <IconNav />
+
+      {/* Cards de estatística */}
+      <StatisticalCards statsData={statsData} />
       
-      <Head>
-        <title>Portfolio FAPERJ em rede</title>
-        <meta name="description" content="Página de teste" />
-      </Head>
-
-      <Header />
-      <Banner />
-      <IconNav />
-
-      {/* Cards de estatística */}
-      <StatisticalCards statsData={statsData} />
-
-      {/* SEÇÃO DO GRID COM OS GRÁFICOS LADO A LADO */}
-      <Box sx={{ py: 4 }}>
+      {/* LINHA SEPARADA PARA O GRÁFICO 2 */}
+      <Box>
         <Container maxWidth="xl">
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={6}>
-              <Grafico1 />
-            </Grid>
-            
-            <Grid item xs={12} md={6}>
+          <Grid container spacing={0} justifyContent="center" sx={{ px: 1 }}>
+            {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
+            <Grid item xs={12} md={12} sx={{ width: 1200 }}>
               <Grafico2 />
             </Grid>
           </Grid>
         </Container>
       </Box>
 
-      {/* AQUI ESTÁ O NOVO GRÁFICO 3 E 4 */}
+      {/* LINHA PARA O GRÁFICO 3 E 4, LADO A LADO */}
+      <Box>
+        <Container maxWidth="xl">
+          <Grid container spacing={0} justifyContent="center" sx={{ mt: 1 }}>
+            <Grid item xs={12} md={6} sx={{ width: 550 }}>
+              <Grafico3 />
+            </Grid>
+            
+            <Grid item xs={12} md={6} sx={{ width: 550 }}>
+              <Grafico4 />
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* LINHA SEPARADA PARA O GRÁFICO 1 */}
       <Box>
         <Container maxWidth="xl">
-          <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12} md={6}>
-              <Grafico3 />
-            </Grid>
-            
-            <Grid item xs={12} md={6}>
-              <Grafico4 />
+          <Grid container spacing={0} justifyContent="center" sx={{ mt: 1 }}>
+            {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
+            <Grid item xs={12} md={12} sx={{ width: 1200 }}>
+              <Grafico1 />
             </Grid>
           </Grid>
         </Container>
       </Box>
-
-      {/* A linha '<DynamicChartSection ... />' foi removida. */}
-      
-      <TripleColumnNav />
-      <Box sx={{ mb: 4 }}>
-      <SearchSection />
-      </Box>
-      <Box sx={{ mb: 4 }}>
-      <LattesSearch />
-      </Box>
-      <Footer />
-    </Box>
-    </>
-  );
+      
+      <TripleColumnNav />
+      <Box sx={{ mb: 4 }}>
+      <SearchSection />
+      </Box>
+      <Box sx={{ mb: 4 }}>
+      <LattesSearch />
+      </Box>
+      <Footer />
+    </Box>
+    </>
+  );
 }

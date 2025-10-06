@@ -66,7 +66,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
               fontSize: '12px'
             }}
           >
-             (em número de concessões)
+             (em número de concessões)
           </Typography>
         </Box>
         <IconButton
@@ -83,7 +83,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 300, width: '100%' }}>
+    <Box sx={{ flex: 1, height: 300 }}> {/* REMOVIDO: width: 600 */}
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -133,7 +133,7 @@ const Grafico3 = (): JSX.Element => {
       error={error}
       onRefresh={handleRefresh}
     >
-      <Box sx={{ height: 300, width: 600 }}>
+      <Box sx={{ flex: 1, height: 300, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data3} margin={{ top: 12, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
