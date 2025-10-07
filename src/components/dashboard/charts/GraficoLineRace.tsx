@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-// Componente ChartCard
+// Componente ChartCard (o mesmo que já está no seu projeto)
 interface ChartCardProps {
   title: string;
   borderColor: string;
@@ -34,8 +34,8 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
     position: 'relative',
     backdropFilter: 'blur(8px)',
     border: '1px solid rgba(255, 255, 255, 0.2)',
-    height: 600, // Altura ajustada
-    width: 1200, // Largura ajustada
+    height: 600,
+    width: 1200,
   }}>
     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0 }}>
@@ -65,7 +65,7 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
       </Box>
       <Divider sx={{ my: 0, backgroundColor: 'rgba(255,255,255,0.2)' }} />
     </Box>
-    <Box sx={{ flex: 1, height: 500, width: '100%' }}> {/* Altura do box do gráfico ajustada */}
+    <Box sx={{ flex: 1, height: 500, width: '100%' }}>
       {error ? (
         <Alert severity="error" sx={{ mt: 2 }}>
           Falha ao carregar dados: {error.message}
@@ -193,9 +193,9 @@ const getOption = (data: typeof rawData) => {
           value: val,
           symbolSize: i === years.indexOf(year) ? 15 : 5,
           label: {
-            show: i === years.indexOf(year),
+            show: false,
             position: 'right',
-            formatter: '{b}',
+            formatter: params => params.seriesName,
             color: 'black',
             fontWeight: 'bold',
           }
@@ -233,7 +233,7 @@ const GraficoLineRace = (): JSX.Element => {
       onRefresh={handleRefresh}
       sourceText={sourceText}
     >
-      <Box sx={{ height: 500, width: '100%' }}> {/* Altura do box do gráfico ajustada */}
+      <Box sx={{ height: 500, width: '100%' }}>
         <ReactECharts
           option={getOption(formattedData)}
           style={{ height: '100%', width: '100%' }}

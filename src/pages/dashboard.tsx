@@ -20,7 +20,8 @@ import Grafico14 from '../components/dashboard/charts/grafico14';
 import Grafico15 from '../components/dashboard/charts/grafico15';
 import Grafico16 from '../components/dashboard/charts/grafico16';
 import Grafico17 from '../components/dashboard/charts/grafico17';
-import Grafico18 from '../components/dashboard/charts/grafico18';
+import Grafico18 from '../components/dashboard/charts/grafico18'; // Gráfico de Dispersão (versão Recharts)
+import GraficoLineRace from '../components/dashboard/charts/GraficoLineRace'; // Gráfico de Corrida de Linhas (versão ECharts)
 
 // Componentes de Layout e Navegação
 import Header from '../components/Header';
@@ -32,6 +33,8 @@ const chartCategories = {
   'Auxílios': [Grafico3, Grafico4, Grafico5, Grafico6, Grafico7, Grafico8, Grafico14, Grafico15],
   'Área de Conhecimento': [Grafico2, Grafico6],
   'Sexo': [Grafico10, Grafico11, Grafico12, Grafico13, Grafico14, Grafico15, Grafico16, Grafico17],
+  'Regionalização': [GraficoLineRace], // Novo gráfico de corrida de linhas
+  'Internacionalização': [], // Botão para uso futuro
 };
 
 const Dashboard = (): JSX.Element => {
@@ -39,10 +42,19 @@ const Dashboard = (): JSX.Element => {
 
   const renderCharts = () => {
     const chartsToRender = chartCategories[activeCategory];
+    if (chartsToRender.length === 0) {
+      return (
+        <Box sx={{ textAlign: 'center', mt: 4 }}>
+          <Typography variant="h6" color="text.secondary">
+            Nenhum gráfico disponível para esta categoria ainda.
+          </Typography>
+        </Box>
+      );
+    }
     return (
       <Grid container spacing={4} justifyContent="center">
         {chartsToRender.map((ChartComponent, index) => (
-          <Grid item xs={12} sm={6} key={index}>
+          <Grid item xs={12} key={index}>
             <ChartComponent />
           </Grid>
         ))}
@@ -66,7 +78,7 @@ const Dashboard = (): JSX.Element => {
             textAlign: 'center',
             mb: 4,
             p: 2,
-            backgroundColor: '#124b6c', // Cor azul escura
+            backgroundColor: '#124b6c', // Cor azul escura padronizada
             borderRadius: '8px',
           }}
         >
@@ -88,9 +100,9 @@ const Dashboard = (): JSX.Element => {
               variant={activeCategory === category ? 'contained' : 'outlined'}
               sx={{
                 fontWeight: 'bold',
-                borderColor: '#861539',
-                color: activeCategory === category ? 'white' : '#861539',
-                backgroundColor: activeCategory === category ? '#861539' : 'transparent',
+                borderColor: '#861539', // Cor avermelhada
+                color: activeCategory === category ? 'white' : '#861539', // Cor avermelhada
+                backgroundColor: activeCategory === category ? '#861539' : 'transparent', // Cor avermelhada
                 '&:hover': {
                   backgroundColor: '#861539',
                   color: 'white',

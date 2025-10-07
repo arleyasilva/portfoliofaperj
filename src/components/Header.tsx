@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
+import Link from 'next/link'; // Importe o componente Link do Next.js
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -97,23 +98,23 @@ const Header = (): JSX.Element => {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <MuiLink
-                href="https://faperj.br"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <Image
-                  src="/images/logo-novo.png"
-                  alt="Logo FAPERJ"
-                  width={300}
-                  height={75}
-                  style={{ objectFit: 'contain' }}
-                />
-              </MuiLink>
+              {/* O link foi alterado para a rota principal do seu projeto */}
+              <Link href="/" passHref>
+                <MuiLink
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Image
+                    src="/images/logo-novo.png"
+                    alt="Logo FAPERJ"
+                    width={300}
+                    height={75}
+                    style={{ objectFit: 'contain' }}
+                  />
+                </MuiLink>
+              </Link>
             </Box>
 
             {/* Ícone de menu hambúrguer à direita (visível em todas as telas) */}
@@ -152,14 +153,16 @@ const Header = (): JSX.Element => {
         }}
       >
         {menuItems.map((item) => (
-          <MuiLink href={item.href} key={item.text} color="inherit" underline="none">
-            <MenuItem
-              onClick={handleMenuClose}
-              sx={{ justifyContent: 'center' }}
-            >
-              {item.text}
-            </MenuItem>
-          </MuiLink>
+          <Link href={item.href} key={item.text} passHref>
+            <MuiLink color="inherit" underline="none">
+              <MenuItem
+                onClick={handleMenuClose}
+                sx={{ justifyContent: 'center' }}
+              >
+                {item.text}
+              </MenuItem>
+            </MuiLink>
+          </Link>
         ))}
       </Menu>
     </Box>

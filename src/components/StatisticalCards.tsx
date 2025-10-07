@@ -94,7 +94,7 @@ const StatisticalCards: React.FC = () => {
             variant="h4"
             sx={{
               fontWeight: 750,
-              color: '#000000c9',
+              color: '#124b6c',
               whiteSpace: 'nowrap',
               fontSize: { xs: '1.5rem', sm: '2rem', md: '2.5rem' }
             }}
