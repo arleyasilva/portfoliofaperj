@@ -130,7 +130,7 @@ const Grafico15 = (): JSX.Element => {
     console.log('Dados do Gráfico 15 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 15 - Quantidade de projetos contemplados pela FAPERJ por sexo e ano – 2019 a 2024 (em número de projetos)";
+  const chartTitle = "Quantidade de projetos contemplados pela FAPERJ por sexo e ano – 2019 a 2024 (em número de projetos)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

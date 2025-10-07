@@ -123,7 +123,7 @@ const Grafico5 = (): JSX.Element => {
     console.log('Dados do Gráfico 5 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 5 - Quantidade de projetos contemplados pela FAPERJ por ano – 2019 a 2024 (em número de projetos)";
+  const chartTitle = "Quantidade de projetos contemplados pela FAPERJ por ano – 2019 a 2024 (em número de projetos)";
 
   return (
     <ChartCard

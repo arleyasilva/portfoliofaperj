@@ -152,7 +152,7 @@ const Grafico6 = (): JSX.Element => {
     console.log('Dados do Gráfico 6 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 6 - Valor total investido e quantidade de projetos da FAPERJ por área do conhecimento – 2019 a 2024 (em milhões de reais e número de projetos)";
+  const chartTitle = "Valor total investido e quantidade de projetos da FAPERJ por área do conhecimento – 2019 a 2024 (em milhões de reais e número de projetos)";
 
   return (
     <ChartCard

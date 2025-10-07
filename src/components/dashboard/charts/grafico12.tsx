@@ -144,7 +144,7 @@ const Grafico12 = (): JSX.Element => {
     console.log('Dados do Gráfico 12 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 12 - Valor total de fomentos da FAPERJ por sexo e ano – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Valor total de fomentos da FAPERJ por sexo e ano – 2019 a 2024 (em milhões de reais)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

@@ -132,7 +132,7 @@ const Grafico3 = (): JSX.Element => {
     console.log('Dados do Gráfico 3 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 3 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Universidades – 2019 a 2024 (em número de concessões)";
+  const chartTitle = "Quantidade de bolsas e auxílios concedidos pela FAPERJ por Universidades – 2019 a 2024 (em número de concessões)";
 
   return (
     <ChartCard

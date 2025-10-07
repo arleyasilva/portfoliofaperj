@@ -132,7 +132,7 @@ const Grafico1 = (): JSX.Element => {
     console.log('Dados do Gráfico 1 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 1 - Valor total investido pela FAPERJ por ano – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Valor total investido pela FAPERJ por ano – 2019 a 2024 (em milhões de reais)";
 
   return (
     <ChartCard

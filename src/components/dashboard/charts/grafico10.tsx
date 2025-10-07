@@ -200,7 +200,7 @@ const Grafico10 = (): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const handleRefresh = () => { console.log('Dados do Gráfico 10 sendo recarregados...'); };
-  const chartTitle = "Gráfico 10 - Distribuição do valor total de fomento da FAPERJ por sexo – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Distribuição do valor total de fomento da FAPERJ por sexo – 2019 a 2024 (em milhões de reais)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

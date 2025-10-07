@@ -155,7 +155,7 @@ const Grafico2 = (): JSX.Element => {
     console.log('Dados do Gráfico 2 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 2 - Distribuição do valor total investido pela FAPERJ por microáreas do conhecimento – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Distribuição do valor total investido pela FAPERJ por microáreas do conhecimento – 2019 a 2024 (em milhões de reais)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (
