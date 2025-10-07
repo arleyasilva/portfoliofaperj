@@ -130,7 +130,7 @@ const Grafico17 = (): JSX.Element => {
     console.log('Dados do Gráfico 17 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 17 - Quantidade de bolsas concedidas pela FAPERJ por sexo e ano – 2019 a 2024 (em número de bolsas)";
+  const chartTitle = "Quantidade de bolsas concedidas pela FAPERJ por sexo e ano – 2019 a 2024 (em número de bolsas)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

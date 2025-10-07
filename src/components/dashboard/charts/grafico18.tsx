@@ -213,7 +213,7 @@ const GraficoLineRace = (): JSX.Element => {
     console.log('Dados do gráfico de Regionalização sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 18 - Evolução do Fomento por Região – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Evolução do Fomento por Região – 2019 a 2024 (em milhões de reais)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   const formattedData = {

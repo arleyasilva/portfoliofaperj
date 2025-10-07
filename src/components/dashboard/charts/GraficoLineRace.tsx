@@ -178,11 +178,14 @@ const getOption = (data: typeof rawData) => {
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
         formatter: (params: any) => {
-          let tooltipHtml = `<b>${params[0].axisValue}</b><br/>`;
-          params.forEach((item: any) => {
-            tooltipHtml += `<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.color};"></span>
-              ${item.seriesName}: R$ ${item.value} mi<br/>`;
-          });
+          let tooltipHtml = '';
+          if (params.length > 0) {
+              tooltipHtml = `<b>${params[0].name}</b><br/>`; // Correção: usa params[0].name
+              params.forEach((item: any) => {
+                  tooltipHtml += `<span style="display:inline-block;margin-right:4px;border-radius:10px;width:10px;height:10px;background-color:${item.color};"></span>
+                  ${item.seriesName}: R$ ${item.value} mi<br/>`;
+              });
+          }
           return tooltipHtml;
         }
       }

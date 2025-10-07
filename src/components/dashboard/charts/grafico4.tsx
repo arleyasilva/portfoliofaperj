@@ -132,7 +132,7 @@ const Grafico4 = (): JSX.Element => {
     console.log('Dados do Gráfico 4 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 4 - Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros de pesquisa e outras instituções";
+  const chartTitle = "Quantidade de bolsas e auxílios concedidos pela FAPERJ por Centros de pesquisa e outras instituções";
 
   return (
     <ChartCard

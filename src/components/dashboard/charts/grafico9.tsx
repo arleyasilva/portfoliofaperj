@@ -138,7 +138,7 @@ const Grafico9 = (): JSX.Element => {
   const [error, setError] = useState<Error | null>(null);
   const handleRefresh = () => { console.log('Dados do Gráfico 9 sendo recarregados...'); };
 
-  const chartTitle = "Gráfico 9 — Evolução do valor investido em bolsas (por ano)";
+  const chartTitle = "Evolução do valor investido em bolsas (por ano)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

@@ -139,7 +139,7 @@ const Grafico7 = (): JSX.Element => {
     console.log('Dados do Gráfico 7 sendo recarregados...');
   };
 
-  const chartTitle = "Gráfico 7 - Evolução do valor total investido em auxílios pela FAPERJ por ano – 2019 a 2024 (em milhões de reais)";
+  const chartTitle = "Evolução do valor total investido em auxílios pela FAPERJ por ano – 2019 a 2024 (em milhões de reais)";
   const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (

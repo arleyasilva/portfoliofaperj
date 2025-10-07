@@ -7,58 +7,76 @@ import {
   Menu,
   MenuItem,
   Link as MuiLink,
+  Typography,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
-import Link from 'next/link'; // Importe o componente Link do Next.js
+import Link from 'next/link';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import { useState } from 'react';
 import React from 'react';
 
-// 1. Tipagem para os itens do menu
-interface MenuItemType {
+interface SubmenuItemType {
   text: string;
   href: string;
 }
 
+interface MenuItemType {
+  text: string;
+  href: string;
+  subItems?: SubmenuItemType[];
+}
+
 const Header = (): JSX.Element => {
-  // 2. Tipagem para o estado do menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
-  // 3. Tipagem para o evento de abrir o menu
+  // Estado para controlar a expansão do submenu "Indicadores"
+  const [isIndicatorsOpen, setIsIndicatorsOpen] = useState(false);
+
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // 4. Tipagem para o evento de fechar o menu
   const handleMenuClose = () => {
     setAnchorEl(null);
+    setIsIndicatorsOpen(false); // Fecha o submenu ao fechar o menu principal
   };
 
-  // 5. Tipagem para o array de itens do menu
+  const handleIndicatorsToggle = () => {
+    setIsIndicatorsOpen(!isIndicatorsOpen);
+  };
+
   const menuItems: MenuItemType[] = [
     { text: 'Página Inicial', href: '/' },
-    { text: 'Indicadores', href: '/dashboard' },
+    {
+      text: 'Indicadores',
+      href: '/dashboard',
+      subItems: [
+        { text: 'Bolsas', href: '/dashboard#bolsas' },
+        { text: 'Auxílios', href: '/dashboard#auxilios' },
+        { text: 'Área de Conhecimento', href: '/dashboard#area-de-conhecimento' },
+        { text: 'Sexo', href: '/dashboard#sexo' },
+        { text: 'Regionalização', href: '/dashboard#regionalizacao' },
+        { text: 'Internacionalização', href: '/dashboard#internacionalizacao' },
+      ],
+    },
     { text: 'Politica de dados', href: '/politica-de-dados' },
     { text: 'Sobre', href: '/sobre' },
   ];
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      {/* Barra superior de ícones sociais */}
       <Box sx={{
         bgcolor: '#6E0E2B',
         color: 'white',
-        // px e py controlam o espaçamento horizontal e vertical
         px: { xs: 1, md: 0 },
         py: { xs: 0.5, md: 0 },
         display: { xs: 'none', md: 'block' },
       }}>
         <Container maxWidth="xl">
-          {/* A Toolbar foi removida, usando apenas uma Box para controle mais direto */}
           <Box sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -77,7 +95,6 @@ const Header = (): JSX.Element => {
         </Container>
       </Box>
 
-      {/* Barra principal com logo e menu hambúrguer */}
       <AppBar
         position="static"
         color="transparent"
@@ -98,8 +115,7 @@ const Header = (): JSX.Element => {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              {/* O link foi alterado para a rota principal do seu projeto */}
-              <Link href="/" passHref>
+              <Link href="/" passHref legacyBehavior>
                 <MuiLink
                   sx={{
                     display: 'flex',
@@ -117,7 +133,6 @@ const Header = (): JSX.Element => {
               </Link>
             </Box>
 
-            {/* Ícone de menu hambúrguer à direita (visível em todas as telas) */}
             <IconButton
               size="large"
               edge="end"
@@ -126,45 +141,128 @@ const Header = (): JSX.Element => {
               sx={{ ml: 'auto' }}
               onClick={handleMenuOpen}
             >
-              <MenuIcon />
+              <MenuIcon sx={{ fontSize: 32 }} />
             </IconButton>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Componente Menu que desce ao clicar no ícone */}
-      <Menu
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={isMenuOpen}
-        onClose={handleMenuClose}
-        sx={{ mt: 5 }}
-        PaperProps={{
-          sx: {
-            width: 150,
-          },
-        }}
-      >
-        {menuItems.map((item) => (
-          <Link href={item.href} key={item.text} passHref>
-            <MuiLink color="inherit" underline="none">
-              <MenuItem
-                onClick={handleMenuClose}
-                sx={{ justifyContent: 'center' }}
-              >
-                {item.text}
-              </MenuItem>
-            </MuiLink>
-          </Link>
-        ))}
-      </Menu>
+<Menu
+  anchorEl={anchorEl}
+  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+  open={isMenuOpen}
+  onClose={handleMenuClose}
+  sx={{ mt: 5 }}
+  PaperProps={{
+    sx: {
+      width: 260,
+      borderRadius: 2,
+      boxShadow: '0px 6px 18px rgba(0,0,0,0.1)',
+      bgcolor: '#fff',
+      overflow: 'visible',
+      p: 1,
+    },
+  }}
+>
+  {menuItems.map((item) => (
+    <Box key={item.text}>
+      {item.subItems ? (
+        <>
+          {/* Item principal: Indicadores */}
+          <MenuItem
+            onClick={handleIndicatorsToggle}
+            sx={{
+              justifyContent: 'center',
+              fontWeight: 700,
+              color: '#333',
+              fontSize: '1rem',
+              borderRadius: 1,
+              transition: 'background-color 0.2s ease, color 0.2s ease',
+              '&:hover': {
+                backgroundColor: '#fbe8ee',
+                color: '#8A1538',
+              },
+            }}
+          >
+            {item.text}
+          </MenuItem>
+
+          {/* Submenu dropdown */}
+          {isIndicatorsOpen && (
+            <Box
+              sx={{
+                bgcolor: '#f9f9f9',
+                borderRadius: 2,
+                mt: 1,
+                mx: 2,
+                mb: 1,
+                p: 1,
+                boxShadow: 'inset 0 0 5px rgba(0,0,0,0.05)',
+              }}
+            >
+              {item.subItems.map((subItem) => (
+                <Link href={subItem.href} key={subItem.text} passHref legacyBehavior>
+                  <MuiLink
+                    underline="none"
+                    sx={{
+                      textDecoration: 'none',
+                      color: '#333',
+                      display: 'block',
+                      '&:hover': { color: '#8A1538' },
+                    }}
+                  >
+                    <MenuItem
+                      onClick={handleMenuClose}
+                      sx={{
+                        justifyContent: 'center',
+                        fontWeight: 500,
+                        fontSize: '0.95rem',
+                        borderRadius: 1,
+                        transition: 'all 0.2s ease',
+                        '&:hover': { backgroundColor: '#fbe8ee' },
+                      }}
+                    >
+                      {subItem.text}
+                    </MenuItem>
+                  </MuiLink>
+                </Link>
+              ))}
+            </Box>
+          )}
+        </>
+      ) : (
+        <Link href={item.href} passHref legacyBehavior>
+          <MuiLink
+            underline="none"
+            sx={{
+              textDecoration: 'none',
+              color: '#333',
+              display: 'block',
+              '&:hover': { color: '#8A1538' },
+            }}
+          >
+            <MenuItem
+              onClick={handleMenuClose}
+              sx={{
+                justifyContent: 'center',
+                fontWeight: 600,
+                fontSize: '1rem',
+                borderRadius: 1,
+                transition: 'background-color 0.2s ease, color 0.2s ease',
+                '&:hover': { backgroundColor: '#fbe8ee' },
+              }}
+            >
+              {item.text}
+            </MenuItem>
+          </MuiLink>
+        </Link>
+      )}
+    </Box>
+  ))}
+</Menu>
+
+
     </Box>
   );
 };
