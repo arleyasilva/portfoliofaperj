@@ -50,13 +50,14 @@ const Banner = (): JSX.Element => {
     >
       <Container maxWidth="md">
         {/* Dizer 1: "ciência, tecnologia e inovação" */}
-        <AnimatedBox delay="0.2s" sx={{ mb: 2 }}>
+        <AnimatedBox delay="0.2s" sx={{ mb: 1 }}> {/* Alteração aqui: Margem inferior reduzida para 1 */}
           <Typography
             variant="h6"
             sx={{
-              fontWeight: 400,
+              fontWeight: 700,
               fontStyle: 'italic',
-              fontSize: { xs: '0.8rem', sm: '1rem' }, // <<<<< Altere aqui
+              fontFamily: 'Roboto, sans-serif',
+              fontSize: { xs: '1.8rem', sm: '2.4rem', md: '1.5rem' },
             }}
           >
             ciência, tecnologia e inovação
@@ -68,8 +69,8 @@ const Banner = (): JSX.Element => {
           <Image
             src={logoUrl}
             alt="Logo FAPERJ Portfólio em Rede"
-            width={600} // <<<<< Altere aqui
-            height={250} // <<<<< E aqui
+            width={600}
+            height={250}
             style={{ objectFit: 'contain' }}
           />
         </AnimatedBox>
@@ -80,7 +81,8 @@ const Banner = (): JSX.Element => {
             variant="h5"
             sx={{
               fontWeight: 600,
-              fontSize: { xs: '1rem', sm: '1.2rem' }, // <<<<< Altere aqui
+              fontFamily: 'Poppins, sans-serif',
+              fontSize: { xs: '1.8rem', sm: '2.4rem', md: '2rem' },
             }}
           >
             transparência, excelência e cooperação

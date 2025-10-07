@@ -26,9 +26,10 @@ interface ChartCardProps {
   loading: boolean;
   error: Error | null;
   onRefresh: () => void;
+  sourceText: string;
 }
 
-const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh }) => (
+const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loading, error, onRefresh, sourceText }) => (
   <Card sx={{
     display: 'flex',
     flexDirection: 'column',
@@ -82,6 +83,25 @@ const ChartCard: React.FC<ChartCardProps> = ({ title, borderColor, children, loa
         </Box>
       ) : children}
     </Box>
+    {/* Fonte dos dados */}
+    <Box sx={{
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      p: 2,
+      pt: 0,
+    }}>
+      <Typography
+        variant="caption"
+        sx={{
+          fontFamily: 'Roboto, sans-serif',
+          color: 'rgba(0, 0, 0, 0.6)',
+          fontStyle: 'italic',
+        }}
+      >
+        {sourceText}
+      </Typography>
+    </Box>
   </Card>
 );
 
@@ -123,7 +143,7 @@ const data = microAreas.map((area, index) => ({
 }));
 
 // Função de formatação para os rótulos de cada fatia
-const renderCustomizedLabel = ({ name, value }) => { // Removi 'percent' dos parâmetros pois não é usado aqui
+const renderCustomizedLabel = ({ name, value }) => {
   return `${name} R$ ${(value / 1_000_000).toFixed(1)} mi`;
 };
 
@@ -136,6 +156,7 @@ const Grafico2 = (): JSX.Element => {
   };
 
   const chartTitle = "Gráfico 2 - Distribuição do valor total investido pela FAPERJ por microáreas do conhecimento – 2019 a 2024 (em milhões de reais)";
+  const sourceText = "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2024]";
 
   return (
     <ChartCard
@@ -144,6 +165,7 @@ const Grafico2 = (): JSX.Element => {
       loading={loading}
       error={error}
       onRefresh={handleRefresh}
+      sourceText={sourceText} // Passa a fonte para o componente ChartCard
     >
       <Box sx={{ height: 440, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -155,7 +177,6 @@ const Grafico2 = (): JSX.Element => {
               ]}
               labelFormatter={(label) => `Área: ${label}`}
             />
-            {/* AQUI: O componente Legend foi removido para evitar a legenda inferior */}
             <Pie
               data={data}
               dataKey="value"
