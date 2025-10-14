@@ -20,104 +20,96 @@ import SearchSection from '../components/SearchSection';
 import LattesSearch from '../components/LattesSearch';
 
 export default function Dashboard(): JSX.Element {
-  const theme = useTheme();
+  const theme = useTheme();
+  const { statsData } = useDashboardData();
 
-  const {
-    statsData,
+  return (
+    <>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: 'url(/images/fundo-branco.png)',
+            backgroundAttachment: 'fixed',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            zIndex: -2,
+          },
+          '&::after': {
+            content: '""',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            zIndex: -1,
+          },
+        }}
+      >
+        <Head>
+          <title>Portfolio FAPERJ em rede</title>
+          <meta name="description" content="Página de teste" />
+        </Head>
 
-  } = useDashboardData();
-  return (
-    <>
-    <Box
-      sx={{
-        minHeight: '100vh',
-        position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: 'url(/images/fundo-branco.png)',
-          backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          zIndex: -2,
-        },
-        '&::after': {
-          content: '""',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          zIndex: -1,
-        },
-      }}
-    >
-      
-      <Head>
-        <title>Portfolio FAPERJ em rede</title>
-        <meta name="description" content="Página de teste" />
-      </Head>
+        <Header />
+        <Banner />
+        <IconNav />
 
-      <Header />
-      <Banner />
-      <IconNav />
+        {/* Cards de estatística */}
+        <StatisticalCards statsData={statsData} />
 
-      {/* Cards de estatística */}
-      <StatisticalCards statsData={statsData} />
-      
-      {/* LINHA SEPARADA PARA O GRÁFICO 2 */}
-      <Box>
-        <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" >
-            {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
-            <Grid item xs={12} md={12} sx={{ width: 1200 }}>
-              <Grafico2 />
+        {/* Área principal com gráficos */}
+        <Box component="main">
+          <Container maxWidth="xl">
+
+            {/* Gráfico 2 - ocupa linha inteira */}
+            <Grid container justifyContent="center" spacing={3}>
+              <Grid item xs={12} md={12} sx={{ width: 1200 }}>
+                <Grafico2 />
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
-      </Box>
 
-      {/* LINHA PARA O GRÁFICO 3 E 4, LADO A LADO */}
-      <Box>
-        <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" >
-            <Grid item xs={12} md={6} sx={{ width: 560 }}>
-              <Grafico3 />
-            </Grid>
-            
-            <Grid item xs={12} md={6} sx={{ width: 560 }}>
-              <Grafico4 />
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
-
-      {/* LINHA SEPARADA PARA O GRÁFICO 1 */}
-      <Box>
-        <Container maxWidth="xl">
-          <Grid container spacing={0} justifyContent="center" >
-            {/* Ocupa 12 colunas em todas as telas, preenchendo o espaço total */}
-            <Grid item xs={12} md={12} sx={{ width: 1200 }}>
-              <Grafico1 />
+            {/* Gráficos 3 e 4 - lado a lado */}
+            <Grid container justifyContent="center" spacing={8} sx={{ mt: 3 }}>
+              <Grid item xs={12} md={6}>
+                <Grafico3 />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Grafico4 />
+              </Grid>
             </Grid>
-          </Grid>
-        </Container>
+
+            {/* Gráfico 1 - linha separada */}
+            <Grid container justifyContent="center" spacing={3} sx={{ mt: 3 }}>
+              <Grid item xs={12} md={12} sx={{ width: 1200 }}>
+                <Grafico1 />
+              </Grid>
+            </Grid>
+
+          </Container>
+        </Box>
+
+        {/* Seções adicionais */}
+        <TripleColumnNav />
+
+        <Box sx={{ mb: 4 }}>
+          <SearchSection />
+        </Box>
+
+        <Box sx={{ mb: 4 }}>
+          <LattesSearch />
+        </Box>
+
+        <Footer />
       </Box>
-      
-      <TripleColumnNav />
-      <Box sx={{ mb: 4 }}>
-      <SearchSection />
-      </Box>
-      <Box sx={{ mb: 4 }}>
-      <LattesSearch />
-      </Box>
-      <Footer />
-    </Box>
-    </>
-  );
+    </>
+  );
 }
