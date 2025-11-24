@@ -1,0 +1,100 @@
+{
+  "nodes": [
+    { "name": "França" },
+    { "name": "Reino Unido" },
+    { "name": "Itália" },
+    { "name": "Bélgica" },
+    { "name": "Estados Unidos" },
+    { "name": "Austrália" },
+    { "name": "Suíça" },
+    { "name": "Canadá" },
+    { "name": "Japão" },
+    { "name": "Ucrânia" },
+    { "name": "China" },
+    { "name": "Portugal" },
+    { "name": "Engenharias" },
+    { "name": "Outros" },
+    { "name": "Ciências Humanas" },
+    { "name": "Ciências da Saúde" },
+    { "name": "Ciências Sociais Aplicadas" },
+    { "name": "Ciências Biológicas" },
+    { "name": "Ciências Exatas e da Terra" },
+    { "name": "Ciências Agrárias" },
+    { "name": "Linguística, Letras e Artes" },
+    { "name": "Geociências" },
+    { "name": "Física" }
+  ],
+  "links": [
+    { "source": "Austrália", "target": "Ciências da Saúde", "value": 2 },
+    { "source": "Austrália", "target": "Ciências Sociais Aplicadas", "value": 1 },
+    { "source": "Austrália", "target": "Ciências Biológicas", "value": 2 },
+    { "source": "Austrália", "target": "Ciências Exatas e da Terra", "value": 2 },
+
+    { "source": "Bélgica", "target": "Engenharias", "value": 6 },
+    { "source": "Bélgica", "target": "Ciências Exatas e da Terra", "value": 4 },
+    { "source": "Bélgica", "target": "Ciências Biológicas", "value": 3 },
+    { "source": "Bélgica", "target": "Ciências Agrárias", "value": 1 },
+    { "source": "Bélgica", "target": "Ciências Sociais Aplicadas", "value": 1 },
+
+    { "source": "Canadá", "target": "Ciências Humanas", "value": 1 },
+    { "source": "Canadá", "target": "Ciências da Saúde", "value": 2 },
+    { "source": "Canadá", "target": "Ciências Exatas e da Terra", "value": 1 },
+    { "source": "Canadá", "target": "Ciências Agrárias", "value": 1 },
+
+    { "source": "China", "target": "Ciências Exatas e da Terra", "value": 2 },
+    { "source": "China", "target": "Engenharias", "value": 2 },
+
+    { "source": "Reino Unido", "target": "Ciências Exatas e da Terra", "value": 13 },
+
+    { "source": "Estados Unidos", "target": "Engenharias", "value": 3 },
+    { "source": "Estados Unidos", "target": "Ciências Exatas e da Terra", "value": 2 },
+    { "source": "Estados Unidos", "target": "Ciências Humanas", "value": 1 },
+    { "source": "Estados Unidos", "target": "Ciências Biológicas", "value": 1 },
+    { "source": "Estados Unidos", "target": "Ciências Agrárias", "value": 1 },
+    { "source": "Estados Unidos", "target": "Ciências da Saúde", "value": 1 },
+    { "source": "Estados Unidos", "target": "Ciências Sociais Aplicadas", "value": 1 },
+    { "source": "Estados Unidos", "target": "Linguística, Letras e Artes", "value": 1 },
+
+    { "source": "França", "target": "Linguística, Letras e Artes", "value": 1 },
+    { "source": "França", "target": "Ciências Humanas", "value": 4 },
+    { "source": "França", "target": "Ciências Agrárias", "value": 2 },
+    { "source": "França", "target": "Ciências Exatas e da Terra", "value": 8 },
+    { "source": "França", "target": "Ciências da Saúde", "value": 6 },
+    { "source": "França", "target": "Engenharias", "value": 7 },
+    { "source": "França", "target": "Ciências Biológicas", "value": 14 },
+    { "source": "França", "target": "Ciências Sociais Aplicadas", "value": 3 },
+
+    { "source": "Reino Unido", "target": "Ciências Biológicas", "value": 2 },
+    { "source": "Reino Unido", "target": "Ciências Sociais Aplicadas", "value": 1 },
+
+    { "source": "Itália", "target": "Ciências Exatas e da Terra", "value": 7 },
+    { "source": "Itália", "target": "Engenharias", "value": 5 },
+    { "source": "Itália", "target": "Ciências Humanas", "value": 2 },
+    { "source": "Itália", "target": "Ciências Agrárias", "value": 1 },
+    { "source": "Itália", "target": "Ciências Biológicas", "value": 1 },
+    { "source": "Itália", "target": "Ciências da Saúde", "value": 2 },
+    { "source": "Itália", "target": "Linguística, Letras e Artes", "value": 1 },
+
+    { "source": "Japão", "target": "Ciências Sociais Aplicadas", "value": 1 },
+    { "source": "Japão", "target": "Ciências da Saúde", "value": 1 },
+    { "source": "Japão", "target": "Engenharias", "value": 2 },
+    { "source": "Japão", "target": "Ciências Humanas", "value": 1 },
+
+    { "source": "Portugal", "target": "Ciências Sociais Aplicadas", "value": 1 },
+    { "source": "Portugal", "target": "Ciências Biológicas", "value": 2 },
+    { "source": "Portugal", "target": "Ciências Humanas", "value": 1 },
+
+    { "source": "Reino Unido", "target": "Engenharias", "value": 4 },
+    { "source": "Reino Unido", "target": "Ciências da Saúde", "value": 1 },
+    { "source": "Reino Unido", "target": "Ciências Humanas", "value": 2 },
+    { "source": "Reino Unido", "target": "Linguística, Letras e Artes", "value": 1 },
+
+    { "source": "Suíça", "target": "Geociências", "value": 3 },
+    { "source": "Suíça", "target": "Física", "value": 3 },
+
+    { "source": "Austrália", "target": "Engenharias", "value": 1 },
+
+    { "source": "Ucrânia", "target": "Engenharias", "value": 4 },
+    { "source": "Ucrânia", "target": "Ciências Exatas e da Terra", "value": 1 }
+  ]
+}

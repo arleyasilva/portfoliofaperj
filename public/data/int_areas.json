@@ -1,0 +1,13 @@
+[
+  { "label": "Ciências Exatas e da Terra", "value": 53 },
+  { "label": "Engenharias", "value": 39 },
+  { "label": "Ciências Biológicas", "value": 30 },
+  { "label": "Ciências Humanas", "value": 18 },
+  { "label": "Ciências da Saúde", "value": 17 },
+  { "label": "Ciências Sociais Aplicadas", "value": 12 },
+  { "label": "Ciências Agrárias", "value": 10 },
+  { "label": "Linguística, Letras e Artes", "value": 5 },
+  { "label": "Física", "value": 3 },
+  { "label": "Geociências", "value": 3 },
+  { "label": "Outros", "value": 1 }
+]

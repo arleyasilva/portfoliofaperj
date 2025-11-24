@@ -1,0 +1,29 @@
+# Ignora dependências
+node_modules/
+.env
+.next/
+out/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# SO e editor
+.DS_Store
+*.swp
+*.swo
+*.bak
+
+# Vídeos ou arquivos pesados (caso existam)
+*.mp4
+*.zip
+*.rar
+*.7z
+*.iso
+
+# Pasta de build ou pública (opcional, se gerada por script)
+build/
+coverage/
+node_modules

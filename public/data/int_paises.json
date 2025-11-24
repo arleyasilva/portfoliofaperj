@@ -1,0 +1,15 @@
+[
+  { "label": "França", "value": 45 },
+  { "label": "Reino Unido", "value": 24 },
+  { "label": "Itália", "value": 19 },
+  { "label": "Bélgica", "value": 15 },
+  { "label": "Estados Unidos", "value": 11 },
+  { "label": "Austrália", "value": 8 },
+  { "label": "Suíça", "value": 6 },
+  { "label": "Canadá", "value": 5 },
+  { "label": "Japão", "value": 5 },
+  { "label": "Ucrânia", "value": 5 },
+  { "label": "China", "value": 4 },
+  { "label": "Portugal", "value": 4 },
+  { "label": "Outros países", "value": 40 }
+]

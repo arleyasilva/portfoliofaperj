@@ -1,0 +1,12 @@
+[
+  { "label": "FIOCRUZ", "bolsas": 81275062, "auxilios": 2718635 },
+  { "label": "FAPERJ", "bolsas": 62582874, "auxilios": 677769 },
+  { "label": "IECPN", "bolsas": 484825, "auxilios": 35416763 },
+  { "label": "CBPF", "bolsas": 8291075, "auxilios": 18198812 },
+  { "label": "FAETEC", "bolsas": 20271442, "auxilios": 11245348 },
+  { "label": "IMPA", "bolsas": 10429130, "auxilios": 10041543 },
+  { "label": "INCA", "bolsas": 5477000, "auxilios": 15033115 },
+  { "label": "PESAGRO", "bolsas": 7646280, "auxilios": 18792 },
+  { "label": "INMETRO", "bolsas": 2483230, "auxilios": 11451871 },
+  { "label": "EMBRAPA", "bolsas": 6594160, "auxilios": 10097204 }
+]

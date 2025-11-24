@@ -1,0 +1,14 @@
+[
+  { "label": "Paris", "value": 15 },
+  { "label": "Bolonha", "value": 7 },
+  { "label": "Bruxelas", "value": 6 },
+  { "label": "Villeurbanne", "value": 5 },
+  { "label": "Damasco", "value": 4 },
+  { "label": "Kiev", "value": 4 },
+  { "label": "Londres", "value": 4 },
+  { "label": "Namur", "value": 4 },
+  { "label": "Nancy", "value": 4 },
+  { "label": "Roma", "value": 4 },
+  { "label": "Canberra", "value": 3 },
+  { "label": "Dübendorf", "value": 3 }
+]
