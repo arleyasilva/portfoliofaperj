@@ -1,98 +1,94 @@
-// src/components/dashboard/charts/grafico11.tsx
-
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
+
 import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico11Data } from "@/types/faperj";
 
-const Grafico11 = () => {
-  const { data, loading, error } = useFaperjData("grafico11");
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center" p={3}>
-        <CircularProgress />
-      </Box>
-    );
+// Abreviação de valores
+const abreviarValor = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + " mi";
+  return v.toLocaleString("pt-BR");
+};
 
+const Grafico11: React.FC = () => {
+
+  // ✔ CORREÇÃO DEFINITIVA
+  const { data, loading, error } = useFaperjData<Grafico11Data>("grafico11");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: { top: 70, left: 30, right: 30, bottom: 30, containLabel: true },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#fff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        borderRadius: 6,
+        textStyle: { color: "#000", fontSize: 13 },
+        formatter: (params: any[]) => {
+          const f = params.find((p) => p.seriesName === "Feminino")?.data;
+          const m = params.find((p) => p.seriesName === "Masculino")?.data;
+
+          return `
+            <strong>${f.label}</strong><br/>
+            Feminino: <strong>R$ ${f.value.toLocaleString("pt-BR")}</strong><br/>
+            Masculino: <strong>R$ ${m.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: { data: ["Feminino", "Masculino"], top: 0 },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12 }
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: { formatter: abreviarValor }
+      },
+
+      series: [
+        {
+          name: "Feminino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#FBC02D" },
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((i) => ({
+            value: i.feminino,
+            label: i.label,
+          })),
+        },
+        {
+          name: "Masculino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#5F93CF" },
+          itemStyle: { color: "#5F93CF" },
+          data: data.map((i) => ({
+            value: i.masculino,
+            label: i.label,
+          })),
+        },
+      ],
+    };
+  }, [data]);
+
+  if (loading) return <Box p={3} textAlign="center"><CircularProgress /></Box>;
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 60,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(18,75,108,0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const f = params.find((p: any) => p.seriesName === "Feminino").data;
-        const m = params.find((p: any) => p.seriesName === "Masculino").data;
-
-        return `
-          <strong>${f.label}</strong><br/>
-          Feminino: R$ ${f.feminino.toLocaleString("pt-BR")}<br/>
-          Masculino: R$ ${m.masculino.toLocaleString("pt-BR")}
-        `;
-      },
-    },
-
-    legend: {
-      data: ["Feminino", "Masculino"],
-      top: 0,
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000_000
-            ? `${(v / 1_000_000_000).toFixed(1)} bi`
-            : v >= 1_000_000
-            ? `${(v / 1_000_000).toFixed(0)} mi`
-            : v.toLocaleString("pt-BR"),
-      },
-    },
-
-    series: [
-      {
-        name: "Feminino",
-        type: "line",
-        smooth: true,
-        symbolSize: 7,
-        data: data.map((item: any) => ({
-          value: item.feminino,
-          ...item,
-        })),
-        itemStyle: { color: "#ff69b4" },
-        lineStyle: { width: 3, color: "#ff69b4" },
-      },
-      {
-        name: "Masculino",
-        type: "line",
-        smooth: true,
-        symbolSize: 7,
-        data: data.map((item: any) => ({
-          value: item.masculino,
-          ...item,
-        })),
-        itemStyle: { color: "#2989b5" },
-        lineStyle: { width: 3, color: "#2989b5" },
-      },
-    ],
-  };
 
   return (
     <Card
@@ -115,15 +111,8 @@ const Grafico11 = () => {
         Valor de Fomento por Sexo e Ano
       </Typography>
 
-      {/* LINHA DIVISÓRIA */}
-      <Box
-        sx={{
-          width: "100%",
-          height: "1px",
-          backgroundColor: "rgba(0,0,0,0.1)",
-          mb: 2,
-        }}
-      />
+      {/* LINHA SUAVE */}
+      <Box sx={{ width: "100%", height: "1px", backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />
 
       {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
@@ -133,11 +122,7 @@ const Grafico11 = () => {
       {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
       </Typography>

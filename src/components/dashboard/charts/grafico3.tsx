@@ -1,11 +1,98 @@
-// src/components/dashboard/charts/grafico3.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Box, Typography, CircularProgress, Alert } from "@mui/material";
 
-const Grafico3 = () => {
-  const { data, loading, error } = useFaperjData("grafico3");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico3Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Função para abreviar valores (formato "mi", "bi")
+const abreviarValor = (num: number): string => {
+  if (num >= 1_000_000_000) {
+    return (num / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
+  }
+  if (num >= 1_000_000) {
+    return (num / 1_000_000).toFixed(1).replace(".0", "") + " mi";
+  }
+  return num.toLocaleString("pt-BR");
+};
+
+const Grafico3: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico3Data>("grafico3");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      tooltip: {
+        trigger: "axis",
+        formatter: (params: any) => {
+          const item = params[0].data;
+          return `
+            <strong>${item.label}</strong><br/>
+            Bolsas: <strong>R$ ${item.bolsas.toLocaleString("pt-BR")}</strong><br/>
+            Auxílios: <strong>R$ ${item.auxilios.toLocaleString("pt-BR")}</strong><br/>
+            Total: <strong>R$ ${item.total.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: {
+        top: 0,
+        left: "center",
+      },
+
+      // Ajuste para o gráfico não estourar o container
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 20,
+        containLabel: true,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((item) => item.label),
+        axisLabel: { rotate: 20 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (value: number) => abreviarValor(value),
+        },
+      },
+
+      series: [
+        {
+          name: "Bolsas",
+          type: "bar",
+          itemStyle: { color: "#1b77b3" },
+          data: data.map((item) => ({ ...item, value: item.bolsas })),
+        },
+        {
+          name: "Auxílios",
+          type: "bar",
+          itemStyle: { color: "#21a179" },
+          data: data.map((item) => ({ ...item, value: item.auxilios })),
+        },
+        {
+          name: "Total",
+          type: "line",
+          smooth: true,
+          symbol: "circle",
+          symbolSize: 8,
+          lineStyle: {
+            color: "#e67e22",
+            width: 3,
+          },
+          data: data.map((item) => item.total),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -14,67 +101,15 @@ const Grafico3 = () => {
       </Box>
     );
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error)
+    return <Alert severity="error">Erro ao carregar dados do gráfico 3.</Alert>;
 
-  // Aplica cálculo caso o JSON não venha com "total"
-  const processed = data.map((item: any) => ({
-    ...item,
-    total: item.total ?? item.bolsas + item.auxilios,
-  }));
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const item = params[0].data;
-        return `
-          <strong>${item.label}</strong><br/>
-          Bolsas: R$ ${item.bolsas.toLocaleString("pt-BR")}<br/>
-          Auxílios: R$ ${item.auxilios.toLocaleString("pt-BR")}<br/>
-          Total: <strong>R$ ${item.total.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: processed.map((i: any) => i.label),
-      axisLabel: { rotate: 35, fontSize: 11 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000
-            ? `${(v / 1_000_000).toFixed(0)} mi`
-            : v.toLocaleString("pt-BR"),
-      },
-    },
-
-    series: [
-      {
-        type: "bar",
-        data: processed.map((item: any) => ({
-          value: item.total,
-          ...item,
-        })),
-        barWidth: "55%",
-        itemStyle: { color: "#2989b5" },
-      },
-    ],
-  };
+  if (!data)
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
   return (
     <Card
+      elevation={3}
       sx={{
         p: 3,
         borderRadius: 3,
@@ -84,7 +119,7 @@ const Grafico3 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
+      {/* TÍTULO PADRÃO */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -95,7 +130,7 @@ const Grafico3 = () => {
           fontSize: "18px",
         }}
       >
-        Valor Total por Universidades
+        Distribuição de Bolsas, Auxílios e Total
       </Typography>
 
       {/* LINHA SUAVE */}
@@ -110,7 +145,10 @@ const Grafico3 = () => {
 
       {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
-        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+        <ReactECharts
+          option={option}
+          style={{ width: "100%", height: "100%" }}
+        />
       </Box>
 
       {/* FONTE */}

@@ -1,39 +1,43 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": false,
-    "skipLibCheck": false,
-    "strict": true,
-    "noImplicitAny": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "esModuleInterop": true,
-    "module": "esnext",
+    /* === Target e ambiente === */
+    "target": "ES2020",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "ESNext",
     "moduleResolution": "bundler",
-    "resolveJsonModule": true,
+    "allowJs": false,
+
+    /* === Tipagem e qualidade === */
+    "strict": true,
+    "skipLibCheck": true,
     "isolatedModules": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* === React / Next.js === */
     "jsx": "preserve",
     "incremental": true,
+    "plugins": [{ "name": "next" }],
+
+    /* === Paths (alias @/) === */
+    "baseUrl": "./",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    },
-    "noEmit": true
+      "@/*": ["src/*"]
+    }
   },
+
+  /* === Arquivos incluídos === */
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    "src/types/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+
+  /* === Excluir === */
+  "exclude": ["node_modules", "dist"]
 }

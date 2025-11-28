@@ -8,7 +8,7 @@ interface Logo {
   alt: string;
 }
 
-const Footer = (): JSX.Element => {
+const Footer: React.FC = () => {
   const logos: Logo[] = [
     { src: '/images/logo_RJ_SECTI_branco.png', alt: 'Secretaria de Ciência, Tecnologia e Inovação' },
     { src: '/images/logo_faperj_branco_completo.png', alt: 'FAPERJ' },

@@ -1,0 +1,42 @@
+name: CI - Portfolio FAPERJ
+
+on:
+  pull_request:
+    branches: 
+      - main
+  push:
+    branches:
+      - main
+      - att3
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Configura Node
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      # Instala dependências
+      - name: Install dependencies
+        run: npm ci
+
+      # Lint
+      - name: Run ESLint
+        run: npm run lint --if-present
+
+      # Testes
+      - name: Run tests
+        run: npm test -- --watchAll=false
+
+      # Build do Next
+      - name: Build project
+        run: npm run build

@@ -1,11 +1,94 @@
-// src/components/dashboard/charts/grafico12.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
 
-const Grafico12 = () => {
-  const { data, loading, error } = useFaperjData("grafico12");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico12Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+const abreviarValor = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + " mi";
+  return v.toLocaleString("pt-BR");
+};
+
+const Grafico12: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico12Data>("grafico12");
+
+
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: { top: 70, left: 30, right: 30, bottom: 30, containLabel: true },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#fff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        textStyle: { color: "#000", fontSize: 13 },
+        borderRadius: 6,
+
+        formatter: (params: any[]) => {
+          const f = params.find((p) => p.seriesName === "Feminino")?.data;
+          const m = params.find((p) => p.seriesName === "Masculino")?.data;
+
+          return `
+            <strong>Ano ${f.label}</strong><br/>
+            Feminino: <strong>${abreviarValor(f.value)}</strong><br/>
+            Masculino: <strong>${abreviarValor(m.value)}</strong>
+          `;
+        },
+      },
+
+      legend: { data: ["Feminino", "Masculino"], top: 0 },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label), // <<< CORREÇÃO
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: { formatter: (v: number) => abreviarValor(v) },
+        splitLine: {
+          lineStyle: { color: "rgba(0,0,0,0.15)", type: "dashed" },
+        },
+      },
+
+      series: [
+        {
+          name: "Feminino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#FBC02D" },
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((item) => ({
+            value: item.feminino,
+            label: item.label, // <<< CORREÇÃO
+          })),
+        },
+
+        {
+          name: "Masculino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#5F93CF" },
+          itemStyle: { color: "#5F93CF" },
+          data: data.map((item) => ({
+            value: item.masculino,
+            label: item.label, // <<< CORREÇÃO
+          })),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -17,122 +100,19 @@ const Grafico12 = () => {
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
-  const option = {
-    grid: {
-      top: 40,
-      left: 60,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(18,75,108,0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const f = params.find((p: any) => p.seriesName === "Feminino").data;
-        const m = params.find((p: any) => p.seriesName === "Masculino").data;
-
-        return `
-          <strong>Ano ${f.ano}</strong><br/>
-          Feminino: ${(f.feminino).toFixed(1)} mi<br/>
-          Masculino: ${(m.masculino).toFixed(1)} mi
-        `;
-      },
-    },
-
-    legend: {
-      data: ["Feminino", "Masculino"],
-      top: 0,
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.ano),
-      axisLabel: { fontSize: 12 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) => `${v.toFixed(0)} mi`,
-      },
-    },
-
-    series: [
-      {
-        name: "Feminino",
-        type: "line",
-        smooth: true,
-        symbolSize: 7,
-        data: data.map((i: any) => ({
-          value: i.feminino,
-          ...i,
-        })),
-        lineStyle: { width: 3, color: "#FBC02D" },
-        itemStyle: { color: "#FBC02D" },
-      },
-      {
-        name: "Masculino",
-        type: "line",
-        smooth: true,
-        symbolSize: 7,
-        data: data.map((i: any) => ({
-          value: i.masculino,
-          ...i,
-        })),
-        lineStyle: { width: 3, color: "#5F93CF" },
-        itemStyle: { color: "#5F93CF" },
-      },
-    ],
-  };
-
   return (
-    <Card
-      sx={{
-        p: 3,
-        borderRadius: 3,
-        boxShadow: 3,
-        height: 430,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* TÍTULO */}
-      <Typography
-        variant="h6"
-        fontWeight={700}
-        color="#124b6c"
-        sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
-      >
+    <Card sx={{ p: 3, borderRadius: 3, boxShadow: 3, height: 430, display: "flex", flexDirection: "column" }}>
+      <Typography variant="h6" fontWeight={700} color="#124b6c" sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}>
         Valor total de fomentos da FAPERJ por sexo e ano
       </Typography>
 
-      {/* LINHA DIVISÓRIA */}
-      <Box
-        sx={{
-          width: "100%",
-          height: "1px",
-          backgroundColor: "rgba(0,0,0,0.1)",
-          mb: 2,
-        }}
-      />
+      <Box sx={{ width: "100%", height: "1px", backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />
 
-      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      {/* FONTE */}
-      <Typography
-        variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
-      >
+      <Typography variant="caption" sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}>
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
       </Typography>
     </Card>

@@ -1,9 +1,20 @@
-// src/types/faperj.ts
-// Tipagens oficiais dos JSON em /public/data
+// ========================================================================
+// 📘 TIPOS OFICIAIS DO PORTFÓLIO FAPERJ — Dashboard Institucional
+// ========================================================================
 
-// -----------------------------
-// faperj-stats.json
-// -----------------------------
+// ------------------------------------------------------------------------
+// 1. Tipos genéricos simples
+// ------------------------------------------------------------------------
+
+export interface LabelValue {
+  label: string;
+  value: number;
+  color?: string; // Usado em gráficos de pizza/microáreas
+}
+
+// ------------------------------------------------------------------------
+// 2. Tipos para estatísticas gerais
+// ------------------------------------------------------------------------
 
 export interface StatsCardItem {
   value: number;
@@ -11,35 +22,39 @@ export interface StatsCardItem {
   isCurrency?: boolean;
 }
 
-export interface FaperjStatsMain {
+export interface StatsData {
   valorTotal: number;
   cardData: StatsCardItem[];
   sourceText: string;
 }
 
-export interface FaperjAreaDistributionItem {
+// ------------------------------------------------------------------------
+// 3. Tipos auxiliares (mocks ou dados estáticos)
+// ------------------------------------------------------------------------
+
+export interface AreaDistributionData {
   name: string;
   value: number;
 }
 
-export interface FaperjMonthlyProjectsItem {
+export interface MonthlyProjectsData {
   name: string;
   projetosAtivos: number;
   projetosInativos: number;
 }
 
-export interface FaperjHighlightTrendPoint {
+export interface TrendData {
   period: string;
   value: number;
 }
 
-export interface FaperjHighlightBlock {
+export interface HighlightData {
   area: string;
   description: string;
-  trend: FaperjHighlightTrendPoint[];
+  trend: TrendData[];
 }
 
-export interface FaperjStatsSummary {
+export interface MockStatsData {
   projetos: number;
   editais: number;
   pesquisasContempladas: number;
@@ -47,158 +62,164 @@ export interface FaperjStatsSummary {
   fomentos: number;
 }
 
-export interface FaperjStatsJson {
-  statsData: FaperjStatsMain;
-  areaDistribution: FaperjAreaDistributionItem[];
-  monthlyProjects: FaperjMonthlyProjectsItem[];
-  highlights: FaperjHighlightBlock;
-  statsSummary: FaperjStatsSummary;
-}
+// ------------------------------------------------------------------------
+// 4. Gráfico 1 — Área + Total
+// ------------------------------------------------------------------------
 
-// -----------------------------
-// Tipos genéricos reutilizáveis
-// -----------------------------
-
-export interface LabelValueItem {
-  label: string;
-  value: number;
-}
-
-export interface AreaTotalItem {
+export interface Grafico1Item {
   area: string;
   total: number;
 }
 
-export interface GenderSplitItem {
+export type Grafico1Data = Grafico1Item[];
+
+// ------------------------------------------------------------------------
+// 5. Gráficos simples (label + value)
+// ------------------------------------------------------------------------
+
+export type Grafico2Data = LabelValue[];
+export type Grafico5Data = LabelValue[];
+export type Grafico7Data = LabelValue[];
+export type Grafico8Data = LabelValue[];
+export type Grafico9Data = LabelValue[];
+export type Grafico9_1Data = LabelValue[];
+export type Grafico10Data = LabelValue[];
+
+// ------------------------------------------------------------------------
+// 5-B. Gráfico 3 — Bolsas, Auxílios e Total
+// ------------------------------------------------------------------------
+
+export interface Grafico3Item {
   label: string;
-  feminino: number;
-  masculino: number;
+  bolsas: number;
+  auxilios: number;
+  total: number;
 }
 
-export interface YearGenderSplitItem {
-  ano: string;
-  feminino: number;
-  masculino: number;
-}
+export type Grafico3Data = Grafico3Item[];
 
-export interface QuantityValueItem {
-  label: string;
-  quantidade: number;
-  valor: number;
-}
+// ------------------------------------------------------------------------
+// 5-C. Gráfico 4 — Bolsas e Auxílios
+// ------------------------------------------------------------------------
 
-export interface BolsaAuxilioItem {
+export interface Grafico4Item {
   label: string;
   bolsas: number;
   auxilios: number;
 }
 
-export interface BolsaAuxilioTotalItem extends BolsaAuxilioItem {
-  total: number;
+export type Grafico4Data = Grafico4Item[];
+
+// ------------------------------------------------------------------------
+// 5-D. Gráfico 6 — Quantidade + Valor
+// ------------------------------------------------------------------------
+
+export interface Grafico6Item {
+  label: string;
+  quantidade: number;
+  valor: number;
 }
 
-// -----------------------------
-// Dados dos gráficos (graficoX.json)
-// -----------------------------
+export type Grafico6Data = Grafico6Item[];
 
-// grafico1.json
-export type Grafico1Data = AreaTotalItem[];
+// ------------------------------------------------------------------------
+// 6. Gráficos segregados por sexo (F/M)
+// ------------------------------------------------------------------------
 
-// grafico2.json
-export interface Grafico2Item extends LabelValueItem {
-  color: string;
+export interface GraficoSexoAno {
+  label: string; // ano
+  feminino: number;
+  masculino: number;
 }
-export type Grafico2Data = Grafico2Item[];
 
-// grafico3.json
-export type Grafico3Data = BolsaAuxilioTotalItem[];
+export type Grafico11Data = GraficoSexoAno[];
+export type Grafico12Data = GraficoSexoAno[];
+export type Grafico13Data = GraficoSexoAno[];
+export type Grafico14Data = GraficoSexoAno[];
+export type Grafico15Data = GraficoSexoAno[];
+export type Grafico16Data = GraficoSexoAno[];
+export type Grafico16_1Data = GraficoSexoAno[];
+export type Grafico17Data = GraficoSexoAno[];
 
-// grafico4.json
-export type Grafico4Data = BolsaAuxilioItem[];
+// ------------------------------------------------------------------------
+// 7. Regionalização — gráfico 18 e line race
+// ------------------------------------------------------------------------
 
-// grafico5.json
-export type Grafico5Data = LabelValueItem[];
-
-// grafico6.json
-export type Grafico6Data = QuantityValueItem[];
-
-// grafico7.json
-export type Grafico7Data = LabelValueItem[];
-
-// grafico8.json
-export type Grafico8Data = LabelValueItem[];
-
-// grafico9.json
-export type Grafico9Data = LabelValueItem[];
-
-// grafico9_1.json
-export type Grafico9_1Data = LabelValueItem[];
-
-// grafico10.json
-export type Grafico10Data = LabelValueItem[];
-
-// grafico11.json
-export type Grafico11Data = GenderSplitItem[];
-
-// grafico12.json
-export type Grafico12Data = YearGenderSplitItem[];
-
-// grafico13.json
-export type Grafico13Data = GenderSplitItem[];
-
-// grafico14.json
-export type Grafico14Data = GenderSplitItem[];
-
-// grafico15.json
-export type Grafico15Data = GenderSplitItem[];
-
-// grafico16.json
-export type Grafico16Data = GenderSplitItem[];
-
-// grafico16_1.json
-export type Grafico16_1Data = GenderSplitItem[];
-
-// grafico17.json
-export type Grafico17Data = GenderSplitItem[];
-
-// grafico18.json
-export interface Grafico18Region {
+export interface RegionalizacaoRegiao {
   label: string;
   values: number[];
 }
+
 export interface Grafico18Data {
   years: string[];
-  regions: Grafico18Region[];
+  regions: RegionalizacaoRegiao[];
 }
 
-// -----------------------------
-// Dados de internacionalização (int_*.json)
-// -----------------------------
+export type GraficoLineRaceData = Grafico18Data;
 
-// int_anos.json
-export type IntAnosData = LabelValueItem[];
+// ------------------------------------------------------------------------
+// 8. Internacionalização — Evolução Anual
+// ------------------------------------------------------------------------
 
-// int_areas.json
-export type IntAreasData = LabelValueItem[];
+export interface IntAnosData {
+  label: string;
+  value: number;
+}
 
-// int_cidades.json
-export type IntCidadesData = LabelValueItem[];
+export type IntAnosResponse = IntAnosData[];
 
-// int_paises.json
-export type IntPaisesData = LabelValueItem[];
+// ------------------------------------------------------------------------
+// 9. Internacionalização — Instituições por Cidade
+// ------------------------------------------------------------------------
 
-// int_sankey.json
-export interface SankeyNode {
+export interface IntCidadesData {
+  label: string;
+  value: number;
+}
+
+export type IntCidadesResponse = IntCidadesData[];
+
+// ------------------------------------------------------------------------
+// 10. Internacionalização — Instituições por País
+// ------------------------------------------------------------------------
+
+export interface IntPaisesData {
+  label: string;
+  value: number;
+}
+
+export type IntPaisesResponse = IntPaisesData[];
+
+// ------------------------------------------------------------------------
+// 11. Internacionalização — Sankey
+// ------------------------------------------------------------------------
+
+export interface IntSankeyNode {
   name: string;
 }
 
-export interface SankeyLink {
+export interface IntSankeyLink {
   source: string;
   target: string;
   value: number;
 }
 
 export interface IntSankeyData {
-  nodes: SankeyNode[];
-  links: SankeyLink[];
+  nodes: IntSankeyNode[];
+  links: IntSankeyLink[];
 }
+
+// ------------------------------------------------------------------------
+// 12. Internacionalização — Instituições por Áreas
+// ------------------------------------------------------------------------
+
+export interface IntAreasItem {
+  label: string;
+  value: number;
+}
+
+export type IntAreasData = IntAreasItem[];
+
+// ========================================================================
+// 🔚 FIM DO ARQUIVO — Totalmente atualizado e validado
+// ========================================================================

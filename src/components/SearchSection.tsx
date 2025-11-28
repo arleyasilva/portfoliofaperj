@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 
 const SEARCH_RESULTS_PAGE = "/search-results";
 
-const SearchSection = (): JSX.Element => {
+const SearchSection: React.FC = () => {
   const router = useRouter();
 
   const [researcherName, setResearcherName] = useState("");

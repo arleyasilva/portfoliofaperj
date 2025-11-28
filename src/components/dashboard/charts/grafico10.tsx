@@ -1,75 +1,108 @@
-// src/components/dashboard/charts/grafico10.tsx
-
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
+
 import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico10Data } from "@/types/faperj";
 
-const Grafico10 = () => {
-  const { data, loading, error } = useFaperjData("grafico10");
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
-  if (loading)
-    return (
-      <Box display="flex" justifyContent="center" p={3}>
-        <CircularProgress />
-      </Box>
-    );
+// Tipagem para permitir uso com props
+interface Grafico10Props {
+  title?: string;
+  data?: Grafico10Data; // OPCIONAL — se não vier, usa useFaperjData
+}
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    tooltip: {
-      trigger: "item",
-      backgroundColor: "rgba(18,75,108,0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (p: any) => `
-        <strong>${p.data.label}</strong><br/>
-        Valor Total: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
-      `,
-    },
-
-    legend: {
-      orient: "vertical",
-      right: 10,
-      top: "center",
-      textStyle: { fontSize: 13 },
-    },
-
-    series: [
-      {
-        type: "pie",
-        radius: ["45%", "70%"], // donut elegante
-        center: ["40%", "55%"],
-        avoidLabelOverlap: true,
-
-        data: data.map((item: any) => ({
-          name: item.label,
-          label: item.label,
-          value: item.value,
-        })),
-
-        itemStyle: {
-          color: (params: any) =>
-            params.data.label === "Feminino" ? "#ff69b4" : "#2989b5",
-        },
-
-        emphasis: {
-          scale: true,
-          scaleSize: 8,
-          itemStyle: {
-            shadowBlur: 20,
-            shadowColor: "rgba(0,0,0,0.25)",
-          },
-        },
-
-        label: {
-          show: false,
-        },
-      },
-    ],
+type TooltipParams = {
+  data: {
+    label: string;
+    value: number;
   };
+};
+
+const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => {
+  
+  // Se vier "data" via props, usa ela. Se não, usa o hook.
+  const { data, loading, error } = useFaperjData<Grafico10Data>("grafico10");
+
+  // Decide qual fonte de dados usar:
+  const finalData = dataFromProps ?? data;
+
+  const option = useMemo(() => {
+    if (!finalData) return {};
+
+    return {
+      grid: {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20,
+      },
+
+      tooltip: {
+        trigger: "item",
+        backgroundColor: "#fff",
+        borderColor: "#ccc",
+        borderWidth: 1,
+        textStyle: { color: "#333" },
+        borderRadius: 6,
+        formatter: (p: TooltipParams) => `
+          <strong>${p.data.label}</strong><br/>
+          Valor Total: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
+        `,
+      },
+
+      legend: {
+        orient: "vertical",
+        right: 10,
+        top: "center",
+        textStyle: { fontSize: 13 },
+      },
+
+      series: [
+        {
+          type: "pie",
+          radius: ["45%", "80%"],
+          center: ["40%", "48%"],
+
+          data: finalData.map((item) => ({
+            name: item.label,
+            label: item.label,
+            value: item.value,
+            itemStyle: {
+              color: item.label === "Feminino" ? "#ff69b4" : "#2989b5",
+            },
+          })),
+
+          emphasis: {
+            scale: true,
+            scaleSize: 8,
+            itemStyle: {
+              shadowBlur: 20,
+              shadowColor: "rgba(0,0,0,0.25)",
+            },
+          },
+
+          label: { show: false },
+        },
+      ],
+    };
+  }, [finalData]);
+
+  if (!dataFromProps) {
+    // SOMENTE MOSTRA LOADING/ERRO SE ESTIVER USANDO O HOOK
+    if (loading)
+      return (
+        <Box display="flex" justifyContent="center" p={3}>
+          <CircularProgress />
+        </Box>
+      );
+
+    if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
+  }
+
+  if (!finalData)
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
   return (
     <Card
@@ -82,17 +115,16 @@ const Grafico10 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO ALINHADO À ESQUERDA */}
+      {/* TÍTULO — agora aceita a prop title */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição Total de Fomento por Sexo
+        {title ?? "Distribuição Total de Fomento por Sexo"}
       </Typography>
 
-      {/* LINHA */}
       <Box
         sx={{
           width: "100%",
@@ -102,7 +134,6 @@ const Grafico10 = () => {
         }}
       />
 
-      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts
           option={option}
@@ -110,14 +141,9 @@ const Grafico10 = () => {
         />
       </Box>
 
-      {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
       </Typography>

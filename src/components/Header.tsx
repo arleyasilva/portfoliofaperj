@@ -29,13 +29,14 @@ interface MenuItemType {
   subItems?: SubmenuItemType[];
 }
 
-const Header = (): JSX.Element => {
+const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-
   const [isIndicatorsOpen, setIsIndicatorsOpen] = useState(false);
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMenuOpen = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -46,6 +47,10 @@ const Header = (): JSX.Element => {
 
   const handleIndicatorsToggle = () => {
     setIsIndicatorsOpen(!isIndicatorsOpen);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Escape") handleMenuClose();
   };
 
   const menuItems: MenuItemType[] = [
@@ -67,55 +72,33 @@ const Header = (): JSX.Element => {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-
-      {/* 🔹 SOCIAL BAR – Centralizado como no site oficial */}
-      <Box
-        sx={{
-          bgcolor: "#6E0E2B",
-          color: "white",
-          py: 0.6,
-        }}
-      >
+    <Box sx={{ flexGrow: 1 }} component="header" role="banner">
+      {/* SOCIAL BAR */}
+      <Box sx={{ bgcolor: "#6E0E2B", color: "white", py: 0.6 }}>
         <Container maxWidth="xl">
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 2,
-              alignItems: "center",
-            }}
-          >
-            <IconButton size="small" color="inherit">
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 2, alignItems: "center" }}>
+            <IconButton size="small" color="inherit" aria-label="Facebook">
               <FacebookIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small" color="inherit">
+            <IconButton size="small" color="inherit" aria-label="Twitter">
               <TwitterIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small" color="inherit">
+            <IconButton size="small" color="inherit" aria-label="Instagram">
               <InstagramIcon fontSize="small" />
             </IconButton>
           </Box>
         </Container>
       </Box>
 
-      {/* 🔹 LOGO + HAMBURGUER */}
-      <AppBar position="static" color="transparent" sx={{ boxShadow: "none" }}>
+      {/* LOGO + MENU */}
+      <AppBar position="static" color="transparent" elevation={0}>
         <Container maxWidth="xl">
-          <Toolbar
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              py: 1,
-            }}
-          >
-            {/* LOGO */}
+          <Toolbar sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", py: 1 }}>
             <Link href="/" passHref legacyBehavior>
               <MuiLink sx={{ display: "flex", alignItems: "center" }}>
                 <Image
                   src="/images/logo-novo.png"
-                  alt="FAPERJ"
+                  alt="Logo FAPERJ"
                   width={300}
                   height={75}
                   style={{ objectFit: "contain" }}
@@ -123,11 +106,14 @@ const Header = (): JSX.Element => {
               </MuiLink>
             </Link>
 
-            {/* HAMBURGUER */}
             <IconButton
               color="inherit"
               onClick={handleMenuOpen}
-              sx={{ display: "block" }}
+              onKeyDown={handleKeyDown}
+              aria-label="Abrir menu"
+              aria-haspopup="true"
+              aria-controls="menu-principal"
+              aria-expanded={isMenuOpen}
             >
               <MenuIcon sx={{ fontSize: 32, color: "#6E0E2B" }} />
             </IconButton>
@@ -135,19 +121,16 @@ const Header = (): JSX.Element => {
         </Container>
       </AppBar>
 
-      {/* 🔹 MENU POPUP – Mais claro, elegante, baixo da linha, centralizado */}
+      {/* POPUP MENU */}
       <Menu
+        id="menu-principal"
         anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={handleMenuClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
+        onKeyDown={handleKeyDown}
+        MenuListProps={{ role: "menu", "aria-label": "Opções do menu" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
         PaperProps={{
           sx: {
             width: 260,
@@ -165,15 +148,7 @@ const Header = (): JSX.Element => {
               <>
                 <MenuItem
                   onClick={handleIndicatorsToggle}
-                  sx={{
-                    fontWeight: 700,
-                    justifyContent: "center",
-                    color: "#000",
-                    borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                    },
-                  }}
+                  sx={{ fontWeight: 700, justifyContent: "center", color: "#000" }}
                 >
                   {item.text}
                 </MenuItem>
@@ -181,12 +156,7 @@ const Header = (): JSX.Element => {
                 {isIndicatorsOpen && (
                   <Box sx={{ p: 1 }}>
                     {item.subItems.map((subItem) => (
-                      <Link
-                        key={subItem.text}
-                        href={subItem.href}
-                        passHref
-                        legacyBehavior
-                      >
+                      <Link key={subItem.text} href={subItem.href} passHref legacyBehavior>
                         <MuiLink underline="none">
                           <MenuItem
                             onClick={handleMenuClose}
@@ -195,11 +165,7 @@ const Header = (): JSX.Element => {
                               fontSize: "0.95rem",
                               borderRadius: 1,
                               color: "#333",
-                              "&:hover": {
-                                backgroundColor: "#f0f0f0",
-                                color: "#6E0E2B",
-                                transition: "0.2s ease",
-                              },
+                              "&:hover": { backgroundColor: "#f0f0f0", color: "#6E0E2B" },
                             }}
                           >
                             {subItem.text}
@@ -215,18 +181,7 @@ const Header = (): JSX.Element => {
             ) : (
               <Link href={item.href} passHref legacyBehavior>
                 <MuiLink underline="none">
-                  <MenuItem
-                    onClick={handleMenuClose}
-                    sx={{
-                      justifyContent: "center",
-                      fontWeight: 600,
-                      borderRadius: 1,
-                      color: "#000",
-                      "&:hover": {
-                        backgroundColor: "#f0f0f0",
-                      },
-                    }}
-                  >
+                  <MenuItem sx={{ justifyContent: "center", fontWeight: 600, color: "#000" }}>
                     {item.text}
                   </MenuItem>
                 </MuiLink>

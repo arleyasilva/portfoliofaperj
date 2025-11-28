@@ -1,17 +1,15 @@
 import { Box, Grid, Typography, IconButton, Link as MuiLink } from '@mui/material';
 import Link from 'next/link';
 import React from 'react';
-import Image from 'next/image'; // Importação do componente Image
+import Image from 'next/image';
 
-// Criamos uma interface para tipar cada item da navegação
 interface NavItem {
   label: string;
-  iconPath: string; // 'icon' foi alterado para 'iconPath' para maior clareza
+  iconPath: string;
   href: string;
 }
 
-const IconNav = (): JSX.Element => {
-  // Use os caminhos para seus ícones na pasta public
+const IconNav: React.FC = () => {
   const navItems: NavItem[] = [
     { label: 'PESQUISADORES', iconPath: '/images/Pesquisadores.png', href: '#busca' },
     { label: 'INDICADORES', iconPath: '/images/Dados.png', href: '/dashboard' },
@@ -50,14 +48,9 @@ const IconNav = (): JSX.Element => {
               }}
             >
               <IconButton sx={{ color: 'white', mb: 1 }}>
-                {/* Usamos o componente Image do Next.js */}
-                <Image
-                  src={item.iconPath}
-                  alt={item.label}
-                  width={50} // Ajuste o tamanho conforme a necessidade
-                  height={50} // Ajuste o tamanho conforme a necessidade
-                />
+                <Image src={item.iconPath} alt={item.label} width={50} height={50} />
               </IconButton>
+
               <Typography variant="body2" sx={{ fontWeight: 500 }}>
                 {item.label}
               </Typography>

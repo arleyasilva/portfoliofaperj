@@ -19,43 +19,34 @@ import TripleColumnNav from '../components/TripleColumnNav';
 import SearchSection from '../components/SearchSection';
 import LattesSearch from '../components/LattesSearch';
 
-export default function Dashboard(): JSX.Element {
+import { StatsData } from '@/types/faperj';  // ✅ IMPORTANTE
 
-  const { data: statsData } = useFaperjData("faperj-stats");
+export default function Dashboard() {
+
+  // 🔥 TIPAGEM CORRETA DO RETORNO
+  const { data: statsData } = useFaperjData<StatsData>("faperj-stats");
 
   return (
     <>
       <Head>
         <title>Portfolio FAPERJ em rede</title>
-        <meta name="description" content="Página de teste" />
-
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
       </Head>
 
       <Box
         sx={{
           minHeight: "100%",
           overflowX: "hidden",
-          backgroundImage: "url(/images/fundo-branco.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: {
-            xs: "scroll",
-            md: "fixed",
-          },
         }}
       >
         <Header />
         <Banner />
         <IconNav />
 
-        {statsData && <StatisticalCards statsData={statsData.statsData} />}
+        {/* 🔥 StatisticalCards NÃO recebe props */}
+        {statsData && <StatisticalCards />}
 
         <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+
           <Grid container spacing={3} justifyContent="center">
             <Grid item xs={12}>
               <Grafico2 />
@@ -76,17 +67,12 @@ export default function Dashboard(): JSX.Element {
               <Grafico1 />
             </Grid>
           </Grid>
+
         </Container>
 
         <TripleColumnNav />
-
-        <Box sx={{ mb: 4 }}>
-          <SearchSection />
-        </Box>
-
-        <Box sx={{ mb: 4 }}>
-          <LattesSearch />
-        </Box>
+        <SearchSection />
+        <LattesSearch />
 
         <Footer />
       </Box>

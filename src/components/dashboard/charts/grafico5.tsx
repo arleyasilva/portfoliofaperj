@@ -1,78 +1,89 @@
-// src/components/dashboard/charts/grafico5.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Box, Typography, CircularProgress, Alert } from "@mui/material";
+
 import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico5Data } from "@/types/faperj";
 
-const Grafico5 = () => {
-  const { data, loading, error } = useFaperjData("grafico5");
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
-  if (loading)
+// Função para abreviar valores (mi / bi)
+const abreviarValor = (num: number): string => {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(".0", "") + " mi";
+  return num.toLocaleString("pt-BR");
+};
+
+const Grafico5: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico5Data>("grafico5");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      tooltip: {
+        trigger: "item",
+        formatter: (p: any) => `
+          <strong>${p.data.label}</strong><br/>
+          Valor: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
+        `,
+      },
+
+      grid: {
+        top: 40,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((item) => item.label),
+        axisLabel: { rotate: 20 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (value: number) => abreviarValor(value),
+        },
+      },
+
+      series: [
+        {
+          name: "Valor",
+          type: "bar",
+          data: data.map((item) => ({
+            label: item.label,
+            value: item.value,
+          })),
+          itemStyle: { color: "#1b77b3" },
+          barWidth: "50%",
+        },
+      ],
+    };
+  }, [data]);
+
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
+  }
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error) {
+    return <Alert severity="error">Erro ao carregar dados do gráfico 5.</Alert>;
+  }
 
-  const option = {
-    grid: {
-      top: 40,
-      left: 60,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const item = params[0].data;
-        return `
-          <strong>Ano ${item.label}</strong><br/>
-          Projetos Contemplados: <strong>${item.value.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((item: any) => item.label),
-      axisLabel: { fontSize: 11 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        fontSize: 11,
-        formatter: (v: number) =>
-          v >= 1_000_000
-            ? `${(v / 1_000_000).toFixed(0)} mi`
-            : v >= 1_000
-            ? `${(v / 1_000).toFixed(0)} mil`
-            : v,
-      },
-    },
-
-    series: [
-      {
-        name: "Projetos",
-        type: "line",
-        smooth: true,
-        data: data.map((item: any) => ({
-          value: item.value,
-          label: item.label,
-        })),
-        itemStyle: { color: "#2989b5" },
-        lineStyle: { color: "#2989b5", width: 3 },
-        symbolSize: 7,
-      },
-    ],
-  };
+  if (!data || data.length === 0) {
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  }
 
   return (
     <Card
+      elevation={3}
       sx={{
         p: 3,
         borderRadius: 3,
@@ -82,14 +93,14 @@ const Grafico5 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
+      {/* TÍTULO PADRÃO */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Projetos Contemplados por Ano
+        Distribuição Geral 
       </Typography>
 
       {/* LINHA SUAVE */}
@@ -104,17 +115,13 @@ const Grafico5 = () => {
 
       {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
-        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+        <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
       {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
       </Typography>

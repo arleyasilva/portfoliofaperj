@@ -1,18 +1,75 @@
-// src/components/dashboard/charts/grafico4.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Box, Typography, CircularProgress, Alert } from "@mui/material";
 
-// Função para abreviar valores
-const formatShort = (v: number) => {
-  if (v >= 1_000_000_000) return `${(v / 1_000_000_000).toFixed(0)} bi`;
-  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(0)} mi`;
-  return v.toLocaleString("pt-BR");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico4Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+const abreviarValor = (num: number): string => {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + " bi";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + " mi";
+  return num.toLocaleString("pt-BR");
 };
 
-const Grafico4 = () => {
-  const { data, loading, error } = useFaperjData("grafico4");
+const Grafico4: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico4Data>("grafico4");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      tooltip: {
+        trigger: "axis",
+        formatter: (params: any[]) => {
+          const b = params.find((p) => p.seriesName === "Bolsas")?.data;
+          const a = params.find((p) => p.seriesName === "Auxílios")?.data;
+
+          return `
+            <strong>${b.label}</strong><br/>
+            Bolsas: <strong>R$ ${b.value.toLocaleString("pt-BR")}</strong><br/>
+            Auxílios: <strong>R$ ${a.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: { top: 0 },
+
+      grid: { top: 70, left: 30, right: 30, bottom: 30, containLabel: true },
+
+      xAxis: {
+        type: "category",
+        data: data.map((item) => item.label),
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: { formatter: abreviarValor },
+      },
+
+      series: [
+        {
+          name: "Bolsas",
+          type: "bar",
+          itemStyle: { color: "#1b77b3" },
+          data: data.map((item) => ({
+            label: item.label,
+            value: item.bolsas,
+          })),
+        },
+        {
+          name: "Auxílios",
+          type: "bar",
+          itemStyle: { color: "#21a179" },
+          data: data.map((item) => ({
+            label: item.label,
+            value: item.auxilios,
+          })),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -21,113 +78,20 @@ const Grafico4 = () => {
       </Box>
     );
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
+  if (error) return <Alert severity="error">Erro ao carregar dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
-  // Garante que total sempre exista
-  const processed = data.map((item: any) => ({
-    ...item,
-    total: item.total ?? item.bolsas + item.auxilios,
-  }));
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const item = params[0].data;
-        return `
-          <strong>${item.label}</strong><br/>
-          Bolsas: R$ ${item.bolsas.toLocaleString("pt-BR")}<br/>
-          Auxílios: R$ ${item.auxilios.toLocaleString("pt-BR")}<br/>
-          Total: <strong>R$ ${item.total.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: processed.map((i: any) => i.label),
-      axisLabel: { rotate: 35, fontSize: 11 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) => formatShort(v),
-      },
-    },
-
-    series: [
-      {
-        type: "bar",
-        data: processed.map((item: any) => ({
-          value: item.total,
-          ...item,
-        })),
-        barWidth: "55%",
-        itemStyle: { color: "#2F80ED" }, // Azul forte, diferente do gráfico 3
-      },
-    ],
-  };
-
   return (
-    <Card
-      sx={{
-        p: 3,
-        borderRadius: 3,
-        boxShadow: 3,
-        height: 430,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      {/* Título */}
-      <Typography
-        variant="h6"
-        fontWeight={700}
-        color="#124b6c"
-        sx={{
-          textAlign: "left",
-          mb: 1,
-          fontSize: "18px",
-        }}
-      >
-        Valor Total por Centros de Pesquisa
+    <Card sx={{ p: 3, borderRadius: 3, boxShadow: 3, height: 430 }}>
+      <Typography variant="h6" fontWeight={700} color="#124b6c" sx={{ mb: 1 }}>
+        Distribuição de Bolsas e Auxílios
       </Typography>
 
-      {/* Linha suave */}
-      <Box
-        sx={{
-          width: "100%",
-          height: "1px",
-          backgroundColor: "rgba(0,0,0,0.1)",
-          mb: 2,
-        }}
-      />
+      <Box sx={{ width: "100%", height: 1, backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />
 
-      {/* Gráfico */}
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ height: "100%" }}>
         <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
       </Box>
-
-      {/* Fonte */}
-      <Typography
-        variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
-      >
-        Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
-      </Typography>
     </Card>
   );
 };

@@ -9,7 +9,7 @@ import {
   Button,
   CircularProgress,
 } from "@mui/material";
-import React, { useState, Suspense } from "react";
+import React, { useState } from "react";
 
 // ====== GRÁFICOS NACIONAIS ======
 import Grafico1 from "../components/dashboard/charts/grafico1";
@@ -45,12 +45,22 @@ import GraficoIntSankey from "../components/dashboard/charts/GraficoIntSankey";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
+// Tipagem para componente de gráfico
 type ChartComponent = React.FC;
 
-// Mapeamento das categorias para os gráficos
+// ====== MAPEAMENTO DAS CATEGORIAS PARA LISTA DE COMPONENTES ======
 const chartCategories = {
   Bolsas: [Grafico3, Grafico4, Grafico9, Grafico9_1, Grafico16, Grafico17],
-  Auxílios: [Grafico3, Grafico4, Grafico5, Grafico6, Grafico7, Grafico8, Grafico14, Grafico15],
+  Auxílios: [
+    Grafico3,
+    Grafico4,
+    Grafico5,
+    Grafico6,
+    Grafico7,
+    Grafico8,
+    Grafico14,
+    Grafico15,
+  ],
   "Área de Conhecimento": [Grafico2, Grafico6, Grafico1],
   Sexo: [
     Grafico10,
@@ -80,28 +90,18 @@ const Dashboard: React.FC = () => {
   const [activeCategory, setActiveCategory] =
     useState<ChartCategory>("Bolsas");
 
-  const chartsToRender: ChartComponent[] = chartCategories[activeCategory];
+  // 🔥 Correção oficial do erro TS — converte length em number normal
+  const chartsToRender = chartCategories[activeCategory];
 
   const renderCharts = () => {
-    const chartsToRender = chartCategories[activeCategory];
-    const count = chartsToRender.length;
+    const charts = chartCategories[activeCategory];
 
-    if (count === 0) {
-      return (
-        <Box sx={{ textAlign: "center", mt: 4 }}>
-          <Typography variant="h6" color="text.secondary">
-            Nenhum gráfico disponível para esta categoria ainda.
-          </Typography>
-        </Box>
-      );
-    }
+    // FIX do erro: remove literal type e usa number plano
+    const count: number = charts.length;
 
     return (
       <Grid container spacing={4} justifyContent="center">
-        {chartsToRender.map((ChartComponent, index) => {
-          // regra:
-          // - se tiver só 1 gráfico na categoria → ocupa 12 colunas (linha inteira)
-          // - se for o Sankey internacional → sempre 12 colunas
+        {charts.map((ChartComponent, index) => {
           const isSankey =
             activeCategory === "Internacionalização" &&
             ChartComponent === GraficoIntSankey;
@@ -124,7 +124,6 @@ const Dashboard: React.FC = () => {
     );
   };
 
-
   return (
     <Box
       sx={{
@@ -136,10 +135,7 @@ const Dashboard: React.FC = () => {
     >
       <Head>
         <title>Portfolio FAPERJ - Indicadores</title>
-        <meta
-          name="description"
-          content="Dashboard com indicadores da FAPERJ."
-        />
+        <meta name="description" content="Dashboard com indicadores da FAPERJ." />
       </Head>
 
       <Header />
@@ -167,7 +163,7 @@ const Dashboard: React.FC = () => {
             </Typography>
           </Box>
 
-          {/* Botões de Categoria */}
+          {/* Botões das categorias */}
           <Box
             sx={{
               display: "flex",
@@ -207,7 +203,7 @@ const Dashboard: React.FC = () => {
             )}
           </Box>
 
-          {/* Gráficos */}
+          {/* Renderização dos gráficos */}
           {renderCharts()}
         </Container>
       </Box>

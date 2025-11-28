@@ -1,11 +1,77 @@
-// src/components/dashboard/charts/grafico9.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const Grafico9 = () => {
-  const { data, loading, error } = useFaperjData("grafico9");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico9Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Abreviação institucional
+const abreviarValor = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(0) + " mi";
+  return v.toLocaleString("pt-BR");
+};
+
+const Grafico9: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico9Data>("grafico9");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "axis",
+        formatter: (params: any[]) => {
+          const p = params[0].data;
+          return `
+            <strong>Ano ${p.label}</strong><br/>
+            Valor Total: <strong>R$ ${p.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (v: number) => abreviarValor(v),
+        },
+        splitLine: {
+          lineStyle: { type: "dashed", color: "#ddd" },
+        },
+      },
+
+      series: [
+        {
+          name: "Bolsas",
+          type: "line",
+          smooth: true,
+          data: data.map((i) => ({
+            value: i.value,
+            label: i.label,
+          })),
+          lineStyle: { width: 3, color: "#2989b5" },
+          itemStyle: { color: "#2989b5" },
+          symbolSize: 7,
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -16,61 +82,6 @@ const Grafico9 = () => {
 
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const p = params[0].data;
-        return `
-          <strong>Ano ${p.label}</strong><br/>
-          Valor Total: <strong>R$ ${p.value.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 },
-    },
-
-    yAxis: {
-      type: "value",
-      name: "Valor (R$)",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000_000
-            ? `${(v / 1_000_000_000).toFixed(1)} bi`
-            : `${(v / 1_000_000).toFixed(0)} mi`,
-      },
-      splitLine: {
-        lineStyle: { type: "dashed", color: "#ddd" },
-      },
-    },
-
-    series: [
-      {
-        name: "Bolsas",
-        type: "line",
-        smooth: true,
-        data: data.map((i: any) => ({
-          value: i.value,
-          label: i.label,
-        })),
-        lineStyle: { width: 3, color: "#2989b5" },
-        itemStyle: { color: "#2989b5" },
-        symbolSize: 7,
-      },
-    ],
-  };
 
   return (
     <Card
@@ -83,7 +94,7 @@ const Grafico9 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
+      {/* TÍTULO */} 
       <Typography
         variant="h6"
         fontWeight={700}

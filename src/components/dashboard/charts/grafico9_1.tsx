@@ -1,11 +1,80 @@
-// src/components/dashboard/charts/grafico9_1.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const Grafico9_1 = () => {
-  const { data, loading, error } = useFaperjData("grafico9_1");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico9_1Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Abreviação institucional
+const abreviarValor = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(0) + " mi";
+  return v.toLocaleString("pt-BR");
+};
+
+const Grafico9_1: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico9_1Data>("grafico9_1");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "rgba(18, 75, 108, 0.9)",
+        textStyle: { color: "#fff" },
+        borderRadius: 6,
+        formatter: (params: any[]) => {
+          const p = params[0].data;
+          return `
+            <strong>${p.label}</strong><br/>
+            Valor BBP: <strong>R$ ${p.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (v: number) => abreviarValor(v),
+        },
+        splitLine: {
+          lineStyle: { color: "rgba(0,0,0,0.15)", type: "dashed" },
+        },
+      },
+
+      series: [
+        {
+          name: "BBP",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#2989b5" },
+          itemStyle: { color: "#2989b5" },
+          data: data.map((item) => ({
+            value: item.value,
+            label: item.label,
+          })),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -16,61 +85,6 @@ const Grafico9_1 = () => {
 
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(18, 75, 108, 0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const item = params[0].data;
-        return `
-          <strong>${item.label}</strong><br/>
-          Valor BBP: <strong>R$ ${item.value.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000 ? `${(v / 1_000_000).toFixed(0)} mi` : v,
-      },
-      splitLine: {
-        lineStyle: { color: "rgba(0,0,0,0.15)", type: "dashed" },
-      },
-    },
-
-    series: [
-      {
-        name: "BBP",
-        type: "line",
-        smooth: true,
-        symbolSize: 7,
-        lineStyle: { width: 3, color: "#2989b5" },
-        itemStyle: { color: "#2989b5" },
-        data: data.map((item: any) => ({
-          value: item.value,
-          label: item.label,
-        })),
-      },
-    ],
-  };
 
   return (
     <Card
@@ -83,7 +97,7 @@ const Grafico9_1 = () => {
         flexDirection: "column",
       }}
     >
-      {/* Título alinhado à esquerda */}
+      {/* TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -93,7 +107,7 @@ const Grafico9_1 = () => {
         Valor de Bolsas de Bancada (BBP) por Ano
       </Typography>
 
-      {/* Linha divisória */}
+      {/* LINHA SUAVE */}
       <Box
         sx={{
           width: "100%",
@@ -103,12 +117,12 @@ const Grafico9_1 = () => {
         }}
       />
 
-      {/* Gráfico */}
+      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
       </Box>
 
-      {/* Fonte */}
+      {/* FONTE */}
       <Typography
         variant="caption"
         sx={{

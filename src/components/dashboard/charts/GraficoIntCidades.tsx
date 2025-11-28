@@ -1,10 +1,92 @@
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const GraficoIntCidades = () => {
-  const { data, loading, error } = useFaperjData("int_cidades");
+import useFaperjData from "@/hooks/useFaperjData";
+import { IntCidadesData } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Paleta profissional e consistente
+const colors = [
+  "#2989b5",
+  "#5F93CF",
+  "#7CB342",
+  "#FBC02D",
+  "#E57373",
+  "#8E44AD",
+  "#63C28F",
+  "#A3D1C6",
+  "#B5C4DD",
+  "#93A9D1",
+  "#BA68C8",
+  "#A0A0A0",
+];
+
+const GraficoIntCidades: React.FC = () => {
+  const { data, loading, error } = useFaperjData<IntCidadesData[]>("int_cidades");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        left: 30,
+        right: 30,
+        top: 70,
+        bottom: 40,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "item",
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        extraCssText: "border-radius:6px; padding:8px;",
+        textStyle: { color: "#000", fontSize: 13 },
+
+        formatter: (p: any) => `
+          <strong>${p.data.label}</strong><br/>
+          Instituições: <strong>${p.data.value}</strong>
+        `,
+      },
+
+      xAxis: {
+        type: "value",
+        axisLabel: { fontSize: 12, color: "#555" },
+        splitLine: {
+          lineStyle: { type: "dashed", color: "#ccc" },
+        },
+      },
+
+      yAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12, color: "#124b6c" },
+      },
+
+      series: [
+        {
+          type: "bar",
+          barWidth: "45%",
+          data: data.map((i, idx) => ({
+            value: i.value,
+            label: i.label,
+            itemStyle: { color: colors[idx % colors.length] },
+          })),
+
+          label: {
+            show: true,
+            position: "right",
+            formatter: "{c}",
+            color: "#124b6c",
+            fontSize: 13,
+          },
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -15,75 +97,6 @@ const GraficoIntCidades = () => {
 
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Dados indisponíveis.</Alert>;
-
-  // Paleta suave e profissional
-  const colors = [
-    "#5A8FDC",
-    "#76B5C5",
-    "#A3D1C6",
-    "#F2C879",
-    "#E8956F",
-    "#C47AC0",
-    "#7A6FF0",
-    "#63C28F",
-    "#93A9D1",
-    "#B5C4DD",
-    "#8BA3A8",
-    "#A0A0A0",
-  ];
-
-  const option = {
-    grid: {
-      left: 130,
-      right: 30,
-      top: 60,
-      bottom: 40,
-    },
-
-    tooltip: {
-      trigger: "item",
-      backgroundColor: "rgba(0,0,0,0.75)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (p: any) => `
-        <strong>${p.data.label}</strong><br/>
-        Instituições: <strong>${p.data.value}</strong>
-      `,
-    },
-
-    xAxis: {
-      type: "value",
-      axisLabel: { fontSize: 12 },
-      splitLine: {
-        lineStyle: { type: "dashed", color: "#ccc" },
-      },
-    },
-
-    yAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 },
-    },
-
-    series: [
-      {
-        type: "bar",
-        barWidth: "45%",
-        data: data.map((i: any, idx: number) => ({
-          value: i.value,
-          label: i.label,
-          itemStyle: { color: colors[idx % colors.length] },
-        })),
-        label: {
-          show: true,
-          position: "right",
-          formatter: "{c}",
-          color: "#333",
-          fontSize: 12,
-        },
-      },
-    ],
-  };
 
   return (
     <Card
@@ -96,7 +109,7 @@ const GraficoIntCidades = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO PADRÃO */}
+      {/* 🟦 TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -106,7 +119,7 @@ const GraficoIntCidades = () => {
         Instituições por Cidade
       </Typography>
 
-      {/* LINHA SUAVE */}
+      {/* LINHA */}
       <Box
         sx={{
           width: "100%",
@@ -118,7 +131,7 @@ const GraficoIntCidades = () => {
 
       {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
-        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+        <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
       {/* FONTE */}
