@@ -1,18 +1,18 @@
 import {
   Box,
   Container,
-  Grid,
   Typography,
   TextField,
   Button,
   Paper,
 } from "@mui/material";
+import Grid from '@mui/material/Unstable_Grid2';
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 
 const SEARCH_RESULTS_PAGE = "/search-results";
 
-const SearchSection = (): JSX.Element => {
+const SearchSection: React.FC = () => {
   const router = useRouter();
 
   const [researcherName, setResearcherName] = useState("");
@@ -68,7 +68,7 @@ const SearchSection = (): JSX.Element => {
 
           <form onSubmit={handleSearch}>
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Pesquisador / Nome"
@@ -79,7 +79,7 @@ const SearchSection = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Palavra-chave"
@@ -90,7 +90,7 @@ const SearchSection = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Universidade / Centro de Pesquisa"
@@ -101,7 +101,7 @@ const SearchSection = (): JSX.Element => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid xs={12} md={6}>
                 <TextField
                   fullWidth
                   label="Título"

@@ -13,7 +13,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -29,11 +29,12 @@ interface MenuItemType {
   subItems?: SubmenuItemType[];
 }
 
-const Header = (): JSX.Element => {
+const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const isMenuOpen = Boolean(anchorEl);
-
   const [isIndicatorsOpen, setIsIndicatorsOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  const isMenuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,10 +43,21 @@ const Header = (): JSX.Element => {
   const handleMenuClose = () => {
     setAnchorEl(null);
     setIsIndicatorsOpen(false);
+
+    // Retorna o foco para o botão ao fechar o menu - Acessibilidade
+    buttonRef.current?.focus();
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    // Fecha menu com ESC
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleMenuClose();
+    }
   };
 
   const handleIndicatorsToggle = () => {
-    setIsIndicatorsOpen(!isIndicatorsOpen);
+    setIsIndicatorsOpen((prev) => !prev);
   };
 
   const menuItems: MenuItemType[] = [
@@ -67,9 +79,8 @@ const Header = (): JSX.Element => {
   ];
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-
-      {/* 🔹 SOCIAL BAR – Centralizado como no site oficial */}
+    <Box sx={{ flexGrow: 1 }} component="header" role="banner">
+      {/* 🔹 BAR SUPERIOR SOCIAL */}
       <Box
         sx={{
           bgcolor: "#6E0E2B",
@@ -86,21 +97,89 @@ const Header = (): JSX.Element => {
               alignItems: "center",
             }}
           >
-            <IconButton size="small" color="inherit">
+            <IconButton
+              size="small"
+              color="inherit"
+              aria-label="Facebook da FAPERJ"
+              component="a"
+              href="https://www.facebook.com/faperj"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <FacebookIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small" color="inherit">
-              <TwitterIcon fontSize="small" />
+
+            <IconButton
+              size="small"
+              color="inherit"
+              aria-label="Twitter da FAPERJ"
+              component="a"
+              href="https://x.com/faperj"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ p: 0 }}
+            >
+              <Image
+                src="/images/x-logo.png"
+                alt="X (Twitter)"
+                width={20}
+                height={20}
+                role="img"
+                style={{ 
+                  objectFit: "contain", 
+                  filter: "none",
+                  display: "block"
+                }}
+              />
             </IconButton>
-            <IconButton size="small" color="inherit">
+
+            <IconButton
+              size="small"
+              color="inherit"
+              aria-label="Instagram da FAPERJ"
+              component="a"
+              href="https://www.instagram.com/faperjoficial/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <InstagramIcon fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              size="small"
+              color="inherit"
+              aria-label="Site da FAPERJ"
+              component="a"
+              href="https://www.faperj.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{ p: 0 }} // Remove padding interno
+            >
+              <Image
+                src="/images/faperj-logo.png"
+                alt="FAPERJ"
+                width={70}
+                height={28}
+                role="img"
+                style={{
+                  objectFit: "contain",
+                  filter: "none",
+                  display: "block", // Remove espaço extra
+                }}
+              />
             </IconButton>
           </Box>
         </Container>
       </Box>
 
-      {/* 🔹 LOGO + HAMBURGUER */}
-      <AppBar position="static" color="transparent" sx={{ boxShadow: "none" }}>
+      {/* 🔹 MENU PRINCIPAL */}
+      <AppBar
+        position="static"
+        color="transparent"
+        elevation={0}
+        role="navigation"
+        aria-label="Menu principal"
+      >
         <Container maxWidth="xl">
           <Toolbar
             sx={{
@@ -115,7 +194,7 @@ const Header = (): JSX.Element => {
               <MuiLink sx={{ display: "flex", alignItems: "center" }}>
                 <Image
                   src="/images/logo-novo.png"
-                  alt="FAPERJ"
+                  alt="Logotipo da FAPERJ"
                   width={300}
                   height={75}
                   style={{ objectFit: "contain" }}
@@ -123,10 +202,16 @@ const Header = (): JSX.Element => {
               </MuiLink>
             </Link>
 
-            {/* HAMBURGUER */}
+            {/* BOTÃO DO MENU - ACESSÍVEL */}
             <IconButton
+              ref={buttonRef}
               color="inherit"
               onClick={handleMenuOpen}
+              onKeyDown={handleKeyDown}
+              aria-label="Abrir menu de navegação"
+              aria-haspopup="true"
+              aria-controls="menu-principal"
+              aria-expanded={isMenuOpen}
               sx={{ display: "block" }}
             >
               <MenuIcon sx={{ fontSize: 32, color: "#6E0E2B" }} />
@@ -135,11 +220,17 @@ const Header = (): JSX.Element => {
         </Container>
       </AppBar>
 
-      {/* 🔹 MENU POPUP – Mais claro, elegante, baixo da linha, centralizado */}
+      {/* 🔹 POPUP DO MENU */}
       <Menu
+        id="menu-principal"
         anchorEl={anchorEl}
         open={isMenuOpen}
         onClose={handleMenuClose}
+        onKeyDown={handleKeyDown}
+        MenuListProps={{
+          role: "menu",
+          "aria-label": "Opções do menu principal",
+        }}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
@@ -157,38 +248,44 @@ const Header = (): JSX.Element => {
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
             p: 1,
           },
+          role: "dialog",
+          "aria-modal": true,
         }}
       >
         {menuItems.map((item) => (
           <Box key={item.text}>
             {item.subItems ? (
               <>
+                {/* ITEM COM SUBMENU */}
                 <MenuItem
+                  role="menuitem"
+                  aria-haspopup="true"
+                  aria-expanded={isIndicatorsOpen}
                   onClick={handleIndicatorsToggle}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleIndicatorsToggle();
+                    }
+                  }}
                   sx={{
                     fontWeight: 700,
                     justifyContent: "center",
                     color: "#000",
                     borderRadius: 1,
-                    "&:hover": {
-                      backgroundColor: "#f0f0f0",
-                    },
+                    "&:hover": { backgroundColor: "#f0f0f0" },
                   }}
                 >
                   {item.text}
                 </MenuItem>
 
                 {isIndicatorsOpen && (
-                  <Box sx={{ p: 1 }}>
+                  <Box sx={{ p: 1 }} role="group" aria-label="Submenu Indicadores">
                     {item.subItems.map((subItem) => (
-                      <Link
-                        key={subItem.text}
-                        href={subItem.href}
-                        passHref
-                        legacyBehavior
-                      >
+                      <Link key={subItem.text} href={subItem.href} passHref legacyBehavior>
                         <MuiLink underline="none">
                           <MenuItem
+                            role="menuitem"
                             onClick={handleMenuClose}
                             sx={{
                               justifyContent: "center",
@@ -213,9 +310,11 @@ const Header = (): JSX.Element => {
                 <Divider />
               </>
             ) : (
+              // ITEM NORMAL
               <Link href={item.href} passHref legacyBehavior>
                 <MuiLink underline="none">
                   <MenuItem
+                    role="menuitem"
                     onClick={handleMenuClose}
                     sx={{
                       justifyContent: "center",

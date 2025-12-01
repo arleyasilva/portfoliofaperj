@@ -1,23 +1,38 @@
-FROM node:18-alpine
+# ============================
+#   STAGE 1 — BUILDER
+# ============================
+FROM node:18-alpine AS builder
 
-# 1. Diretório de trabalho
 WORKDIR /app
 
-# 2. Copiar apenas os arquivos necessários para instalar dependências
-COPY package.json ./
-COPY package-lock.json ./
+# Copia arquivos essenciais
+COPY package.json package-lock.json ./
 
-# 3. Instalar dependências
-RUN npm install
+# Instala somente dependências necessárias
+RUN npm ci
 
-# 4. Copiar todo o restante do projeto
+# Copia todo o projeto
 COPY . .
 
-# 5. Build de produção do Next
+# Build Standalone — Next 14
 RUN npm run build
 
-# 6. Expor a porta de execução
+
+# ============================
+#   STAGE 2 — RUNNER
+# ============================
+FROM node:18-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Copiar apenas o standalone (sem node_modules, sem source)
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+
+# Next.js Standalone já embute node_modules
 EXPOSE 3000
 
-# 7. Iniciar servidor Next.js
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

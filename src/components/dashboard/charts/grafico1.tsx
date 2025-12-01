@@ -1,66 +1,82 @@
+// src/components/dashboard/charts/grafico1.tsx
 import React from "react";
 import ReactECharts from "echarts-for-react";
-import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
+import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
 import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico1Item } from "@/types/faperj";
+import { TooltipFormatterParams } from "@/types/echarts";
 
 const Grafico1 = () => {
-  const { data, loading, error } = useFaperjData("grafico1");
+  const { data, loading, error } = useFaperjData<Grafico1Item[]>("grafico1");
 
   if (loading)
     return (
-      <Box display="flex" justifyContent="center" p={3}>
+      <Box p={3} textAlign="center">
         <CircularProgress />
       </Box>
     );
 
-  if (error) return <Alert severity="error">Erro ao carregar dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error)
+    return <Alert severity="error">Erro ao carregar dados do gráfico 1.</Alert>;
+
+  if (!data)
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+
+  // 🔹 Agora data é ARRAY e tipado corretamente
+  const categorias = data.map((item) => item.area);
+  const valores = data.map((item) => item.total);
 
   const option = {
-    animationDuration: 800,
-
     tooltip: {
       trigger: "axis",
-      formatter: (params: any) => {
-        const item = params[0]?.data;
-        return `
-          <strong>${item.area}</strong><br/>
-          Total: <strong>R$ ${item.total.toLocaleString("pt-BR")}</strong>
-        `;
+      backgroundColor: "#fff",
+      borderColor: "#ccc",
+      borderWidth: 1,
+      textStyle: { color: "#333" },
+      formatter: (params: TooltipFormatterParams) => {
+        if (Array.isArray(params) && params.length > 0) {
+          const p = params[0];
+          return `
+            <strong>${p.name}</strong><br/>
+            Total: <strong>${typeof p.value === 'number' ? p.value.toLocaleString("pt-BR") : ''}</strong>
+          `;
+        }
+        return '';
       },
+    },
+
+    grid: {
+      top: 70,
+      left: 30,
+      right: 30,
+      bottom: 30,
+      containLabel: true,
     },
 
     xAxis: {
       type: "category",
-      data: data.map((i: any) => i.area),
-      axisLabel: {
-        interval: 0,
-        fontSize: 11,
-        overflow: "break",
-        width: 80,
-      },
+      data: categorias,
+      axisLabel: { rotate: 20 },
     },
 
     yAxis: {
       type: "value",
       axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000
-            ? `${(v / 1_000_000).toFixed(0)} mi`
-            : v.toLocaleString("pt-BR"),
+        formatter: (v: number) => {
+          if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + "B";
+          if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + "M";
+          if (v >= 1_000) return (v / 1_000).toFixed(1) + "K";
+          return v;
+        },
       },
     },
 
     series: [
       {
         type: "bar",
-        data: data.map((i: any) => ({
-          value: i.total,
-          area: i.area,
-          total: i.total,
-        })),
-        barWidth: "55%",
+        data: valores,
         itemStyle: { color: "#2989b5" },
+        barWidth: "55%",
       },
     ],
   };
@@ -81,13 +97,9 @@ const Grafico1 = () => {
         variant="h6"
         fontWeight={700}
         color="#124b6c"
-        sx={{
-          textAlign: "left",
-          mb: 1,
-          fontSize: "18px",
-        }}
+        sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor Total por Área de Conhecimento
+        Distribuição de Recursos por Grande Área
       </Typography>
 
       {/* LINHA SUAVE */}

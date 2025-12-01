@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Bloqueia páginas que não fazem sentido ser indexadas
+Disallow: /api/
+Disallow: /dashboard-teste/
+Disallow: /_next/
+
+Sitemap: https://portfolio-faperj.vercel.app/sitemap.xml

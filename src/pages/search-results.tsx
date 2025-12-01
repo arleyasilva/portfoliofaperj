@@ -3,6 +3,7 @@ import { Container, Typography, Box, CircularProgress, Alert } from '@mui/materi
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout'; // <-- CORRIGIDO
+import SEO from "@/components/SEO";
 
 const API_BASE_URL = '/api/v1/search/researchers';
 
@@ -73,6 +74,12 @@ const SearchResultsPage = () => {
 
   return (
     <Layout>
+      <SEO
+        title="Busca de Pesquisadores – FAPERJ"
+        description="Resultados da busca por pesquisadores, projetos, instituições e palavras-chave na plataforma."
+        url="https://portfolio-faperj.vercel.app/search-results"
+        image="/images/seo-search.png"
+      />
       <Head>
         <title>Resultados da Busca FAPERJ</title>
       </Head>

@@ -2,9 +2,18 @@ import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
 import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico2Data } from "@/types/faperj";
+import { SeriesLabelFormatterParam } from "@/types/echarts";
 
-const Grafico2 = () => {
-  const { data, loading, error } = useFaperjData("grafico2");
+interface PieTooltipParams {
+  data: {
+    label: string;
+    value: number;
+  };
+}
+
+const Grafico2: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico2Data>("grafico2");
 
   if (loading)
     return (
@@ -14,11 +23,9 @@ const Grafico2 = () => {
     );
 
   if (error)
-    return (
-      <Alert severity="error">Erro ao carregar dados do gráfico 2.</Alert>
-    );
+    return <Alert severity="error">Erro ao carregar dados do gráfico 2.</Alert>;
 
-  if (!data)
+  if (!data || data.length === 0)
     return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
   const option = {
@@ -26,7 +33,12 @@ const Grafico2 = () => {
 
     tooltip: {
       trigger: "item",
-      formatter: (p: any) => `
+      backgroundColor: "#fff",
+      borderColor: "rgba(0,0,0,0.15)",
+      borderWidth: 1,
+      borderRadius: 6,
+      textStyle: { color: "#000", fontSize: 13 },
+      formatter: (p: PieTooltipParams) => `
         <strong>${p.data.label}</strong><br/>
         Investimento: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
       `,
@@ -36,29 +48,35 @@ const Grafico2 = () => {
       orient: "vertical",
       right: 10,
       top: "center",
+      textStyle: { fontSize: 13 },
     },
 
     series: [
       {
         type: "pie",
         radius: "60%",
-        data: data.map((item: any) => ({
+        center: ["40%", "55%"],
+
+        data: data.map((item) => ({
           name: item.label,
           value: item.value,
           label: item.label,
-          itemStyle: { color: item.color },
+          itemStyle: {
+            color: item.color ?? "#2989b5", // fallback seguro
+          },
         })),
+
         label: {
-          formatter: (param: any) => param.data.label,
+          color: "#000",
           fontSize: 11,
-          width: 110,
-          overflow: "break",
+          formatter: (param: SeriesLabelFormatterParam) => param.data.label || param.name,
         },
+
         emphasis: {
           itemStyle: {
             shadowBlur: 15,
             shadowOffsetX: 0,
-            shadowColor: "rgba(0,0,0,0.3)",
+            shadowColor: "rgba(0,0,0,0.25)",
           },
         },
       },
@@ -76,21 +94,15 @@ const Grafico2 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
-        sx={{
-          textAlign: "left",
-          mb: 1,
-          fontSize: "18px",
-        }}
+        sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
         Distribuição do Valor Total por Microáreas
       </Typography>
 
-      {/* LINHA SUAVE */}
       <Box
         sx={{
           width: "100%",
@@ -100,12 +112,10 @@ const Grafico2 = () => {
         }}
       />
 
-      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      {/* FONTE */}
       <Typography
         variant="caption"
         sx={{

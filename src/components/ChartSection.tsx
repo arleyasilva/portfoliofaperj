@@ -3,6 +3,7 @@ import { Box, Card, Typography } from "@mui/material";
 import ReactECharts from "echarts-for-react";
 
 import useFaperjData from "@/hooks/useFaperjData";
+import { ChartDataItem } from "@/types/echarts";
 
 interface ChartSectionProps {
   title: string;
@@ -15,7 +16,7 @@ export default function ChartSection({
   fileName,
   chartType = "bar",
 }: ChartSectionProps) {
-  const { data, loading, error } = useFaperjData<any>(fileName);
+  const { data, loading, error } = useFaperjData<ChartDataItem[]>(fileName);
 
   if (loading)
     return (
@@ -42,13 +43,13 @@ export default function ChartSection({
   const option = {
     xAxis: {
       type: "category",
-      data: data.map((d: any) => d.label || d.name),
+      data: data.map((d) => d.label || d.name || ''),
     },
     yAxis: { type: "value" },
     series: [
       {
         type: chartType,
-        data: data.map((d: any) => d.value || d.total || d.feminino || d.masculino),
+        data: data.map((d) => d.value || d.total || d.feminino || d.masculino || 0),
       },
     ],
     tooltip: { trigger: "axis" },

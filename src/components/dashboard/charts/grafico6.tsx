@@ -1,11 +1,103 @@
-// src/components/dashboard/charts/grafico6.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Box, Typography, CircularProgress, Alert } from "@mui/material";
 
-const Grafico6 = () => {
-  const { data, loading, error } = useFaperjData("grafico6");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico6Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Abrevia número (1 bi / 800 mi / etc.)
+const abreviarValor = (num: number): string => {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(".0", "") + " mi";
+  return num.toLocaleString("pt-BR");
+};
+
+const Grafico6: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico6Data>("grafico6");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      tooltip: {
+        trigger: "axis",
+        formatter: (params: any[]) => {
+          const bar = params.find((p) => p.seriesType === "bar");
+          const line = params.find((p) => p.seriesType === "line");
+
+          return `
+            <strong>${bar.data.label}</strong><br/>
+            Quantidade: <strong>${bar.data.quantidade}</strong><br/>
+            Valor: <strong>R$ ${line.data.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: {
+        top: 0,
+        left: "center",
+        textStyle: { fontSize: 12 },
+      },
+
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((item) => item.label),
+      },
+
+      yAxis: [
+        {
+          type: "value",
+          name: "Quantidade",
+          axisLabel: {
+            formatter: (value: number) => value.toLocaleString("pt-BR"),
+          },
+        },
+        {
+          type: "value",
+          name: "Valor",
+          axisLabel: {
+            formatter: (value: number) => abreviarValor(value),
+          },
+        },
+      ],
+
+      series: [
+        {
+          name: "Quantidade",
+          type: "bar",
+          yAxisIndex: 0,
+          itemStyle: { color: "#1b77b3" },
+          data: data.map((item) => ({
+            label: item.label,
+            quantidade: item.quantidade,
+            valor: item.valor,
+            value: item.quantidade,
+          })),
+        },
+        {
+          name: "Valor",
+          type: "line",
+          yAxisIndex: 1,
+          smooth: true,
+          symbol: "circle",
+          symbolSize: 8,
+          lineStyle: { color: "#e67e22", width: 3 },
+          itemStyle: { color: "#e67e22" },
+          data: data.map((item) => item.valor),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -14,87 +106,15 @@ const Grafico6 = () => {
       </Box>
     );
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error)
+    return <Alert severity="error">Erro ao carregar dados do gráfico 6.</Alert>;
 
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 40,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const qtd = params.find((p: any) => p.seriesName === "Quantidade").data;
-        const val = params.find((p: any) => p.seriesName === "Valor (R$)").data;
-
-        return `
-          <strong>${qtd.label}</strong><br/>
-          Quantidade: ${qtd.quantidade}<br/>
-          Valor: R$ ${val.valor.toLocaleString("pt-BR")}
-        `;
-      },
-    },
-
-    legend: {
-      data: ["Quantidade", "Valor (R$)"],
-      top: 0,
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 11 },
-    },
-
-    yAxis: [
-      {
-        type: "value",
-        name: "Qtd",
-        axisLabel: { fontSize: 11 },
-      },
-      {
-        type: "value",
-        name: "Valor (R$)",
-        axisLabel: {
-          formatter: (v: number) =>
-            v >= 1_000_000 ? `${(v / 1_000_000).toFixed(0)} mi` : v,
-          fontSize: 11,
-        },
-      },
-    ],
-
-    series: [
-      {
-        name: "Quantidade",
-        type: "bar",
-        data: data.map((i: any) => ({
-          value: i.quantidade,
-          ...i,
-        })),
-        barWidth: "45%",
-        itemStyle: { color: "#5F93CF" }, // azul suave
-      },
-      {
-        name: "Valor (R$)",
-        type: "line",
-        yAxisIndex: 1,
-        smooth: true,
-        data: data.map((i: any) => ({
-          value: i.valor,
-          ...i,
-        })),
-        lineStyle: { width: 3, color: "#2CB66D" }, // verde moderno
-        itemStyle: { color: "#2CB66D" },
-      },
-    ],
-  };
+  if (!data)
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
   return (
     <Card
+      elevation={3}
       sx={{
         p: 3,
         borderRadius: 3,
@@ -104,17 +124,17 @@ const Grafico6 = () => {
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
+      {/* Título padrão institucional */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor e Quantidade de Projetos por Ano
+        Evolução de Quantidade e Valor
       </Typography>
 
-      {/* LINHA SUAVE */}
+      {/* Linha suave */}
       <Box
         sx={{
           width: "100%",
@@ -124,12 +144,10 @@ const Grafico6 = () => {
         }}
       />
 
-      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
-        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+        <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      {/* FONTE */}
       <Typography
         variant="caption"
         sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}

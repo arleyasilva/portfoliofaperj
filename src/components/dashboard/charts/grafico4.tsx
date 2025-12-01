@@ -1,81 +1,121 @@
-// src/components/dashboard/charts/grafico4.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
+import { Card, Box, Typography, CircularProgress, Alert } from "@mui/material";
 
-// Função para abreviar valores
-const formatShort = (v: number) => {
-  if (v >= 1_000_000_000) return `${(v / 1_000_000_000).toFixed(0)} bi`;
-  if (v >= 1_000_000) return `${(v / 1_000_000).toFixed(0)} mi`;
-  return v.toLocaleString("pt-BR");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico4Data } from "@/types/faperj";
+import { TooltipFormatterParams } from "@/types/echarts";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+const abreviarValor = (num: number): string => {
+  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1) + " bi";
+  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + " mi";
+  return num.toLocaleString("pt-BR");
 };
 
-const Grafico4 = () => {
-  const { data, loading, error } = useFaperjData("grafico4");
+const Grafico4: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico4Data>("grafico4");
 
-  if (loading)
+  const option = useMemo(() => {
+    // se não tem dados ainda, devolve opção vazia
+    if (!data || data.length === 0) {
+      return {
+        xAxis: { type: "category", data: [] },
+        yAxis: { type: "value" },
+        series: [],
+      };
+    }
+
+    return {
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#fff",
+        borderColor: "#ccc",
+        borderWidth: 1,
+        textStyle: { color: "#333" },
+        borderRadius: 6,
+        formatter: (params: TooltipFormatterParams) => {
+          if (!Array.isArray(params)) return "";
+          
+          const b = params.find((p) => p.seriesName === "Bolsas");
+          const a = params.find((p) => p.seriesName === "Auxílios");
+
+          if (!b || !a || typeof b.data !== 'object' || typeof a.data !== 'object') return "";
+
+          const bData = b.data as { label: string; value: number };
+          const aData = a.data as { label: string; value: number };
+
+          return `
+            <strong>${bData.label}</strong><br/>
+            Bolsas: <strong>R$ ${bData.value.toLocaleString("pt-BR")}</strong><br/>
+            Auxílios: <strong>R$ ${aData.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: {
+        top: 0,
+        data: ["Bolsas", "Auxílios"],
+      },
+
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((item) => item.label),
+        axisLabel: { rotate: 20 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: { formatter: (v: number) => abreviarValor(v) },
+      },
+
+      series: [
+        {
+          name: "Bolsas",
+          type: "bar",
+          itemStyle: { color: "#1b77b3" },
+          data: data.map((item) => ({
+            label: item.label,
+            value: item.bolsas,
+          })),
+        },
+        {
+          name: "Auxílios",
+          type: "bar",
+          itemStyle: { color: "#21a179" },
+          data: data.map((item) => ({
+            label: item.label,
+            value: item.auxilios,
+          })),
+        },
+      ],
+    };
+  }, [data]);
+
+  if (loading) {
     return (
       <Box display="flex" justifyContent="center" p={3}>
         <CircularProgress />
       </Box>
     );
+  }
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error) {
+    return <Alert severity="error">Erro ao carregar dados do gráfico 4.</Alert>;
+  }
 
-  // Garante que total sempre exista
-  const processed = data.map((item: any) => ({
-    ...item,
-    total: item.total ?? item.bolsas + item.auxilios,
-  }));
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 70,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      formatter: (params: any) => {
-        const item = params[0].data;
-        return `
-          <strong>${item.label}</strong><br/>
-          Bolsas: R$ ${item.bolsas.toLocaleString("pt-BR")}<br/>
-          Auxílios: R$ ${item.auxilios.toLocaleString("pt-BR")}<br/>
-          Total: <strong>R$ ${item.total.toLocaleString("pt-BR")}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: processed.map((i: any) => i.label),
-      axisLabel: { rotate: 35, fontSize: 11 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) => formatShort(v),
-      },
-    },
-
-    series: [
-      {
-        type: "bar",
-        data: processed.map((item: any) => ({
-          value: item.total,
-          ...item,
-        })),
-        barWidth: "55%",
-        itemStyle: { color: "#2F80ED" }, // Azul forte, diferente do gráfico 3
-      },
-    ],
-  };
+  if (!data || data.length === 0) {
+    return <Alert severity="warning">Nenhum dado encontrado para o gráfico 4.</Alert>;
+  }
 
   return (
     <Card
@@ -88,21 +128,15 @@ const Grafico4 = () => {
         flexDirection: "column",
       }}
     >
-      {/* Título */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
-        sx={{
-          textAlign: "left",
-          mb: 1,
-          fontSize: "18px",
-        }}
+        sx={{ mb: 1, fontSize: "18px", textAlign: "left" }}
       >
-        Valor Total por Centros de Pesquisa
+        Distribuição de Bolsas e Auxílios
       </Typography>
 
-      {/* Linha suave */}
       <Box
         sx={{
           width: "100%",
@@ -112,19 +146,13 @@ const Grafico4 = () => {
         }}
       />
 
-      {/* Gráfico */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
       </Box>
 
-      {/* Fonte */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
       </Typography>

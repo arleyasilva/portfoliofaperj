@@ -1,4 +1,4 @@
-import { StatsData } from '../hooks/useFaperjData';
+import { StatsData } from '@/types/faperj';
 
 const API_URL: string | undefined = process.env.NEXT_PUBLIC_API_URL;
 

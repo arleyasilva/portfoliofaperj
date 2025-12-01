@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  portfoliofaperj:
+    container_name: portfoliofaperj
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: portfoliofaperj:latest
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      # Variáveis de ambiente do Next
+      NODE_ENV: production
+
+      # Exemplos (adicione se usar)
+      # NEXT_PUBLIC_API_URL: "https://api.faperj.rj.gov.br"
+      # NEXT_TELEMETRY_DISABLED: "1"
+
+    volumes:
+      # NÃO monta node_modules (boa prática)
+      - .:/app
+      - /app/node_modules
+
+    restart: unless-stopped
+
+    # Para servir estáticos com boa performance
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+        reservations:
+          cpus: "0.25"
+          memory: 256M

@@ -1,6 +1,12 @@
 import { Card, Box, Typography } from "@mui/material";
+import React from "react";
 
-const ChartContainer = ({ title, children }: any) => (
+interface ChartContainerProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const ChartContainer = ({ title, children }: ChartContainerProps) => (
   <Card
     sx={{
       p: 2,

@@ -1,5 +1,6 @@
-import { Box, Typography, Container, Grid } from '@mui/material';
-import Image from 'next/image';
+import { Box, Typography, Container } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
+import Image from "next/image";
 import type { StaticImageData } from 'next/image';
 import React from 'react';
 
@@ -8,7 +9,7 @@ interface Logo {
   alt: string;
 }
 
-const Footer = (): JSX.Element => {
+const Footer: React.FC = () => {
   const logos: Logo[] = [
     { src: '/images/logo_RJ_SECTI_branco.png', alt: 'Secretaria de Ciência, Tecnologia e Inovação' },
     { src: '/images/logo_faperj_branco_completo.png', alt: 'FAPERJ' },
@@ -52,17 +53,19 @@ const Footer = (): JSX.Element => {
           sx={{ maxWidth: 900, margin: '0 auto' }}
         >
           {logos.map((logo, index) => (
-            <Grid item key={index} xs={4} sm={3} md={2} lg={1.7}>
+            <Grid key={index} xs={4} sm={3} md={2} lg={1.7}>
               <Box sx={{ width: '100%', textAlign: 'center' }}>
                 <Image
                   src={logo.src}
                   alt={logo.alt}
                   width={120}
                   height={60}
+                  role="img"
+                  data-testid="footer-logo"
                   style={{
-                    width: '100%',
-                    height: 'auto',
-                    objectFit: 'contain',
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "contain",
                   }}
                 />
               </Box>

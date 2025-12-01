@@ -1,11 +1,101 @@
-// src/components/dashboard/charts/grafico16.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const Grafico16 = () => {
-  const { data, loading, error } = useFaperjData("grafico16");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico16Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Formatação padrão institucional
+const abreviarValor = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + " mi";
+  return v.toLocaleString("pt-BR");
+};
+
+const Grafico16: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico16Data>("grafico16");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        extraCssText: "border-radius:6px; padding:10px;",
+        textStyle: { color: "#000", fontSize: 13 },
+
+        formatter: (params: any[]) => {
+          const fem = params.find((p) => p.seriesName === "Feminino")?.data;
+          const masc = params.find((p) => p.seriesName === "Masculino")?.data;
+
+          return `
+            <strong>Ano ${fem.label}</strong><br/>
+            Feminino: <strong>R$ ${fem.value.toLocaleString("pt-BR")}</strong><br/>
+            Masculino: <strong>R$ ${masc.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: {
+        data: ["Feminino", "Masculino"],
+        top: 0,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (v: number) => abreviarValor(v),
+        },
+      },
+
+      series: [
+        {
+          name: "Feminino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#FBC02D" },
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((i) => ({
+            value: i.feminino,
+            label: i.label,
+          })),
+        },
+
+        {
+          name: "Masculino",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#5F93CF" },
+          itemStyle: { color: "#5F93CF" },
+          data: data.map((i) => ({
+            value: i.masculino,
+            label: i.label,
+          })),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -17,80 +107,6 @@ const Grafico16 = () => {
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
-  const option = {
-    grid: {
-      top: 40,
-      left: 60,
-      right: 20,
-      bottom: 60
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(18,75,108,0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const fem = params.find((p: any) => p.seriesName === "Feminino").data;
-        const masc = params.find((p: any) => p.seriesName === "Masculino").data;
-
-        return `
-          <strong>Ano ${fem.label}</strong><br/>
-          Feminino: R$ ${fem.feminino.toLocaleString("pt-BR")}<br/>
-          Masculino: R$ ${masc.masculino.toLocaleString("pt-BR")}
-        `;
-      }
-    },
-
-    legend: {
-      data: ["Feminino", "Masculino"],
-      top: 0
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 }
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1_000_000
-            ? `${(v / 1_000_000).toFixed(0)} mi`
-            : v.toLocaleString("pt-BR")
-      }
-    },
-
-    series: [
-      {
-        name: "Feminino",
-        type: "line",
-        smooth: true,
-        data: data.map((i: any) => ({
-          value: i.feminino,
-          ...i
-        })),
-        lineStyle: { width: 3, color: "#FBC02D" },
-        itemStyle: { color: "#FBC02D" },
-        symbolSize: 7
-      },
-      {
-        name: "Masculino",
-        type: "line",
-        smooth: true,
-        data: data.map((i: any) => ({
-          value: i.masculino,
-          ...i
-        })),
-        lineStyle: { width: 3, color: "#5F93CF" },
-        itemStyle: { color: "#5F93CF" },
-        symbolSize: 7
-      }
-    ]
-  };
-
   return (
     <Card
       sx={{
@@ -99,10 +115,10 @@ const Grafico16 = () => {
         boxShadow: 3,
         height: 430,
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
       }}
     >
-      {/* Título */}
+      {/* TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -112,22 +128,22 @@ const Grafico16 = () => {
         Valor Total de Bolsas por Sexo e Ano
       </Typography>
 
-      {/* Linha suave */}
+      {/* LINHA SUAVE */}
       <Box
         sx={{
           width: "100%",
           height: "1px",
           backgroundColor: "rgba(0,0,0,0.1)",
-          mb: 2
+          mb: 2,
         }}
       />
 
-      {/* Gráfico */}
+      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      {/* Fonte */}
+      {/* FONTE */}
       <Typography
         variant="caption"
         sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}

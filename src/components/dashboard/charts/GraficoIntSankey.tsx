@@ -1,12 +1,70 @@
-// src/components/dashboard/charts/GraficoIntSankey.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
+
 import useFaperjData from "@/hooks/useFaperjData";
+import { IntSankeyData } from "@/types/faperj";
+import { SankeyFormatterParam } from "@/types/echarts";
 
-const GraficoIntSankey = () => {
-  const { data, loading, error } = useFaperjData("int_sankey");
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
+const GraficoIntSankey: React.FC = () => {
+  const { data, loading, error } = useFaperjData<IntSankeyData>("int_sankey");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      tooltip: {
+        trigger: "item",
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        extraCssText: "border-radius:6px; padding:10px;",
+        textStyle: { color: "#000", fontSize: 13 },
+
+        formatter: (p: SankeyFormatterParam) => {
+          if (p.dataType === "edge" && 'source' in p.data && 'target' in p.data) {
+            return `
+              <strong>${p.data.source} → ${p.data.target}</strong><br/>
+              Colaborações: <strong>${p.data.value}</strong>
+            `;
+          }
+          if ('name' in p.data) {
+            return `<strong>${p.data.name}</strong>`;
+          }
+          return '';
+        },
+      },
+
+      series: [
+        {
+          type: "sankey",
+          layout: "none",
+          emphasis: { focus: "adjacency" },
+
+          data: data.nodes,
+          links: data.links,
+
+          lineStyle: {
+            color: "source",
+            curveness: 0.4,
+          },
+
+          label: {
+            color: "#124b6c",
+            fontSize: 12,
+            fontWeight: 600,
+          },
+
+          nodeGap: 12,
+          nodeWidth: 18,
+        },
+      ],
+    };
+  }, [data]);
+
+  // LOADING / ERROR
   if (loading)
     return (
       <Box p={3} textAlign="center">
@@ -20,51 +78,13 @@ const GraficoIntSankey = () => {
   if (!data)
     return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
-  const option = {
-    tooltip: {
-      trigger: "item",
-      formatter: (p: any) => {
-        if (p.dataType === "edge") {
-          return `
-            <strong>${p.data.source} → ${p.data.target}</strong><br/>
-            Colaborações: ${p.data.value}
-          `;
-        }
-        return `<strong>${p.data.name}</strong>`;
-      },
-    },
-
-    series: [
-      {
-        type: "sankey",
-        layout: "none",
-        data: data.nodes,
-        links: data.links,
-
-        // Mantém as cores automáticas do ECharts
-        lineStyle: {
-          color: "gradient",
-          curveness: 0.4,
-        },
-
-        label: {
-          fontSize: 12,
-          color: "#333",
-        },
-
-        nodeGap: 12,
-        nodeWidth: 15,
-      },
-    ],
-  };
-
   return (
     <Card
       sx={{
         p: 3,
         borderRadius: 3,
         boxShadow: 3,
-        height: 430,
+        height: 470,
         display: "flex",
         flexDirection: "column",
       }}
@@ -79,7 +99,7 @@ const GraficoIntSankey = () => {
         Fluxo de Colaboração Internacional – País ↔ Grande Área
       </Typography>
 
-      {/* LINHA SUAVE */}
+      {/* LINHA */}
       <Box
         sx={{
           width: "100%",
@@ -91,17 +111,13 @@ const GraficoIntSankey = () => {
 
       {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
-        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+        <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
       {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema FAPERJ – Cooperação Internacional
       </Typography>

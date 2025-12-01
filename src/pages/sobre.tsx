@@ -2,10 +2,17 @@ import Head from 'next/head';
 import { Container, Typography, Box, Divider } from '@mui/material';
 import React from 'react';
 import Layout from '../components/Layout';
+import SEO from '@/components/SEO';
 
 const Sobre = () => {
   return (
     <Layout>
+      <SEO
+        title="Sobre a Plataforma – FAPERJ Portfolio em Rede"
+        description="Conheça a finalidade, missão e aspectos institucionais da plataforma Portfolio FAPERJ em Rede."
+        url="https://portfolio-faperj.vercel.app/sobre"
+        image="/images/seo-sobre.png"
+      />
       <Head>
         <title>Sobre o Portfólio FAPERJ</title>
         <meta

@@ -1,107 +1,106 @@
-import Head from 'next/head';
-import { Container, Grid, Typography } from '@mui/material';
-import Layout from '../components/Layout';
+import Head from "next/head";
+import {
+  Box,
+  Container,
+  Typography,
+  Card,
+} from "@mui/material";
+import Grid from '@mui/material/Unstable_Grid2';
+import React from "react";
 
-// Importe aqui os gráficos 10 a 17 quando estiverem prontos
-import Grafico10 from '../components/dashboard/charts/grafico10';
-import Grafico11 from '../components/dashboard/charts/grafico11';
-import Grafico12 from '../components/dashboard/charts/grafico12';
-import Grafico13 from '../components/dashboard/charts/grafico13';
-import Grafico14 from '../components/dashboard/charts/grafico14';
-import Grafico15 from '../components/dashboard/charts/grafico15';
-import Grafico16 from '../components/dashboard/charts/grafico16';
-import Grafico17 from '../components/dashboard/charts/grafico17';
-// Novo Gráfico 16_1 adicionado aqui
-import Grafico16_1 from '../components/dashboard/charts/grafico16_1';
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 
-const IndicadoresSexoPage = () => {
-    // Dados de exemplo para a página de indicadores por sexo
-    const dataSexoExemplo = [
-        { name: 'A', value: 100 },
-        { name: 'B', value: 200 },
-    ];
-    
-    return (
-        <Layout>
-            <Head>
-                <title>Indicadores 2 </title>
-                <meta name="description" content="Página com gráficos de comparação por sexo." />
-            </Head>
+import Grafico10 from "@/components/dashboard/charts/grafico10";
+import Grafico11 from "@/components/dashboard/charts/grafico11";
+import Grafico12 from "@/components/dashboard/charts/grafico12";
+import Grafico13 from "@/components/dashboard/charts/grafico13";
+import Grafico14 from "@/components/dashboard/charts/grafico14";
+import Grafico15 from "@/components/dashboard/charts/grafico15";
+import Grafico16 from "@/components/dashboard/charts/grafico16";
+import Grafico16_1 from "@/components/dashboard/charts/grafico16_1";
+import Grafico17 from "@/components/dashboard/charts/grafico17";
 
-            <Container maxWidth="xl" sx={{ py: 4 }}>
-                <Typography variant="h4" component="h1" gutterBottom>
-                    Indicadores 2
-                </Typography>
-                <Grid container spacing={4} justifyContent="center">
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico10
-                            title="Gráfico 10 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
-                    
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico11
-                            title="Gráfico 11 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
+// ======================================================================
+// 🔹 PÁGINA PRINCIPAL
+// ======================================================================
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico12
-                            title="Gráfico 12 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
+export default function IndicadoresSexo() {
+  return (
+    <>
+      <SEO
+        title="Distribuição de Bolsas e Auxílios por Sexo – FAPERJ"
+        description="Análise comparativa de bolsas e auxílios concedidos pela FAPERJ segmentados por sexo ao longo dos anos."
+        url="https://portfolio-faperj.vercel.app/indicadores-sexo"
+        image="/images/seo-sexo.png"
+      />
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico13
-                            title="Gráfico 13 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
+      <Header />
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico14
-                            title="Gráfico 14 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
+      <Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5", py: 4 }}>
+        <Container maxWidth="xl">
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico15
-                            title="Gráfico 15 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
+          {/* ======================== TÍTULO ======================== */}
+          <Card
+            sx={{
+              p: 3,
+              mb: 4,
+              backgroundColor: "#124b6c",
+              color: "white",
+              textAlign: "center",
+              borderRadius: 2,
+            }}
+          >
+            <Typography variant="h4" fontWeight={700}>
+              Indicadores — Fomento por Sexo
+            </Typography>
+          </Card>
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico16
-                            title="Gráfico 16 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
-                    
-                    {/* Inclusão do novo Gráfico 16_1 */}
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico16_1
-                            title="Gráfico 16.1 — Placeholder (Novo)"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
-                    {/* Fim da inclusão do Gráfico 16_1 */}
+          {/* ======================== GRID DOS GRÁFICOS ======================== */}
+          <Grid container spacing={4}>
 
+            <Grid xs={12} md={6}>
+              <Grafico10 />
+            </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico17
-                            title="Gráfico 17 — Placeholder"
-                            data={dataSexoExemplo}
-                        />
-                    </Grid>
-                </Grid>
-            </Container>
-        </Layout>
-    );
-};
+            <Grid xs={12} md={6}>
+              <Grafico11 />
+            </Grid>
 
-export default IndicadoresSexoPage;
+            <Grid xs={12} md={6}>
+              <Grafico12 />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <Grafico13 />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <Grafico14 />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <Grafico15 />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <Grafico16 />
+            </Grid>
+
+            <Grid xs={12} md={6}>
+              <Grafico16_1 />
+            </Grid>
+
+            <Grid xs={12} md={12}>
+              <Grafico17 />
+            </Grid>
+
+          </Grid>
+        </Container>
+      </Box>
+
+      <Footer />
+    </>
+  );
+}

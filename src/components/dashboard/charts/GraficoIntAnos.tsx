@@ -1,10 +1,70 @@
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const GraficoIntAnos = () => {
-  const { data, loading, error } = useFaperjData("int_anos");
+import useFaperjData from "@/hooks/useFaperjData";
+import { IntAnosData } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+const GraficoIntAnos: React.FC = () => {
+  const { data, loading, error } = useFaperjData<IntAnosData[]>("int_anos");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        extraCssText: "border-radius:6px; padding:10px;",
+        textStyle: { color: "#000" },
+
+        formatter: (params: any[]) => {
+          const p = params[0];
+          return `
+            <strong>${p.axisValue}</strong><br/>
+            Instituições: <strong>${p.data}</strong>
+          `;
+        },
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((d) => d.label),
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        name: "Instituições",
+        axisLabel: { fontSize: 12 },
+        splitLine: { lineStyle: { type: "dashed", color: "#ccc" } },
+      },
+
+      series: [
+        {
+          name: "Instituições",
+          type: "line",
+          smooth: true,
+          data: data.map((d) => d.value),
+          lineStyle: { width: 3, color: "#2989b5" },
+          itemStyle: { color: "#2989b5" },
+          symbolSize: 7,
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -15,56 +75,6 @@ const GraficoIntAnos = () => {
 
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    grid: {
-      left: 60,
-      right: 20,
-      top: 50,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(0,0,0,0.75)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const p = params[0];
-        return `
-          <strong>${p.axisValue}</strong><br/>
-          Instituições: <strong>${p.data}</strong>
-        `;
-      },
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((d: any) => d.label),
-      axisLabel: { fontSize: 12, rotate: 0 },
-    },
-
-    yAxis: {
-      type: "value",
-      name: "Instituições",
-      axisLabel: { fontSize: 12 },
-      splitLine: {
-        lineStyle: { type: "dashed", color: "#ccc" },
-      },
-    },
-
-    series: [
-      {
-        name: "Instituições",
-        type: "line",
-        smooth: true,
-        data: data.map((d: any) => d.value),
-        lineStyle: { width: 3, color: "#2989b5" },
-        itemStyle: { color: "#2989b5" },
-        symbolSize: 7,
-      },
-    ],
-  };
 
   return (
     <Card
@@ -77,7 +87,7 @@ const GraficoIntAnos = () => {
         flexDirection: "column",
       }}
     >
-      {/* Título */}
+      {/* TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
@@ -87,7 +97,7 @@ const GraficoIntAnos = () => {
         Evolução das Colaborações Internacionais por Ano
       </Typography>
 
-      {/* Linha suave */}
+      {/* LINHA SUAVE */}
       <Box
         sx={{
           width: "100%",
@@ -97,19 +107,15 @@ const GraficoIntAnos = () => {
         }}
       />
 
-      {/* Gráfico */}
+      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
       </Box>
 
-      {/* Fonte */}
+      {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{
-          mt: 1,
-          color: "rgba(0,0,0,0.6)",
-          fontStyle: "italic",
-        }}
+        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
         Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2018 – 2025]
       </Typography>

@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import { Box, Grid, Container } from '@mui/material';
+import { Box, Container } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import Header from '../components/Header';
@@ -19,74 +20,67 @@ import TripleColumnNav from '../components/TripleColumnNav';
 import SearchSection from '../components/SearchSection';
 import LattesSearch from '../components/LattesSearch';
 
-export default function Dashboard(): JSX.Element {
+import { StatsData } from '@/types/faperj';  // ✅ IMPORTANTE
+import SEO from "@/components/SEO";
 
-  const { data: statsData } = useFaperjData("faperj-stats");
+export default function Dashboard() {
+
+  // 🔥 TIPAGEM CORRETA DO RETORNO
+  const { data: statsData } = useFaperjData<StatsData>("faperj-stats");
 
   return (
     <>
+      <SEO
+        title="FAPERJ – Portfolio em Rede"
+        description="Painel unificado da FAPERJ com indicadores, estatísticas, investimentos e visualização dos programas de fomento no Rio de Janeiro."
+        url="https://portfolio-faperj.vercel.app/"
+        image="/images/seo-home.png"
+      />
       <Head>
         <title>Portfolio FAPERJ em rede</title>
-        <meta name="description" content="Página de teste" />
-
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
       </Head>
 
       <Box
         sx={{
           minHeight: "100%",
           overflowX: "hidden",
-          backgroundImage: "url(/images/fundo-branco.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: {
-            xs: "scroll",
-            md: "fixed",
-          },
         }}
       >
         <Header />
         <Banner />
         <IconNav />
 
-        {statsData && <StatisticalCards statsData={statsData.statsData} />}
+        {/* 🔥 StatisticalCards NÃO recebe props */}
+        {statsData && <StatisticalCards />}
 
         <Container maxWidth="xl" sx={{ px: { xs: 1, sm: 2, md: 3 } }}>
+
           <Grid container spacing={3} justifyContent="center">
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Grafico2 />
             </Grid>
           </Grid>
 
           <Grid container spacing={3} sx={{ mt: 3 }}>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Grafico3 />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Grafico4 />
             </Grid>
           </Grid>
 
           <Grid container spacing={3} sx={{ mt: 3 }}>
-            <Grid item xs={12}>
+            <Grid xs={12}>
               <Grafico1 />
             </Grid>
           </Grid>
+
         </Container>
 
         <TripleColumnNav />
-
-        <Box sx={{ mb: 4 }}>
-          <SearchSection />
-        </Box>
-
-        <Box sx={{ mb: 4 }}>
-          <LattesSearch />
-        </Box>
+        <SearchSection />
+        <LattesSearch />
 
         <Footer />
       </Box>

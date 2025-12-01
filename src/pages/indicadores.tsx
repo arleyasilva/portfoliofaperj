@@ -1,6 +1,8 @@
 import Head from 'next/head';
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import Layout from '../components/Layout';
+import SEO from '@/components/SEO';
 
 // Importe os gráficos que já temos e os placeholders futuros
 import Grafico5 from '../components/dashboard/charts/grafico5'; // Importação adicionada
@@ -13,14 +15,14 @@ import Grafico9 from '../components/dashboard/charts/grafico9';
 import Grafico9_1 from '../components/dashboard/charts/grafico9_1';
 
 const IndicadoresPage = () => {
-    // Dados de exemplo para a página de indicadores
-    const dataIndicadoresExemplo = [
-        { name: 'A', value: 100 },
-        { name: 'B', value: 200 },
-    ];
-    
     return (
         <Layout>
+            <SEO
+                title="Indicadores Gerais – FAPERJ Portfolio em Rede"
+                description="Visualização de indicadores gerais da FAPERJ, incluindo investimentos, bolsas, auxílios e análise por área de conhecimento."
+                url="https://portfolio-faperj.vercel.app/indicadores"
+                image="/images/seo-indicadores.png"
+            />
             <Head>
                 <title>Indicadores</title>
                 <meta name="description" content="Página com os gráficos de indicadores." />
@@ -32,47 +34,29 @@ const IndicadoresPage = () => {
                 </Typography>
                 <Grid container spacing={4} justifyContent="center">
                     {/* Adição do Grafico5 */}
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico5 
-                            title="Gráfico 5 — Título do Gráfico 5" 
-                            data={dataIndicadoresExemplo} 
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico5 />
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico6
-                            title="Gráfico 6 — Valor investido por área e quantidade"
-                            data={dataIndicadoresExemplo}
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico6 />
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico7
-                            title="Gráfico 7 — Placeholder"
-                            data={dataIndicadoresExemplo}
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico7 />
                     </Grid>
                     
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico8
-                            title="Gráfico 8 — Placeholder"
-                            data={dataIndicadoresExemplo}
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico8 />
                     </Grid>
 
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico9
-                            title="Gráfico 9 — Placeholder"
-                            data={dataIndicadoresExemplo}
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico9 />
                     </Grid>
 
                     {/* Inclusão do novo Grafico 9_1 */}
-                    <Grid item xs={12} sm={6} md={6}>
-                        <Grafico9_1
-                            title="Gráfico 9.1 — Placeholder (Novo)"
-                            data={dataIndicadoresExemplo}
-                        />
+                    <Grid xs={12} sm={6} md={6}>
+                        <Grafico9_1 />
                     </Grid>
                     {/* Fim da inclusão do Grafico 9_1 */}
 

@@ -5,59 +5,67 @@ import { Box, Container } from "@mui/material";
 import Header from "./Header";
 import Footer from "./Footer";
 
+// 🔹 Skip Link acessível — invisível até receber foco
+const SkipToContent = () => (
+  <a href="#main-content" className="skip-link" aria-label="Pular para o conteúdo principal">
+    Pular para o conteúdo principal
+  </a>
+);
+
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        position: "relative",
-
-        // 🔹 FUNDO GLOBAL (padronizado com o restante da plataforma)
-        "&::before": {
-          content: '""',
-          position: "fixed",
-          inset: 0,
-          backgroundImage: "url(/images/fundo-branco.png)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundAttachment: "fixed",
-          zIndex: -2,
-        },
-
-        // 🔹 Camada de opacidade suave (pode ajustar se quiser)
-        "&::after": {
-          content: '""',
-          position: "fixed",
-          inset: 0,
-          backgroundColor: "rgba(255,255,255,0.85)",
-          zIndex: -1,
-        },
-      }}
-    >
-      {/* 🔹 HEADER FIXO NO TOPO */}
-      <Header />
-
-      {/* 🔹 CONTEÚDO CENTRAL PADRONIZADO */}
-      <Container
-        maxWidth="lg"
+    <>
+      <Box
         sx={{
-          flexGrow: 1,
-          py: { xs: 4, md: 6 },
-          mt: { xs: 10, md: 12 }, // distância para não ficar atrás do Header
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
+
+          "&::before": {
+            content: '""',
+            position: "fixed",
+            inset: 0,
+            backgroundImage: "url(/images/fundo-branco.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            zIndex: -2,
+          },
+
+          "&::after": {
+            content: '""',
+            position: "fixed",
+            inset: 0,
+            backgroundColor: "rgba(255,255,255,0.85)",
+            zIndex: -1,
+          },
         }}
       >
-        {children}
-      </Container>
+        <Header />
 
-      {/* 🔹 FOOTER */}
-      <Footer />
-    </Box>
+      {/* <SkipToContent /> */}
+
+        <Container
+          id="main-content"
+          maxWidth="lg"
+          sx={{
+            flexGrow: 1,
+            py: { xs: 4, md: 6 },
+            mt: { xs: 2, md: 4 }, // reduz margem superior já que Skip/ Header ocupam espaço
+          }}
+          tabIndex={-1} // garante foco programático por link
+        >
+          {children}
+        </Container>
+
+        <Footer />
+      </Box>
+    </>
   );
 };
 

@@ -1,11 +1,97 @@
-// src/components/dashboard/charts/grafico17.tsx
-import React from "react";
-import ReactECharts from "echarts-for-react";
+import React, { useMemo } from "react";
+import dynamic from "next/dynamic";
 import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-import useFaperjData from "@/hooks/useFaperjData";
 
-const Grafico17 = () => {
-  const { data, loading, error } = useFaperjData("grafico17");
+import useFaperjData from "@/hooks/useFaperjData";
+import { Grafico17Data } from "@/types/faperj";
+
+const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
+
+// Abreviação institucional
+const abreviar = (v: number): string => {
+  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + " bi";
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + " mi";
+  if (v >= 1_000) return (v / 1_000).toFixed(0) + " mil";
+  return v.toLocaleString("pt-BR");
+};
+
+const Grafico17: React.FC = () => {
+  const { data, loading, error } = useFaperjData<Grafico17Data>("grafico17");
+
+  const option = useMemo(() => {
+    if (!data) return {};
+
+    return {
+      grid: {
+        top: 70,
+        left: 30,
+        right: 30,
+        bottom: 30,
+        containLabel: true,
+      },
+
+      tooltip: {
+        trigger: "axis",
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
+        extraCssText: "border-radius:6px; padding:10px;",
+        textStyle: { color: "#000", fontSize: 13 },
+
+        formatter: (params: any[]) => {
+          const f = params.find((p) => p.seriesName === "Feminino")?.data;
+          const m = params.find((p) => p.seriesName === "Masculino")?.data;
+
+          return `
+            <strong>Ano ${f.label}</strong><br/>
+            Fomentos Femininos: <strong>${f.value.toLocaleString("pt-BR")}</strong><br/>
+            Fomentos Masculinos: <strong>${m.value.toLocaleString("pt-BR")}</strong>
+          `;
+        },
+      },
+
+      legend: {
+        data: ["Feminino", "Masculino"],
+        top: 0,
+      },
+
+      xAxis: {
+        type: "category",
+        data: data.map((i) => i.label),
+        axisLabel: { fontSize: 12 },
+      },
+
+      yAxis: {
+        type: "value",
+        axisLabel: {
+          formatter: (v: number) => abreviar(v),
+        },
+      },
+
+      series: [
+        {
+          name: "Feminino",
+          type: "bar",
+          barWidth: "45%",
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((i) => ({
+            value: i.feminino,
+            label: i.label,
+          })),
+        },
+        {
+          name: "Masculino",
+          type: "bar",
+          barWidth: "45%",
+          itemStyle: { color: "#5F93CF" },
+          data: data.map((i) => ({
+            value: i.masculino,
+            label: i.label,
+          })),
+        },
+      ],
+    };
+  }, [data]);
 
   if (loading)
     return (
@@ -16,74 +102,6 @@ const Grafico17 = () => {
 
   if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
   if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
-
-  const option = {
-    grid: {
-      top: 40,
-      left: 60,
-      right: 20,
-      bottom: 60,
-    },
-
-    tooltip: {
-      trigger: "axis",
-      backgroundColor: "rgba(18,75,108,0.9)",
-      textStyle: { color: "#fff" },
-      borderRadius: 6,
-      formatter: (params: any) => {
-        const f = params.find((p: any) => p.seriesName === "Feminino").data;
-        const m = params.find((p: any) => p.seriesName === "Masculino").data;
-
-        return `
-          <strong>Ano ${f.label}</strong><br/>
-          Fomentos Femininos: ${f.feminino.toLocaleString("pt-BR")}<br/>
-          Fomentos Masculinos: ${m.masculino.toLocaleString("pt-BR")}
-        `;
-      },
-    },
-
-    legend: {
-      data: ["Feminino", "Masculino"],
-      top: 0,
-    },
-
-    xAxis: {
-      type: "category",
-      data: data.map((i: any) => i.label),
-      axisLabel: { fontSize: 12 },
-    },
-
-    yAxis: {
-      type: "value",
-      axisLabel: {
-        formatter: (v: number) =>
-          v >= 1000 ? `${(v / 1000).toFixed(0)} mil` : v,
-      },
-    },
-
-    series: [
-      {
-        name: "Feminino",
-        type: "bar",
-        data: data.map((i: any) => ({
-          value: i.feminino,
-          ...i,
-        })),
-        barWidth: "45%",
-        itemStyle: { color: "#FBC02D" },
-      },
-      {
-        name: "Masculino",
-        type: "bar",
-        data: data.map((i: any) => ({
-          value: i.masculino,
-          ...i,
-        })),
-        barWidth: "45%",
-        itemStyle: { color: "#5F93CF" },
-      },
-    ],
-  };
 
   return (
     <Card
@@ -106,7 +124,7 @@ const Grafico17 = () => {
         Quantidade de Fomentos por Sexo e Ano
       </Typography>
 
-      {/* LINHA SUAVE */}
+      {/* LINHA */}
       <Box
         sx={{
           width: "100%",

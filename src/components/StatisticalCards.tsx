@@ -1,11 +1,11 @@
 import {
   Box,
   Container,
-  Grid,
   Typography,
   Paper,
   Divider,
 } from "@mui/material";
+import Grid from '@mui/material/Unstable_Grid2';
 import { styled } from "@mui/material/styles";
 import React from "react";
 import { STATS_DATA } from "../data/faperj-data";
@@ -118,7 +118,7 @@ const StatisticalCards: React.FC = () => {
         {/* 🔵 Cards menores */}
         <Grid container spacing={3} justifyContent="center">
           {cardData.map((card, i) => (
-            <Grid item xs={12} sm={6} md={2.4} key={i}>
+            <Grid xs={12} sm={6} md={2.4} key={i}>
               <StatCard>
                 <Typography variant="h5" sx={{ fontWeight: 700 }}>
                   {formatValue(card.value, card.isCurrency)}
