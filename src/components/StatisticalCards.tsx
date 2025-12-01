@@ -116,7 +116,12 @@ const StatisticalCards: React.FC = () => {
         </TopCard>
 
         {/* 🔵 Cards menores */}
-        <Grid container spacing={3} justifyContent="center">
+        <Grid
+          container
+          spacing={3}
+          justifyContent="center"
+          sx={{ px: { xs: 1.5, sm: 0 } }}
+        >
           {cardData.map((card, i) => (
             <Grid xs={12} sm={6} md={2.4} key={i}>
               <StatCard>
