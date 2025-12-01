@@ -74,7 +74,6 @@ const chartCategories = {
     Grafico16,
     Grafico16_1,
     Grafico17,
-    Grafico18,
   ],
   Regionalização: [GraficoLineRace],
   Internacionalização: [
