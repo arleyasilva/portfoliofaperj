@@ -9,7 +9,8 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 // ====== GRÁFICOS NACIONAIS ======
 import Grafico1 from "../components/dashboard/charts/grafico1";
@@ -87,9 +88,43 @@ const chartCategories = {
 
 type ChartCategory = keyof typeof chartCategories;
 
+// Mapa de URL slug para categoria exata
+const slugToCategory: Record<string, ChartCategory> = {
+  "bolsas": "Bolsas",
+  "auxilios": "Auxílios",
+  "area-de-conhecimento": "Área de Conhecimento",
+  "sexo": "Sexo",
+  "regionalizacao": "Regionalização",
+  "internacionalizacao": "Internacionalização",
+};
+
 const Dashboard: React.FC = () => {
+  const router = useRouter();
   const [activeCategory, setActiveCategory] =
     useState<ChartCategory>("Bolsas");
+
+  // Lê o query param 'categoria' na URL e ativa a categoria correspondente
+  useEffect(() => {
+    // Aguarda o router estar pronto
+    if (!router.isReady) return;
+    
+    const { categoria } = router.query;
+    if (typeof categoria === "string" && categoria in slugToCategory) {
+      setActiveCategory(slugToCategory[categoria]);
+    }
+  }, [router.isReady, router.query]);
+  
+  // Handler para trocar categoria via botão E atualizar URL
+  const handleCategoryChange = (category: ChartCategory) => {
+    setActiveCategory(category);
+    // Atualiza a URL sem recarregar a página
+    const slug = Object.keys(slugToCategory).find(
+      key => slugToCategory[key] === category
+    );
+    if (slug) {
+      router.push(`/dashboard?categoria=${slug}`, undefined, { shallow: true });
+    }
+  };
 
   // 🔥 Correção oficial do erro TS — converte length em number normal
   const chartsToRender = chartCategories[activeCategory];
@@ -184,7 +219,7 @@ const Dashboard: React.FC = () => {
               (category) => (
                 <Button
                   key={category}
-                  onClick={() => setActiveCategory(category)}
+                  onClick={() => handleCategoryChange(category)}
                   variant={
                     activeCategory === category ? "contained" : "outlined"
                   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Box,
   Card,
@@ -11,13 +11,14 @@ import {
   Container,
   Link as MuiLink,
   Button,
+  Chip,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Link from "next/link";
 
 // ✅ IMPORTAÇÕES DOS DATA FILES
-import { EDITAIS_DATA } from "@/data/tripleColumn/editais";
+import { EDITAIS_DATA, type EditalItem } from "@/data/tripleColumn/editais";
 import { PROGRAMAS_DATA } from "@/data/tripleColumn/programas";
 import { RECENT_VIDEOS, LIVE_EVENT } from "@/data/tripleColumn/videos";
 
@@ -29,6 +30,7 @@ interface YoutubeVideoItem {
 }
 
 const DEFAULT_ITEMS_LIMIT = 10;
+const ESTIMATED_ROW_HEIGHT = 44; // px — aproximação da altura de cada linha de vídeo
 
 /* CARD DE EVENTO AO VIVO */
 const LiveNotificationCard = ({ video }: { video: YoutubeVideoItem }) => (
@@ -61,15 +63,80 @@ const LiveNotificationCard = ({ video }: { video: YoutubeVideoItem }) => (
 
 /* COLUNA 3 – DESTAQUES (Vídeos) */
 const DestaquesColumn = () => {
-  const allVideos: YoutubeVideoItem[] = LIVE_EVENT
-    ? [LIVE_EVENT, ...RECENT_VIDEOS]
-    : RECENT_VIDEOS;
+  const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetched, setFetched] = useState<YoutubeVideoItem[]>([]);
+  const [fitCount, setFitCount] = useState<number>(DEFAULT_ITEMS_LIMIT);
 
-  const itemsToShow = allVideos.slice(0, 8);
+  // Refs para medir área disponível no List
+  const listRef = useRef<HTMLUListElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+
+  // Carrega vídeos dinamicamente do backend (sem API key)
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        setLoading(true);
+        const res = await fetch('/api/youtube?max=24');
+        if (!res.ok) throw new Error('Falha ao carregar vídeos');
+        const data = await res.json();
+        const items: YoutubeVideoItem[] = (data.items || []).map((v: any) => ({
+          title: v.title,
+          url: v.url,
+        }));
+        if (!cancelled) setFetched(items);
+      } catch {
+        // Silencia e mantém fallback estático
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // Medição responsiva: calcula quantas linhas cabem na área disponível
+  useEffect(() => {
+    function computeFit() {
+      const listEl = listRef.current;
+      if (!listEl) return;
+      const total = listEl.getBoundingClientRect().height; // altura da área do List (flexGrow)
+      const headerH = headerRef.current?.getBoundingClientRect().height ?? 0;
+      const footerH = footerRef.current?.getBoundingClientRect().height ?? 0;
+      const available = Math.max(0, total - headerH - footerH);
+      const rows = Math.floor(available / ESTIMATED_ROW_HEIGHT);
+      if (rows && rows !== fitCount) {
+        setFitCount(Math.max(DEFAULT_ITEMS_LIMIT, rows));
+      }
+    }
+
+    // Observa redimensionamentos
+    const ro = new ResizeObserver(() => computeFit());
+    if (listRef.current) ro.observe(listRef.current);
+    computeFit();
+    window.addEventListener("resize", computeFit);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", computeFit);
+    };
+  }, [fitCount]);
+
+  // Fallback estático caso fetch falhe
+  const baseList = fetched.length > 0 ? fetched : RECENT_VIDEOS;
+  // Remove duplicados por URL
+  const unique = baseList.filter((it, idx, arr) => arr.findIndex(a => a.url === it.url) === idx);
+  const allVideos: YoutubeVideoItem[] = LIVE_EVENT ? [LIVE_EVENT, ...unique] : unique;
+
+  const limit = fitCount; // número dinâmico que cabe no container
+  const itemsToShow = expanded ? allVideos : allVideos.slice(0, Math.min(allVideos.length, limit));
 
   return (
-    <List sx={{ p: 0, flexGrow: 1 }}>
-      <Box sx={{ p: 1 }}>
+    <List sx={{ p: 0, flexGrow: 1 }} ref={listRef}>
+      <Box sx={{ p: 1 }} ref={headerRef}>
         <Typography variant="subtitle2" sx={{ color: "text.secondary", px: 1 }}>
           {LIVE_EVENT ? "Live + Vídeos recentes" : "Vídeos Recentes"}
         </Typography>
@@ -117,11 +184,22 @@ const DestaquesColumn = () => {
         )
       )}
 
-      <Box sx={{ p: 2, textAlign: "center" }}>
+      <Box sx={{ p: 2, textAlign: "center", display: 'flex', gap: 1, justifyContent: 'center' }} ref={footerRef}>
+        {allVideos.length > (limit || DEFAULT_ITEMS_LIMIT) && (
+          <Button
+            variant="text"
+            color="inherit"
+            onClick={() => setExpanded((v) => !v)}
+            disabled={loading}
+            sx={{ textTransform: 'none' }}
+          >
+            {expanded ? "Ver menos" : "Ver mais"}
+          </Button>
+        )}
         <Button
           variant="contained"
           color="error"
-          href="https://www.youtube.com/user/FAPERJcomunica"
+          href="https://www.youtube.com/@FAPERJoficial"
           target="_blank"
           sx={{ fontWeight: 600, textTransform: "none" }}
         >
@@ -175,6 +253,9 @@ const BannerHeader = styled(Box)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius * 2,
   marginBottom: theme.spacing(4),
   boxShadow: theme.shadows[3],
+  [theme.breakpoints.down('md')]: {
+    height: 100,
+  },
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -190,6 +271,30 @@ const StyledCard = styled(Card)(({ theme }) => ({
 const TripleColumnNav = () => {
   const [openItem, setOpenItem] = useState<Record<string, boolean>>({});
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [editais, setEditais] = useState<EditalItem[]>(EDITAIS_DATA);
+
+  // Heurística local para garantir status mesmo quando a API não trouxer
+  const parseLastDateInText = (text?: string): Date | undefined => {
+    if (!text) return undefined;
+    const m = text.match(/(\d{2}\/\d{2}\/\d{4})(?![\s\S]*\d{2}\/\d{2}\/\d{4})/);
+    if (!m) return undefined;
+    const [dd, mm, yyyy] = m[1].split("/");
+    const d = new Date(Number(yyyy), Number(mm) - 1, Number(dd), 23, 59, 59, 999);
+    return isNaN(d.getTime()) ? undefined : d;
+  };
+
+  const getStatus = (item: EditalItem): "aberto" | "resultado" | "encerrado" => {
+    // Preferir status vindo do dado quando existir e for válido
+    const now = new Date();
+    const s: any = (item as any).status;
+    if (s === "aberto" || s === "resultado" || s === "encerrado") return s;
+    // Fallback: se tiver link de resultado, considerar "resultado"
+    // @ts-ignore
+    if ((item as any).linkResultado) return "resultado";
+    const deadline = parseLastDateInText((item as any).submissao);
+    if (deadline && deadline.getTime() >= now.getTime()) return "aberto";
+    return "encerrado";
+  };
 
   const toggleItem = (id: string) => {
     setOpenItem((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -199,54 +304,213 @@ const TripleColumnNav = () => {
     setExpanded((prev) => ({ ...prev, [column]: !prev[column] }));
   };
 
+  // Carrega automaticamente os editais via API e usa fallback em caso de erro
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const resp = await fetch("/api/editais");
+        if (!resp.ok) return;
+        const json = await resp.json();
+        const items: EditalItem[] = json?.items || [];
+        if (!cancelled && items.length) {
+          setEditais(items);
+        }
+      } catch (e) {
+        // usa fallback silenciosamente
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
-    <Container maxWidth="xl" sx={{ py: 6 }}>
+    <Container maxWidth="xl" sx={{ py: { xs: 3, md: 6 } }}>
       <BannerHeader>
-        <Typography variant="h3" fontWeight={600} color="white">
+        <Typography 
+          variant="h3" 
+          fontWeight={600} 
+          color="white"
+          sx={{ fontSize: { xs: "1.75rem", md: "3rem" } }}
+        >
           FAPERJ EM PAUTA
         </Typography>
       </BannerHeader>
 
       <Box
         sx={{
-          display: "flex",
-          flexWrap: "nowrap",
-          gap: 4,
-          justifyContent: "center",
+          display: { xs: "block", md: "flex" },
+          flexDirection: { md: "row" },
+          gap: { md: 4 },
+          justifyContent: { md: "center" },
+          alignItems: { md: "stretch" },
         }}
       >
         {/* COLUNA 1 — EDITAIS */}
-        <Box sx={{ width: "33.33%", minWidth: 320 }}>
+        <Box sx={{ 
+          width: "100%",
+          flex: { md: "1 1 0" },
+          minWidth: { md: 0 },
+          mb: { xs: 4, md: 0 },
+        }}>
           <StyledCard>
-            {/* Deixe imageSrc vazio, só preencher depois! */}
             <CardHeader imageSrc="">
               EDITAIS
             </CardHeader>
-            <List sx={{ flexGrow: 1 }}>
-              {EDITAIS_DATA.slice(
+            {/* Wrapper com clamp de altura para manter a coluna compacta em desktop */}
+            <Box sx={{ position: "relative" }}>
+              <List
+                sx={{
+                  flexGrow: 1,
+                  maxHeight: { xs: "none", md: expanded["Editais"] ? "none" : 420 },
+                  overflow: "hidden",
+                  pr: 1,
+                }}
+              >
+              {editais.slice(
                 0,
-                expanded["Editais"] ? EDITAIS_DATA.length : DEFAULT_ITEMS_LIMIT
+                expanded["Editais"] ? editais.length : DEFAULT_ITEMS_LIMIT
               ).map((item) => (
                 <Box key={item.id}>
-                  <Box
+                    <MuiLink
+                      component="button"
+                      underline="none"
+                      color="inherit"
+                      onClick={() => toggleItem(item.id)}
                     sx={{
                       p: 1,
                       pl: 2,
+                        width: "100%",
+                        textAlign: "left",
                       display: "flex",
                       alignItems: "center",
+                        gap: 1.25,
+                        borderLeft: getStatus(item) === "aberto" ? "4px solid #2e7d32" : undefined,
+                        backgroundColor: getStatus(item) === "aberto" ? "rgba(46,125,50,0.06)" : undefined,
+                         borderRadius: 1,
                       "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: 32 }}>
-                      <ArrowRightIcon />
+                        <Box
+                          sx={{
+                            transition: "0.3s",
+                            transform: openItem[item.id]
+                              ? "rotate(45deg)"
+                              : "rotate(0deg)",
+                            fontSize: 18,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          +
+                        </Box>
                     </ListItemIcon>
-                    <Typography variant="body1">{item.label}</Typography>
-                  </Box>
+                      <Box sx={{ flex: 1, minWidth: 0 }}>
+                        <Typography variant="body2" fontWeight={600}>
+                          {item.numero}
+                        </Typography>
+                        <Typography variant="body2" sx={{ fontSize: "0.875rem" }}>
+                          {item.titulo}
+                        </Typography>
+                      </Box>
+                      {/* Selo compacto de status sempre visível */}
+                      {(() => {
+                        const st = getStatus(item);
+                        const chipProps =
+                          st === "aberto"
+                            ? { label: "ABERTO", sx: { bgcolor: "#e8f5e9", color: "#2e7d32", fontWeight: 700 } }
+                            : st === "resultado"
+                            ? { label: "RESULTADO", sx: { bgcolor: "#e3f2fd", color: "#1565c0", fontWeight: 700 } }
+                            : { label: "ENCERRADO", sx: { bgcolor: "#eeeeee", color: "#616161", fontWeight: 700 } };
+                        return <Chip size="small" {...chipProps} />;
+                      })()}
+                    </MuiLink>
+                    <Collapse in={openItem[item.id]}>
+                      <Box sx={{ p: 2, pt: 1, backgroundColor: "rgba(0,0,0,0.02)" }}>
+                        {item.publicacao && (
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            <strong>Publicação:</strong> {item.publicacao}
+                          </Typography>
+                        )}
+                        {item.submissao && (
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            <strong>Submissão:</strong> {item.submissao}
+                          </Typography>
+                        )}
+                        {item.resultadoPrevisao && (
+                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                            <strong>Resultado:</strong> {item.resultadoPrevisao}
+                          </Typography>
+                        )}
+                        {item.observacoes && (
+                          <Typography variant="body2" color="error" gutterBottom sx={{ mt: 1 }}>
+                            {item.observacoes}
+                          </Typography>
+                        )}
+                        <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
+                          <MuiLink
+                            href={item.linkEdital}
+                            target="_blank"
+                            rel="noopener"
+                            sx={{
+                              px: 2,
+                              py: 0.5,
+                              backgroundColor: "primary.main",
+                              color: "white",
+                              borderRadius: 1,
+                              textDecoration: "none",
+                              fontSize: "0.75rem",
+                              "&:hover": { backgroundColor: "primary.dark" },
+                            }}
+                          >
+                            📄 Ver Edital
+                          </MuiLink>
+                          {item.linkResultado && (
+                            <MuiLink
+                              href={item.linkResultado}
+                              target="_blank"
+                              rel="noopener"
+                              sx={{
+                                px: 2,
+                                py: 0.5,
+                                backgroundColor: "secondary.main",
+                                color: "white",
+                                borderRadius: 1,
+                                textDecoration: "none",
+                                fontSize: "0.75rem",
+                                "&:hover": { backgroundColor: "secondary.dark" },
+                              }}
+                            >
+                              📊 Ver Resultado
+                            </MuiLink>
+                          )}
+                        </Box>
+                      </Box>
+                    </Collapse>
                 </Box>
               ))}
-            </List>
-            {EDITAIS_DATA.length > DEFAULT_ITEMS_LIMIT && (
-              <Box textAlign="right">
+              </List>
+
+              {/* Fade no rodapé quando estiver colapsado (somente desktop) */}
+              {!expanded["Editais"] && (
+                <Box
+                  sx={{
+                    display: { xs: "none", md: "block" },
+                    position: "absolute",
+                    height: 48,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background:
+                      "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+            </Box>
+            {editais.length > DEFAULT_ITEMS_LIMIT && (
+                <Box textAlign="right" sx={{ p: 1 }}>
                 <Button onClick={() => toggleExpand("Editais")}>
                   {expanded["Editais"] ? "Ver menos" : "Ver mais"}
                 </Button>
@@ -256,7 +520,12 @@ const TripleColumnNav = () => {
         </Box>
 
         {/* COLUNA 2 — PROGRAMAS */}
-        <Box sx={{ width: "33.33%", minWidth: 320 }}>
+        <Box sx={{ 
+          width: "100%",
+          flex: { md: "1 1 0" },
+          minWidth: { md: 0 },
+          mb: { xs: 4, md: 0 },
+        }}>
           <StyledCard>
             <CardHeader imageSrc="">
               PROGRAMAS
@@ -319,7 +588,12 @@ const TripleColumnNav = () => {
         </Box>
 
         {/* COLUNA 3 — DESTAQUES */}
-        <Box sx={{ width: "33.33%", minWidth: 320 }}>
+        <Box sx={{ 
+          width: "100%",
+          flex: { md: "1 1 0" },
+          minWidth: { md: 0 },
+          mb: { xs: 0, md: 0 },
+        }}>
           <StyledCard>
             <CardHeader imageSrc="">
               DESTAQUES FAPERJ

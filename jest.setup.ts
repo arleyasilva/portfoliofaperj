@@ -40,6 +40,20 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 } as unknown as typeof IntersectionObserver;
 
+// Mock do ResizeObserver para ambiente de testes (jsdom não fornece)
+class ResizeObserverMock {
+  callback: ResizeObserverCallback;
+  constructor(callback: ResizeObserverCallback) {
+    this.callback = callback;
+  }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+// Anexa mock ao escopo global de testes
+(global as any).ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
+
 // Suprimir avisos de console não críticos
 const originalError = console.error;
 
