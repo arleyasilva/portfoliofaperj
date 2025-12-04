@@ -169,7 +169,7 @@ const Header: React.FC = () => {
               color="inherit"
               aria-label="LinkedIn da FAPERJ"
               component="a"
-              href="https://www.linkedin.com/company/faperj"
+              href="https://www.linkedin.com/company/faperjoficial"
               target="_blank"
               rel="noopener noreferrer"
             >
