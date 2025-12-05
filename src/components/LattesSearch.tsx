@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Typography, TextField, IconButton } from '@mui/material';
+import { Box, Typography, TextField, IconButton, Tooltip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/system';
 
 const LATTES_SEARCH_URL = 'http://buscatextual.cnpq.br/buscatextual/busca.do';
+const LATTES_CV_URL = 'http://lattes.cnpq.br';
 
 /* =============================== */
 /* ESTILOS                          */
@@ -27,7 +28,9 @@ const SearchContainer = styled(Box)(({ theme }) => ({
 const SectionTitle = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginBottom: '40px',
+  justifyContent: 'center',
+  textAlign: 'center',
+  marginBottom: '32px',
   width: '100%',
   maxWidth: '900px',
   padding: '0 16px',
@@ -36,11 +39,8 @@ const SectionTitle = styled(Box)(({ theme }) => ({
     content: '""',
     flex: 1,
     borderBottom: '2px solid #E60000',
-    margin: '0 10px',
+    margin: '0 12px',
   },
-
-  '&:before': { flex: 0.3 },
-  '&:after': { flex: 1 },
 }));
 
 // Barra de busca
@@ -69,15 +69,34 @@ const LattesTextField = styled(TextField)(({ theme }) => ({
 /* COMPONENTE                       */
 /* =============================== */
 
-const LattesSearch: React.FC = () => {
+type LattesSearchProps = {
+  /**
+   * When true, shows the search input. When false, only shows the CNPq/Lattes logo linking to the official search page.
+   */
+  enabled?: boolean;
+};
+
+const LattesSearch: React.FC<LattesSearchProps> = ({ enabled = false }) => {
   const [researcherName, setResearcherName] = useState('');
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault();
     if (researcherName.trim()) {
-      const url = `${LATTES_SEARCH_URL}?texto=${encodeURIComponent(
-        researcherName
-      )}&buscaSimples=true&botaoBusca=Buscar`;
+      // Verifica se é um ID Lattes (geralmente é um número com 16 dígitos)
+      const isLattesId = /^\d{16}$/.test(researcherName.trim());
+      
+      let url: string;
+      
+      if (isLattesId) {
+        // Se for ID Lattes, abre direto o currículo
+        url = `http://lattes.cnpq.br/${researcherName.trim()}`;
+      } else {
+        // Se for nome, faz a busca no CNPq
+        // Parâmetro 'texto' é o que o CNPq reconhece para busca
+        url = `http://buscatextual.cnpq.br/buscatextual/busca.do?texto=${encodeURIComponent(
+          researcherName.trim()
+        )}&buscaSimples=true&botaoBusca=Buscar`;
+      }
 
       window.open(url, '_blank');
     }
@@ -95,39 +114,56 @@ const LattesSearch: React.FC = () => {
         </Typography>
       </SectionTitle>
 
-      {/* --- LOGO + CAMPO DE BUSCA --- */}
+      {/* --- LOGO + (opcional) CAMPO DE BUSCA --- */}
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
+          justifyContent: 'center',
+          gap: enabled ? 2 : 0,
           width: '100%',
           maxWidth: '600px',
           px: 2,
         }}
       >
-        <img
-          src="/images/lattes-logo.png"
-          alt="Plataforma Lattes Logo"
-          style={{
-            height: '60px',
-            marginRight: '20px',
-            maxWidth: '100%',
-          }}
-        />
+        {/* Logo do CNPq/Lattes direcionando para a página de busca oficial */}
+        <a
+          href={LATTES_SEARCH_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ display: 'inline-flex' }}
+        >
+          <img
+            src="/images/lattes-logo.png"
+            alt="Plataforma Lattes (CNPq)"
+            style={{
+              height: '120px',
+              marginRight: enabled ? '20px' : 0,
+              maxWidth: '100%',
+              borderRadius: '6px',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.25)',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+            }}
+          />
+        </a>
 
-        <form onSubmit={handleSearch} style={{ width: '100%' }}>
-          <SearchBar>
-            <LattesTextField
-              placeholder="Digite o nome do pesquisador"
-              value={researcherName}
-              onChange={(e) => setResearcherName(e.target.value)}
-              variant="outlined"
-            />
-            <IconButton type="submit" sx={{ color: '#002E5C' }}>
-              <SearchIcon />
-            </IconButton>
-          </SearchBar>
-        </form>
+        {enabled && (
+          <form onSubmit={handleSearch} style={{ width: '100%' }}>
+            <SearchBar>
+              <Tooltip title="Digite o nome do pesquisador ou o ID Lattes (16 dígitos)">
+                <LattesTextField
+                  placeholder="Nome do pesquisador ou ID Lattes"
+                  value={researcherName}
+                  onChange={(e) => setResearcherName(e.target.value)}
+                  variant="outlined"
+                />
+              </Tooltip>
+              <IconButton type="submit" sx={{ color: '#002E5C' }}>
+                <SearchIcon />
+              </IconButton>
+            </SearchBar>
+          </form>
+        )}
       </Box>
     </SearchContainer>
   );

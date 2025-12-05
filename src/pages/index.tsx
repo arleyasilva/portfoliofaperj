@@ -17,7 +17,8 @@ import StatisticalCards from '../components/StatisticalCards';
 import useFaperjData from '../hooks/useFaperjData';
 import IconNav from '../components/IconNav';
 import TripleColumnNav from '../components/TripleColumnNav';
-import SearchSection from '../components/SearchSection';
+// SearchSection temporariamente oculto
+// import SearchSection from '../components/SearchSection';
 import LattesSearch from '../components/LattesSearch';
 
 import { StatsData } from '@/types/faperj';  // ✅ IMPORTANTE
@@ -78,8 +79,7 @@ export default function Dashboard() {
 
         </Container>
 
-        <TripleColumnNav />
-        <SearchSection />
+  <TripleColumnNav />
         <LattesSearch />
 
         <Footer />
