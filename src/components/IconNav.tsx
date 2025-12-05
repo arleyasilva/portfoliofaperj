@@ -17,13 +17,14 @@ interface NavItem {
 
 const IconNav: React.FC = () => {
   // Novos ícones (sem imagens), inspirados nos 3 anteriores, agora com 6 categorias
+  // Apontamentos alinhados com o menu hambúrguer (Header.tsx -> /dashboard?categoria=...)
   const navItems: NavItem[] = [
-    { label: 'Bolsas', href: '/indicadores', Icon: SchoolIcon },
-    { label: 'Auxílios', href: '/indicadores', Icon: VolunteerActivismIcon },
-    { label: 'Área de Conhecimento', href: '/indicadores', Icon: CategoryIcon },
-    { label: 'Sexo', href: '/indicadores-sexo', Icon: WcIcon },
-    { label: 'Regionalização', href: '/indicadores', Icon: MapIcon },
-    { label: 'Internacionalização', href: '/IndicadoresInternacionaisPage', Icon: PublicIcon },
+    { label: 'Bolsas', href: '/dashboard?categoria=bolsas', Icon: SchoolIcon },
+    { label: 'Auxílios', href: '/dashboard?categoria=auxilios', Icon: VolunteerActivismIcon },
+    { label: 'Área de Conhecimento', href: '/dashboard?categoria=area-de-conhecimento', Icon: CategoryIcon },
+    { label: 'Sexo', href: '/dashboard?categoria=sexo', Icon: WcIcon },
+    { label: 'Regionalização', href: '/dashboard?categoria=regionalizacao', Icon: MapIcon },
+    { label: 'Internacionalização', href: '/dashboard?categoria=internacionalizacao', Icon: PublicIcon },
   ];
 
   return (
