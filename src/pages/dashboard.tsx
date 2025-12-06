@@ -141,6 +141,13 @@ const Dashboard: React.FC = () => {
             activeCategory === "Internacionalização" &&
             ChartComponent === GraficoIntSankey;
 
+          // ⭐ DESTAQUE PARA ÁREA DE CONHECIMENTO NO DESKTOP
+          const isAreaConhecimento = activeCategory === "Área de Conhecimento";
+          const isFirstChart = index === 0;
+          
+          // Primeiro gráfico de Área de Conhecimento = largura total no desktop
+          const fullWidthDesktop = isAreaConhecimento && isFirstChart;
+          
           const fullWidth = count === 1 || isSankey;
 
           return (
@@ -148,7 +155,7 @@ const Dashboard: React.FC = () => {
               key={index}
               xs={12}
               sm={fullWidth ? 12 : 6}
-              md={fullWidth ? 12 : 6}
+              md={fullWidthDesktop ? 12 : (fullWidth ? 12 : 6)}
             >
               <ChartComponent />
             </Grid>

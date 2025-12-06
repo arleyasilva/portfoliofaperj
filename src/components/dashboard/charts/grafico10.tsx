@@ -31,6 +31,9 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
   const option = useMemo(() => {
     if (!finalData) return {};
 
+    // Detectar se é mobile
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     return {
       grid: {
         top: 20,
@@ -44,26 +47,28 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
         backgroundColor: "#fff",
         borderColor: "#ccc",
         borderWidth: 1,
-        textStyle: { color: "#333" },
-        borderRadius: 6,
+        textStyle: { color: "#333", fontSize: isMobile ? 11 : 15 },
+        borderRadius: 8,
+        padding: isMobile ? 8 : 12,
+        confine: true,
         formatter: (p: TooltipParams) => `
-          <strong>${p.data.label}</strong><br/>
-          Valor Total: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
+          <strong style="font-size: ${isMobile ? '12px' : '16px'}">${p.data.label}</strong><br/>
+          <span style="font-size: ${isMobile ? '10px' : '14px'}">Valor Total: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong></span>
         `,
       },
 
       legend: {
         orient: "vertical",
-        right: 10,
+        right: isMobile ? 5 : 10,
         top: "center",
-        textStyle: { fontSize: 13 },
+        textStyle: { fontSize: isMobile ? 11 : 15 },
       },
 
       series: [
         {
           type: "pie",
-          radius: ["45%", "80%"],
-          center: ["40%", "48%"],
+          radius: isMobile ? ["40%", "70%"] : ["45%", "80%"],
+          center: isMobile ? ["35%", "50%"] : ["40%", "48%"],
 
           data: finalData.map((item) => ({
             name: item.label,

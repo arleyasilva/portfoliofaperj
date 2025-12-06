@@ -33,18 +33,19 @@ const IconNav: React.FC = () => {
         width: '100%',
         backgroundColor: '#861539',
         color: 'white',
-        py: 1,
+        py: { xs: 1.5, sm: 1 },
         boxShadow: 3,
+        overflow: 'hidden',
       }}
     >
       {/* Título acadêmico/profissional para a seção de indicadores */}
-      <Box sx={{ textAlign: 'center', mb: 0.5 }}>
+      <Box sx={{ textAlign: 'center', mb: { xs: 0.75, sm: 0.5 } }}>
         <Typography
-          variant="h4"
           sx={{
             fontWeight: 800,
             letterSpacing: 0.6,
             textTransform: 'uppercase',
+            fontSize: { xs: '1.25rem', sm: '1.75rem', md: '2rem' },
           }}
         >
           Indicadores
@@ -52,7 +53,10 @@ const IconNav: React.FC = () => {
         <Box sx={{ width: 64, height: 2, backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 2, mx: 'auto', my: 0.25 }} />
         <Typography
           variant="body2"
-          sx={{ opacity: 0.9 }}
+          sx={{ 
+            opacity: 0.9,
+            fontSize: { xs: '0.75rem', sm: '0.875rem' },
+          }}
         >
           Navegue pelos principais eixos analíticos
         </Typography>
@@ -61,16 +65,17 @@ const IconNav: React.FC = () => {
       <Grid
         container
         justifyContent="center"
-        spacing={0}
-        columnSpacing={0}
-        rowSpacing={0}
+        spacing={{ xs: 1, sm: 0 }}
         sx={{
-          // afasta ainda mais os itens; responsivo para telas maiores
-          '& > .MuiGrid2-root': { mx: { xs: 1.5, sm: 2, md: 2.5, lg: 3 } },
+          // afasta os itens de forma responsiva
+          '& > .MuiGrid2-root': { 
+            mx: { xs: 0, sm: 2, md: 2.5, lg: 3 },
+            px: { xs: 0.25, sm: 0 },
+          },
         }}
       >
         {navItems.map((item, index) => (
-          <Grid key={index} xs="auto" sm="auto" md="auto">
+          <Grid key={index} xs={4} sm="auto" md="auto">
             <MuiLink
               href={item.href}
               component={Link}
@@ -82,18 +87,29 @@ const IconNav: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
-                padding: (theme) => theme.spacing(1),
+                padding: { xs: 0.25, sm: 1 },
                 transition: 'background-color 0.3s ease',
                 '&:hover': {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 },
               }}
             >
-              <IconButton sx={{ color: 'white', mb: 0 }}>
-                <item.Icon sx={{ fontSize: 68 }} />
+              <IconButton sx={{ color: 'white', mb: 0, p: { xs: 0.25, sm: 1 } }}>
+                <item.Icon sx={{ fontSize: { xs: 36, sm: 56, md: 68 } }} />
               </IconButton>
 
-              <Typography variant="body2" sx={{ fontWeight: 600, mt: 0 }}>
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  fontWeight: 600, 
+                  mt: { xs: 0.25, sm: 0 },
+                  fontSize: { xs: '0.65rem', sm: '0.875rem' },
+                  lineHeight: 1.1,
+                  whiteSpace: { xs: 'nowrap', sm: 'normal' },
+                  overflow: { xs: 'hidden', sm: 'visible' },
+                  textOverflow: { xs: 'ellipsis', sm: 'clip' },
+                }}
+              >
                 {item.label}
               </Typography>
             </MuiLink>

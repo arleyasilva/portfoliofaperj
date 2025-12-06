@@ -28,6 +28,9 @@ const Grafico2: React.FC = () => {
   if (!data || data.length === 0)
     return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
 
+  // Detectar se é mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const option = {
     animationDuration: 800,
 
@@ -36,26 +39,42 @@ const Grafico2: React.FC = () => {
       backgroundColor: "#fff",
       borderColor: "rgba(0,0,0,0.15)",
       borderWidth: 1,
-      borderRadius: 6,
-      textStyle: { color: "#000", fontSize: 13 },
+      borderRadius: 8,
+      padding: isMobile ? 8 : 12,
+      textStyle: { color: "#000", fontSize: isMobile ? 11 : 15 },
+      confine: true, // Mantém tooltip dentro dos limites do gráfico
+      position: function (point: number[], params: any, dom: any, rect: any, size: any) {
+        // Ajusta posição para não sair da tela
+        const x = point[0] < size.viewSize[0] / 2 ? point[0] + 10 : point[0] - size.contentSize[0] - 10;
+        const y = point[1] < size.viewSize[1] / 2 ? point[1] + 10 : point[1] - size.contentSize[1] - 10;
+        return [x, y];
+      },
       formatter: (p: PieTooltipParams) => `
-        <strong>${p.data.label}</strong><br/>
-        Investimento: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong>
+        <strong style="font-size: ${isMobile ? '12px' : '16px'}">${p.data.label}</strong><br/>
+        <span style="font-size: ${isMobile ? '10px' : '14px'}">Investimento: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong></span>
       `,
     },
 
     legend: {
-      orient: "vertical",
-      right: 10,
-      top: "center",
-      textStyle: { fontSize: 13 },
+      orient: isMobile ? "horizontal" : "vertical",
+      ...(isMobile
+        ? {
+            bottom: 0,
+            left: "center",
+            textStyle: { fontSize: 10 },
+          }
+        : {
+            right: 10,
+            top: "center",
+            textStyle: { fontSize: 15 },
+          }),
     },
 
     series: [
       {
         type: "pie",
-        radius: "60%",
-        center: ["40%", "55%"],
+        radius: isMobile ? "45%" : "70%",
+        center: isMobile ? ["50%", "35%"] : ["40%", "50%"],
 
         data: data.map((item) => ({
           name: item.label,
@@ -67,9 +86,11 @@ const Grafico2: React.FC = () => {
         })),
 
         label: {
+          show: true, // Mostrar labels em todos os dispositivos
           color: "#000",
-          fontSize: 11,
+          fontSize: isMobile ? 9 : 14,
           formatter: (param: SeriesLabelFormatterParam) => param.data.label || param.name,
+          overflow: 'truncate',
         },
 
         emphasis: {
@@ -89,7 +110,7 @@ const Grafico2: React.FC = () => {
         p: 3,
         borderRadius: 3,
         boxShadow: 3,
-        height: 430,
+        height: { xs: 500, sm: 430 },
         display: "flex",
         flexDirection: "column",
       }}

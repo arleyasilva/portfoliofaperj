@@ -40,12 +40,19 @@ const GraficoLineRace: React.FC = () => {
 
     const { years, regions } = data;
 
+    // Detectar se é mobile
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     const timelineFrames = years.map((year: string, index: number) => ({
       title: {
         text: `Regionalização – Ano ${year}`,
         left: "center",
         top: 10,
-        textStyle: { fontSize: 16, fontWeight: 700, color: "#124b6c" },
+        textStyle: { 
+          fontSize: isMobile ? 14 : 16, 
+          fontWeight: 700, 
+          color: "#124b6c" 
+        },
       },
 
       series: [
@@ -60,14 +67,14 @@ const GraficoLineRace: React.FC = () => {
 
           itemStyle: {
             color: (params: BarItemParams) => regionColors[params.data.name],
-            borderRadius: 6,
+            borderRadius: isMobile ? 4 : 6,
           },
 
           label: {
             show: true,
             position: "right",
             color: "#124b6c",
-            fontSize: 12,
+            fontSize: isMobile ? 9 : 12,
             formatter: (p: BarItemParams) => formatValor(p.data.value),
           },
         },
@@ -82,14 +89,18 @@ const GraficoLineRace: React.FC = () => {
           playInterval: 1800,
           data: years,
           bottom: 0,
-          label: { color: "#124b6c", fontWeight: 600 },
+          label: { 
+            color: "#124b6c", 
+            fontWeight: 600,
+            fontSize: isMobile ? 10 : 12,
+          },
         },
 
         grid: {
-          top: 70,
-          left: 70,
-          right: 150,
-          bottom: 80,
+          top: isMobile ? 50 : 70,
+          left: isMobile ? 10 : 70,
+          right: isMobile ? 90 : 150,
+          bottom: isMobile ? 60 : 80,
           containLabel: true,
         },
 
@@ -98,6 +109,8 @@ const GraficoLineRace: React.FC = () => {
           axisLabel: {
             formatter: (v: number) => formatValor(v),
             color: "#666",
+            fontSize: isMobile ? 8 : 12,
+            rotate: isMobile ? 45 : 0,
           },
           splitLine: { lineStyle: { type: "dashed", color: "#ccc" } },
         },
@@ -106,7 +119,10 @@ const GraficoLineRace: React.FC = () => {
           type: "category",
           inverse: true,
           data: regions.map((r) => r.label),
-          axisLabel: { color: "#124b6c", fontSize: 13 },
+          axisLabel: { 
+            color: "#124b6c", 
+            fontSize: isMobile ? 10 : 13,
+          },
         },
 
         tooltip: {
@@ -115,7 +131,8 @@ const GraficoLineRace: React.FC = () => {
           borderColor: "rgba(0,0,0,0.15)",
           borderWidth: 1,
           extraCssText: "border-radius:6px; padding:8px;",
-          textStyle: { color: "#000", fontSize: 13 },
+          textStyle: { color: "#000", fontSize: isMobile ? 11 : 13 },
+          confine: true,
 
           formatter: (p: TooltipParams) =>
             `<strong>${p.name}</strong><br/>${formatValor(p.value)}`,
@@ -162,7 +179,9 @@ const GraficoLineRace: React.FC = () => {
       />
 
       {/* GRÁFICO */}
-      <ReactECharts option={option} style={{ height: 520, width: "100%" }} />
+      <Box sx={{ height: { xs: 450, sm: 520 }, width: "100%" }}>
+        <ReactECharts option={option} style={{ height: "100%", width: "100%" }} />
+      </Box>
 
       {/* FONTE */}
       <Typography
