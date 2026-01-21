@@ -167,13 +167,12 @@ const DestaquesColumn = () => {
             >
               <ListItemIcon sx={{ minWidth: "32px" }}>
                 <svg
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="#FF0000"
                 >
-                  <path d="M10 15l5.587-3.23L10 8.54V15z" />
-                  <path d="M21.5 8.167a3.033 3.033 0 00-2.15-2.15C17.383 5.5 12 5.5 12 5.5s-5.383 0-7.35.517a3.033 3.033 0 00-2.15 2.15C2.5 10.133 2.5 12 2.5 12s0 1.867.517 3.833a3.033 3.033 0 002.15 2.15C6.617 18.5 12 18.5 12 18.5s5.383 0 7.35-.517a3.033 3.033 0 002.15-2.15C21.5 13.867 21.5 12 21.5 12s0-1.867-.5-3.833z" />
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                 </svg>
               </ListItemIcon>
               <Typography variant="body2" sx={{ lineHeight: 1.3 }}>
@@ -198,10 +197,32 @@ const DestaquesColumn = () => {
         )}
         <Button
           variant="contained"
-          color="error"
           href="https://www.youtube.com/@FAPERJoficial"
           target="_blank"
-          sx={{ fontWeight: 600, textTransform: "none" }}
+          startIcon={
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+            >
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          }
+          sx={{ 
+            fontWeight: 600, 
+            textTransform: "none",
+            bgcolor: "#FF0000",
+            color: "white",
+            px: 3,
+            py: 1,
+            borderRadius: 2,
+            boxShadow: "0 2px 8px rgba(255,0,0,0.3)",
+            "&:hover": {
+              bgcolor: "#CC0000",
+              boxShadow: "0 4px 12px rgba(255,0,0,0.4)",
+            }
+          }}
         >
           Ver Canal no YouTube
         </Button>
@@ -283,17 +304,18 @@ const TripleColumnNav = () => {
     return isNaN(d.getTime()) ? undefined : d;
   };
 
-  const getStatus = (item: EditalItem): "aberto" | "resultado" | "encerrado" => {
+  const getStatus = (item: EditalItem): "aberto" | "resultado" | "em-avaliacao" | "encerrado" => {
     // Preferir status vindo do dado quando existir e for válido
     const now = new Date();
     const s: any = (item as any).status;
-    if (s === "aberto" || s === "resultado" || s === "encerrado") return s;
+    if (s === "aberto" || s === "resultado" || s === "em-avaliacao" || s === "encerrado") return s;
     // Fallback: se tiver link de resultado, considerar "resultado"
     // @ts-ignore
     if ((item as any).linkResultado) return "resultado";
     const deadline = parseLastDateInText((item as any).submissao);
     if (deadline && deadline.getTime() >= now.getTime()) return "aberto";
-    return "encerrado";
+    // Se passou o prazo mas não tem resultado, está em avaliação
+    return "em-avaliacao";
   };
 
   const toggleItem = (id: string) => {
@@ -386,8 +408,16 @@ const TripleColumnNav = () => {
                       display: "flex",
                       alignItems: "center",
                         gap: 1.25,
-                        borderLeft: getStatus(item) === "aberto" ? "4px solid #2e7d32" : undefined,
-                        backgroundColor: getStatus(item) === "aberto" ? "rgba(46,125,50,0.06)" : undefined,
+                        borderLeft: getStatus(item) === "aberto" 
+                          ? "4px solid #2e7d32" 
+                          : getStatus(item) === "em-avaliacao"
+                          ? "4px solid #e65100"
+                          : undefined,
+                        backgroundColor: getStatus(item) === "aberto" 
+                          ? "rgba(46,125,50,0.06)" 
+                          : getStatus(item) === "em-avaliacao"
+                          ? "rgba(230,81,0,0.06)"
+                          : undefined,
                          borderRadius: 1,
                       "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
                     }}
@@ -422,6 +452,8 @@ const TripleColumnNav = () => {
                             ? { label: "ABERTO", sx: { bgcolor: "#e8f5e9", color: "#2e7d32", fontWeight: 700 } }
                             : st === "resultado"
                             ? { label: "RESULTADO", sx: { bgcolor: "#e3f2fd", color: "#1565c0", fontWeight: 700 } }
+                            : st === "em-avaliacao"
+                            ? { label: "EM AVALIAÇÃO", sx: { bgcolor: "#fff3e0", color: "#e65100", fontWeight: 700 } }
                             : { label: "ENCERRADO", sx: { bgcolor: "#eeeeee", color: "#616161", fontWeight: 700 } };
                         return <Chip size="small" {...chipProps} />;
                       })()}

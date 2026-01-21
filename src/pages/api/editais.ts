@@ -10,7 +10,7 @@ export type EditalApiItem = {
   publicacao?: string;
   submissao?: string;
   resultadoPrevisao?: string;
-  status?: "aberto" | "encerrado" | "resultado";
+  status?: "aberto" | "encerrado" | "resultado" | "em-avaliacao";
 };
 
 const FAPERJ_URL = "https://www.faperj.br/?id=28.5.7";
@@ -99,7 +99,8 @@ function extractEditais(html: string, ano: number = 2025): EditalApiItem[] {
     } else if (linkResultado) {
       status = "resultado";
     } else if (submissao) {
-      status = "encerrado";
+      // Se passou o prazo de submissão mas não tem resultado, está em avaliação
+      status = "em-avaliacao";
     }
 
     items.push({

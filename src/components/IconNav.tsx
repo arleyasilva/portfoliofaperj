@@ -51,15 +51,6 @@ const IconNav: React.FC = () => {
           Indicadores
         </Typography>
         <Box sx={{ width: 64, height: 2, backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 2, mx: 'auto', my: 0.25 }} />
-        <Typography
-          variant="body2"
-          sx={{ 
-            opacity: 0.9,
-            fontSize: { xs: '0.75rem', sm: '0.875rem' },
-          }}
-        >
-          Navegue pelos principais eixos analíticos
-        </Typography>
       </Box>
 
       <Grid

@@ -61,7 +61,7 @@ const Header: React.FC = () => {
   };
 
   const menuItems: MenuItemType[] = [
-    { text: "Página Inicial", href: "/" },
+    { text: "Página inicial", href: "/" },
     {
       text: "Indicadores",
       href: "/dashboard",
@@ -344,8 +344,6 @@ const Header: React.FC = () => {
                     ))}
                   </Box>
                 )}
-
-                <Divider />
               </>
             ) : (
               // ITEM NORMAL

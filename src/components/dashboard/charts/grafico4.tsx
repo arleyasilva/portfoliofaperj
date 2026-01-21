@@ -45,18 +45,20 @@ const Grafico4: React.FC = () => {
 
           const bData = b.data as { label: string; value: number };
           const aData = a.data as { label: string; value: number };
+          const total = bData.value + aData.value;
 
           return `
             <strong>${bData.label}</strong><br/>
             Bolsas: <strong>R$ ${bData.value.toLocaleString("pt-BR")}</strong><br/>
-            Auxílios: <strong>R$ ${aData.value.toLocaleString("pt-BR")}</strong>
+            Auxílios: <strong>R$ ${aData.value.toLocaleString("pt-BR")}</strong><br/>
+            Total: <strong>R$ ${total.toLocaleString("pt-BR")}</strong>
           `;
         },
       },
 
       legend: {
         top: 0,
-        data: ["Bolsas", "Auxílios"],
+        data: ["Bolsas", "Auxílios", "Total"],
       },
 
       grid: {
@@ -96,6 +98,18 @@ const Grafico4: React.FC = () => {
             label: item.label,
             value: item.auxilios,
           })),
+        },
+        {
+          name: "Total",
+          type: "line",
+          smooth: true,
+          symbol: "circle",
+          symbolSize: 8,
+          lineStyle: {
+            color: "#e67e22",
+            width: 3,
+          },
+          data: data.map((item) => item.bolsas + item.auxilios),
         },
       ],
     };

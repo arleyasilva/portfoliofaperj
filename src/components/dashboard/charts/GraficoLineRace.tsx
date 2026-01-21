@@ -165,7 +165,7 @@ const GraficoLineRace: React.FC = () => {
         color="#124b6c"
         sx={{ fontSize: "18px" }}
       >
-        Regionalização – Corrida de Regiões (Line Race)
+        Fomento por Região
       </Typography>
 
       {/* LINHA */}

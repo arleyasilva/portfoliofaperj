@@ -10,11 +10,62 @@ export interface EditalItem {
   resultadoPrevisao?: string;
   linkEdital: string;
   linkResultado?: string;
-  status: "aberto" | "encerrado" | "resultado";
+  status: "aberto" | "encerrado" | "resultado" | "em-avaliacao";
   observacoes?: string;
 }
 
 export const EDITAIS_DATA: EditalItem[] = [
+  {
+    id: "edital-45-2025",
+    numero: "Nº 45/2025",
+    titulo: "Programa de Apoio à Estruturação e Consolidação de Indicações Geográficas (IGs)",
+    publicacao: "15/12/2025",
+    submissao: "15/12/2025 a 15/01/2026 (encerrado)",
+    resultadoPrevisao: "Resultado Preliminar: 28/02/2026",
+    linkEdital: "https://www.faperj.br/rp/downloads/Edital_FAPERJ_N%C2%BA_45_2025.pdf",
+    status: "em-avaliacao"
+  },
+  {
+    id: "edital-44-2025",
+    numero: "Nº 44/2025",
+    titulo: "Pesquisador na Empresa",
+    publicacao: "10/12/2025",
+    submissao: "10/12/2025 a 10/01/2026 (encerrado)",
+    resultadoPrevisao: "Resultado Preliminar: 20/02/2026",
+    linkEdital: "https://www.faperj.br/rp/downloads/Edital_FAPERJ_N%C2%BA_44_2025.pdf",
+    status: "em-avaliacao"
+  },
+  {
+    id: "edital-43-2025",
+    numero: "Nº 43/2025",
+    titulo: "Programa Básico Especial para Cursos Emergentes, Mestrado e Doutorado 2025",
+    publicacao: "05/12/2025",
+    submissao: "05/12/2025 a 05/01/2026 (encerrado)",
+    resultadoPrevisao: "Resultado Preliminar: 15/02/2026",
+    linkEdital: "https://www.faperj.br/rp/downloads/Edital_FAPERJ_N%C2%BA_43_2025.pdf",
+    status: "em-avaliacao"
+  },
+  {
+    id: "edital-42-2025",
+    numero: "Nº 42/2025",
+    titulo: "Programa de Apoio Emergencial para Programas de Pós-Graduação Stricto Sensu 6 e 7 – CAPES",
+    publicacao: "01/12/2025",
+    submissao: "01/12/2025 a 31/12/2025 (encerrado)",
+    resultadoPrevisao: "Resultado Preliminar: 10/02/2026",
+    linkEdital: "https://www.faperj.br/rp/downloads/Edital_FAPERJ_N%C2%BA_42_2025.pdf",
+    status: "em-avaliacao"
+  },
+  {
+    id: "edital-41-2025",
+    numero: "Nº 41/2025",
+    titulo: "Programa Luiz Pinguelli Rosa de Apoio à Mobilidade e Instalação de Pesquisadores Originários de Regiões em Conflito em ICTs do Estado do Rio de Janeiro – 3ª Edição",
+    publicacao: "25/11/2025",
+    submissao: "25/11/2025 a 25/12/2025 (encerrado)",
+    resultadoPrevisao: "Resultado Preliminar: 05/02/2026",
+    linkEdital: "https://www.faperj.br/rp/downloads/Edital_FAPERJ_N%C2%BA_41_2025.pdf",
+    status: "em-avaliacao",
+    observacoes: "⚠️ Edital destinado a pesquisadores de regiões em conflito"
+  },
   {
     id: "edital-37-2025",
     numero: "Nº 37/2025",
