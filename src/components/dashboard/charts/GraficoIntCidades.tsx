@@ -143,7 +143,7 @@ const GraficoIntCidades: React.FC = () => {
           fontStyle: "italic",
         }}
       >
-        Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ (Colaborações Internacionais)
+        Fonte: Assessoria Internacional - ASSINT / FAPERJ [2025]
       </Typography>
     </Card>
   );

@@ -117,7 +117,7 @@ const GraficoIntAnos: React.FC = () => {
         variant="caption"
         sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
       >
-        Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2018 – 2025]
+        Fonte: Assessoria Internacional - ASSINT / FAPERJ [2025]
       </Typography>
     </Card>
   );

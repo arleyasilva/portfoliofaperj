@@ -135,8 +135,14 @@ const DestaquesColumn = () => {
   const itemsToShow = expanded ? allVideos : allVideos.slice(0, Math.min(allVideos.length, limit));
 
   return (
-    <List sx={{ p: 0, flexGrow: 1 }} ref={listRef}>
-      <Box sx={{ p: 1 }} ref={headerRef}>
+    <Box sx={{ position: "relative" }}>
+      <List sx={{ 
+        p: 0, 
+        flexGrow: 1,
+        maxHeight: { xs: "none", md: expanded ? "none" : 420 },
+        overflow: "hidden",
+      }} ref={listRef}>
+        <Box sx={{ p: 1 }} ref={headerRef}>
         <Typography variant="subtitle2" sx={{ color: "text.secondary", px: 1 }}>
           {LIVE_EVENT ? "Live + Vídeos recentes" : "Vídeos Recentes"}
         </Typography>
@@ -227,7 +233,25 @@ const DestaquesColumn = () => {
           Ver Canal no YouTube
         </Button>
       </Box>
-    </List>
+      </List>
+
+      {/* Fade no rodapé quando estiver colapsado (somente desktop) */}
+      {!expanded && (
+        <Box
+          sx={{
+            display: { xs: "none", md: "block" },
+            position: "absolute",
+            height: 48,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background:
+              "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))",
+            pointerEvents: "none",
+          }}
+        />
+      )}
+    </Box>
   );
 };
 
@@ -369,7 +393,99 @@ const TripleColumnNav = () => {
           alignItems: { md: "stretch" },
         }}
       >
-        {/* COLUNA 1 — EDITAIS */}
+        {/* COLUNA 1 — PROGRAMAS */}
+        <Box sx={{ 
+          width: "100%",
+          flex: { md: "1 1 0" },
+          minWidth: { md: 0 },
+          mb: { xs: 4, md: 0 },
+        }}>
+          <StyledCard>
+            <CardHeader imageSrc="">
+              PROGRAMAS
+            </CardHeader>
+            <Box sx={{ position: "relative" }}>
+              <List sx={{ 
+                flexGrow: 1,
+                maxHeight: { xs: "none", md: expanded["Programas"] ? "none" : 420 },
+                overflow: "hidden",
+                pr: 1,
+              }}>
+                {PROGRAMAS_DATA.slice(
+                0,
+                expanded["Programas"] ? PROGRAMAS_DATA.length : DEFAULT_ITEMS_LIMIT
+              ).map((item) => (
+                <Box key={item.id}>
+                  <MuiLink
+                    component="button"
+                    underline="none"
+                    color="inherit"
+                    onClick={() => toggleItem(item.id)}
+                    sx={{
+                      p: 1,
+                      pl: 2,
+                      width: "100%",
+                      textAlign: "left",
+                      display: "flex",
+                      alignItems: "center",
+                      "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
+                    }}
+                  >
+                    <ListItemIcon sx={{ minWidth: 32 }}>
+                      <Box
+                        sx={{
+                          transition: "0.3s",
+                          transform: openItem[item.id]
+                            ? "rotate(45deg)"
+                            : "rotate(0deg)",
+                          fontSize: 18,
+                          fontWeight: "bold",
+                        }}
+                      >
+                        +
+                      </Box>
+                    </ListItemIcon>
+                    <Typography variant="body1">{item.label}</Typography>
+                  </MuiLink>
+                  <Collapse in={openItem[item.id]}>
+                    <Box sx={{ p: 2, pt: 1 }}>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.content}
+                      </Typography>
+                    </Box>
+                  </Collapse>
+                </Box>
+              ))}
+              </List>
+
+              {/* Fade no rodapé quando estiver colapsado (somente desktop) */}
+              {!expanded["Programas"] && (
+                <Box
+                  sx={{
+                    display: { xs: "none", md: "block" },
+                    position: "absolute",
+                    height: 48,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background:
+                      "linear-gradient(to top, rgba(255,255,255,1), rgba(255,255,255,0))",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+            </Box>
+            {PROGRAMAS_DATA.length > DEFAULT_ITEMS_LIMIT && (
+              <Box textAlign="right">
+                <Button onClick={() => toggleExpand("Programas")}>
+                  {expanded["Programas"] ? "Ver menos" : "Ver mais"}
+                </Button>
+              </Box>
+            )}
+          </StyledCard>
+        </Box>
+
+        {/* COLUNA 2 — EDITAIS */}
         <Box sx={{ 
           width: "100%",
           flex: { md: "1 1 0" },
@@ -545,74 +661,6 @@ const TripleColumnNav = () => {
                 <Box textAlign="right" sx={{ p: 1 }}>
                 <Button onClick={() => toggleExpand("Editais")}>
                   {expanded["Editais"] ? "Ver menos" : "Ver mais"}
-                </Button>
-              </Box>
-            )}
-          </StyledCard>
-        </Box>
-
-        {/* COLUNA 2 — PROGRAMAS */}
-        <Box sx={{ 
-          width: "100%",
-          flex: { md: "1 1 0" },
-          minWidth: { md: 0 },
-          mb: { xs: 4, md: 0 },
-        }}>
-          <StyledCard>
-            <CardHeader imageSrc="">
-              PROGRAMAS
-            </CardHeader>
-            <List sx={{ flexGrow: 1 }}>
-              {PROGRAMAS_DATA.slice(
-                0,
-                expanded["Programas"] ? PROGRAMAS_DATA.length : DEFAULT_ITEMS_LIMIT
-              ).map((item) => (
-                <Box key={item.id}>
-                  <MuiLink
-                    component="button"
-                    underline="none"
-                    color="inherit"
-                    onClick={() => toggleItem(item.id)}
-                    sx={{
-                      p: 1,
-                      pl: 2,
-                      width: "100%",
-                      textAlign: "left",
-                      display: "flex",
-                      alignItems: "center",
-                      "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 32 }}>
-                      <Box
-                        sx={{
-                          transition: "0.3s",
-                          transform: openItem[item.id]
-                            ? "rotate(45deg)"
-                            : "rotate(0deg)",
-                          fontSize: 18,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        +
-                      </Box>
-                    </ListItemIcon>
-                    <Typography variant="body1">{item.label}</Typography>
-                  </MuiLink>
-                  <Collapse in={openItem[item.id]}>
-                    <Box sx={{ p: 2, pt: 1 }}>
-                      <Typography variant="body2" color="text.secondary">
-                        {item.content}
-                      </Typography>
-                    </Box>
-                  </Collapse>
-                </Box>
-              ))}
-            </List>
-            {PROGRAMAS_DATA.length > DEFAULT_ITEMS_LIMIT && (
-              <Box textAlign="right">
-                <Button onClick={() => toggleExpand("Programas")}>
-                  {expanded["Programas"] ? "Ver menos" : "Ver mais"}
                 </Button>
               </Box>
             )}
