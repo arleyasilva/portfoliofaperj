@@ -21,6 +21,9 @@ const Grafico12: React.FC = () => {
   const option = useMemo(() => {
     if (!data) return {};
 
+    // Debug: verificar se os dados estão corretos
+    console.log("Grafico12 - Dados carregados:", data);
+
     return {
       grid: { top: 70, left: 30, right: 30, bottom: 30, containLabel: true },
 
@@ -35,16 +38,23 @@ const Grafico12: React.FC = () => {
         formatter: (params: any[]) => {
           const f = params.find((p) => p.seriesName === "Feminino")?.data;
           const m = params.find((p) => p.seriesName === "Masculino")?.data;
+          const nd = params.find((p) => p.seriesName === "Não definido")?.data;
 
-          return `
+          let html = `
             <strong>Ano ${f.label}</strong><br/>
             Feminino: <strong>${abreviarValor(f.value)}</strong><br/>
             Masculino: <strong>${abreviarValor(m.value)}</strong>
           `;
+          
+          if (nd && nd.value > 0) {
+            html += `<br/>Não definido: <strong>${abreviarValor(nd.value)}</strong>`;
+          }
+          
+          return html;
         },
       },
 
-      legend: { data: ["Feminino", "Masculino"], top: 0 },
+      legend: { data: ["Feminino", "Masculino", "Não definido"], top: 0 },
 
       xAxis: {
         type: "category",
@@ -66,11 +76,11 @@ const Grafico12: React.FC = () => {
           type: "line",
           smooth: true,
           symbolSize: 7,
-          lineStyle: { width: 3, color: "#FBC02D" },
-          itemStyle: { color: "#FBC02D" },
+          lineStyle: { width: 3, color: "#ff69b4" },
+          itemStyle: { color: "#ff69b4" },
           data: data.map((item) => ({
             value: item.feminino,
-            label: item.label, // <<< CORREÇÃO
+            label: item.label,
           })),
         },
 
@@ -83,7 +93,20 @@ const Grafico12: React.FC = () => {
           itemStyle: { color: "#5F93CF" },
           data: data.map((item) => ({
             value: item.masculino,
-            label: item.label, // <<< CORREÇÃO
+            label: item.label,
+          })),
+        },
+
+        {
+          name: "Não definido",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#FBC02D" },
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((item) => ({
+            value: item.naoDefinido || 0,
+            label: item.label,
           })),
         },
       ],
@@ -103,7 +126,7 @@ const Grafico12: React.FC = () => {
   return (
     <Card sx={{ p: 3, borderRadius: 3, boxShadow: 3, height: 430, display: "flex", flexDirection: "column" }}>
       <Typography variant="h6" fontWeight={700} color="#124b6c" sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}>
-        Valor total de fomentos da FAPERJ por sexo e ano
+        Quantidade de Bolsas e Auxílios por Sexo e Ano
       </Typography>
 
       <Box sx={{ width: "100%", height: "1px", backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />

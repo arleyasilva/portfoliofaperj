@@ -1,9 +1,9 @@
 [
-  { "label": "2019", "feminino": 266, "masculino": 447 },
-  { "label": "2020", "feminino": 271, "masculino": 419 },
-  { "label": "2021", "feminino": 1166, "masculino": 1368 },
-  { "label": "2022", "feminino": 857, "masculino": 866 },
-  { "label": "2023", "feminino": 453, "masculino": 552 },
-  { "label": "2024", "feminino": 732, "masculino": 758 },
-  { "label": "2025", "feminino": 545, "masculino": 322 }
+  { "label": "2019", "feminino": 266, "masculino": 447, "naoDefinido": 4  },
+  { "label": "2020", "feminino": 271, "masculino": 419, "naoDefinido": 21 },
+  { "label": "2021", "feminino": 1166, "masculino": 1368, "naoDefinido": 31 },
+  { "label": "2022", "feminino": 857, "masculino": 866, "naoDefinido": 40 },
+  { "label": "2023", "feminino": 453, "masculino": 552, "naoDefinido": 88 },
+  { "label": "2024", "feminino": 732, "masculino": 758, "naoDefinido": 53 },
+  { "label": "2025", "feminino": 702, "masculino": 500, "naoDefinido": 92 }
 ]

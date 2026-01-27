@@ -130,6 +130,7 @@ export interface GraficoSexoAno {
   label: string; // ano
   feminino: number;
   masculino: number;
+  naoDefinido?: number; // opcional para novos dados
 }
 
 export type Grafico11Data = GraficoSexoAno[];

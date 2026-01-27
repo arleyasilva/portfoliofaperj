@@ -70,14 +70,21 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
           radius: isMobile ? ["40%", "70%"] : ["45%", "80%"],
           center: isMobile ? ["35%", "50%"] : ["40%", "48%"],
 
-          data: finalData.map((item) => ({
-            name: item.label,
-            label: item.label,
-            value: item.value,
-            itemStyle: {
-              color: item.label === "Feminino" ? "#ff69b4" : "#2989b5",
-            },
-          })),
+          data: finalData.map((item) => {
+            let color = "#2989b5"; // Masculino (azul)
+            if (item.label === "Feminino") {
+              color = "#ff69b4"; // Rosa
+            } else if (item.label === "Não Definido" || item.label === "Não definido") {
+              color = "#FBC02D"; // Amarelo
+            }
+            
+            return {
+              name: item.label,
+              label: item.label,
+              value: item.value,
+              itemStyle: { color },
+            };
+          }),
 
           emphasis: {
             scale: true,
@@ -127,7 +134,7 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        {title ?? "Distribuição Total de Fomento por Sexo"}
+        Distribuição Total de Bolsas e Auxílios por Sexo
       </Typography>
 
       <Box

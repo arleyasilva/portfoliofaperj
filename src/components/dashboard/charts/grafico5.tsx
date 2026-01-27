@@ -107,7 +107,7 @@ const Grafico5: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição Geral 
+        Quantidade de Auxílios por ano
       </Typography>
 
       {/* LINHA SUAVE */}
