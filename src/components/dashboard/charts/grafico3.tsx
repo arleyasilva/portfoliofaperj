@@ -141,7 +141,7 @@ const Grafico3: React.FC = () => {
           fontSize: "18px",
         }}
       >
-        Distribuição de Bolsas, Auxílios e Total
+        Distribuição de Bolsas e Auxílios por Universidades
       </Typography>
 
       {/* LINHA SUAVE */}

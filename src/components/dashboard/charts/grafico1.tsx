@@ -99,7 +99,7 @@ const Grafico1 = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição de Recursos por Grande Área
+                Distribuição total de auxílios por Grande Área
       </Typography>
 
       {/* LINHA SUAVE */}
