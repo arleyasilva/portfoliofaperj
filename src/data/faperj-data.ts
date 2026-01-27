@@ -8,13 +8,13 @@
 // Estatísticas gerais (usado no StatisticalCards.tsx)
 // ------------------------------------------------------------
 export const STATS_DATA = {
-  valorTotal: 2850000000,
+  valorTotal: 3008566439,
   cardData: [
-    { value: 1530000000, label: "Auxílios Contemplados", isCurrency: true },
-    { value: 1310000000, label: "Total em Bolsas", isCurrency: true },
-    { value: 74641, label: "Bolsas" },
-    { value: 9349, label: "Auxílios" },
-    { value: 407, label: "Editais Lançados" },
+    { value: 1630005710, label: "Auxílios Contemplados", isCurrency: true },
+    { value: 1378560728, label: "Total em Bolsas", isCurrency: true },
+    { value: 75071, label: "Bolsas" },
+    { value: 9686, label: "Auxílios" },
+    { value: 1064, label: "Editais Lançados" },
   ],
   sourceText:
     "Fonte: Sistema de Bolsas e Auxílios - SBA / Faperj [2019 - 2025]",
