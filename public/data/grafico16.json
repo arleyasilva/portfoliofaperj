@@ -1,9 +1,9 @@
 [
-  { "label": "2019", "feminino": 41711900, "masculino": 31410563 },
-  { "label": "2020", "feminino": 46305740, "masculino": 33263031 },
-  { "label": "2021", "feminino": 51559740, "masculino": 37845330 },
-  { "label": "2022", "feminino": 95471993, "masculino": 69472212 },
-  { "label": "2023", "feminino": 108251562, "masculino": 78148120 },
-  { "label": "2024", "feminino": 115699869, "masculino": 82886322 },
-  { "label": "2025", "feminino": 81692910, "masculino": 61647580 }
+  { "label": "2019", "feminino": 62517849, "masculino": 62131089 },
+  { "label": "2020", "feminino": 65865655, "masculino": 62068028 },
+  { "label": "2021", "feminino": 70653340, "masculino": 65599530 },
+  { "label": "2022", "feminino": 118253493, "masculino": 100599712 },
+  { "label": "2023", "feminino": 135453662, "masculino": 114736220 },
+  { "label": "2024", "feminino": 143025669, "masculino": 118346122 },
+  { "label": "2025", "feminino": 138042036, "masculino": 116936138 }
 ]
