@@ -81,7 +81,7 @@ export default function PoliticaDeDados() {
                   Quantidade de projetos, bolsas e auxílios concedidos;
                 </Typography>
                 <Typography component="li" variant="body1">
-                  Valores investidos por ano, por área do conhecimento, por tipo de auxílio e por sexo (declarado);
+                  Valores investidos por ano, por área do conhecimento, por tipo de auxílio e por gênero (declarado);
                 </Typography>
                 <Typography component="li" variant="body1">
                   Indicadores estatísticos e financeiros derivados do Sistema de Bolsas e Auxílios (SBA).

@@ -141,7 +141,7 @@ const Grafico14: React.FC = () => {
           fontSize: "18px",
         }}
       >
-        Valor de Auxílios por Sexo e Ano
+        Valor de Auxílios por Gênero e Ano
       </Typography>
 
       {/* LINHA SUAVE */}

@@ -40,17 +40,22 @@ const Grafico16: React.FC = () => {
         formatter: (params: any[]) => {
           const fem = params.find((p) => p.seriesName === "Feminino")?.data;
           const masc = params.find((p) => p.seriesName === "Masculino")?.data;
+          const naoDef = params.find((p) => p.seriesName === "Não Definido")?.data;
 
-          return `
-            <strong>Ano ${fem.label}</strong><br/>
-            Feminino: <strong>R$ ${fem.value.toLocaleString("pt-BR")}</strong><br/>
-            Masculino: <strong>R$ ${masc.value.toLocaleString("pt-BR")}</strong>
-          `;
+          let html = `<strong>Ano ${fem.label}</strong><br/>`;
+          html += `Feminino: <strong>R$ ${fem.value.toLocaleString("pt-BR")}</strong><br/>`;
+          html += `Masculino: <strong>R$ ${masc.value.toLocaleString("pt-BR")}</strong>`;
+          
+          if (naoDef && naoDef.value > 0) {
+            html += `<br/>Não Definido: <strong>R$ ${naoDef.value.toLocaleString("pt-BR")}</strong>`;
+          }
+
+          return html;
         },
       },
 
       legend: {
-        data: ["Feminino", "Masculino"],
+        data: ["Feminino", "Masculino", "Não Definido"],
         top: 0,
       },
 
@@ -73,8 +78,8 @@ const Grafico16: React.FC = () => {
           type: "line",
           smooth: true,
           symbolSize: 7,
-          lineStyle: { width: 3, color: "#FBC02D" },
-          itemStyle: { color: "#FBC02D" },
+          lineStyle: { width: 3, color: "#ff69b4" },
+          itemStyle: { color: "#ff69b4" },
           data: data.map((i) => ({
             value: i.feminino,
             label: i.label,
@@ -90,6 +95,19 @@ const Grafico16: React.FC = () => {
           itemStyle: { color: "#5F93CF" },
           data: data.map((i) => ({
             value: i.masculino,
+            label: i.label,
+          })),
+        },
+
+        {
+          name: "Não Definido",
+          type: "line",
+          smooth: true,
+          symbolSize: 7,
+          lineStyle: { width: 3, color: "#FBC02D" },
+          itemStyle: { color: "#FBC02D" },
+          data: data.map((i) => ({
+            value: i.naoDefinido || 0,
             label: i.label,
           })),
         },
@@ -125,7 +143,7 @@ const Grafico16: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor Total de Bolsas por Sexo e Ano
+        Valor Total de Bolsas por Gênero e Ano
       </Typography>
 
       {/* LINHA SUAVE */}

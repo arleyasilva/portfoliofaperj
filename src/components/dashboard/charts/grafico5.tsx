@@ -8,11 +8,10 @@ import { TooltipFormatterParams } from "@/types/echarts";
 
 const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
 
-// Função para abreviar valores (mi / bi)
-const abreviarValor = (num: number): string => {
-  if (num >= 1_000_000_000) return (num / 1_000_000_000).toFixed(1).replace(".0", "") + " bi";
-  if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(".0", "") + " mi";
-  return num.toLocaleString("pt-BR");
+// Função para abreviar quantidades (k = mil)
+const abreviarQuantidade = (num: number): string => {
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(".0", "") + "k";
+  return num.toString();
 };
 
 const Grafico5: React.FC = () => {
@@ -29,7 +28,7 @@ const Grafico5: React.FC = () => {
             const data = p.data as { label: string; value: number };
             return `
               <strong>${data.label}</strong><br/>
-              Valor: <strong>R$ ${data.value.toLocaleString("pt-BR")}</strong>
+              Quantidade: <strong>${data.value.toLocaleString("pt-BR")}</strong>
             `;
           }
           return '';
@@ -53,13 +52,13 @@ const Grafico5: React.FC = () => {
       yAxis: {
         type: "value",
         axisLabel: {
-          formatter: (value: number) => abreviarValor(value),
+          formatter: (value: number) => abreviarQuantidade(value),
         },
       },
 
       series: [
         {
-          name: "Valor",
+          name: "Quantidade",
           type: "bar",
           data: data.map((item) => ({
             label: item.label,

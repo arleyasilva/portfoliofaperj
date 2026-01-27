@@ -7,18 +7,18 @@
 ## 📁 Área de Conhecimento
 
 ### grafico1.tsx
-**Título:** Distribuição de Recursos por Grande Área  
-**Tipo:** Gráfico de Pizza/Rosca  
+**Título:** Distribuição total de auxílios por Grande Área  
+**Tipo:** Gráfico de Barras Verticais  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ### grafico2.tsx
-**Título:** Distribuição do Valor Total por Microáreas  
-**Tipo:** Gráfico de Barras Horizontais  
+**Título:** Distribuição do total de recursos por Grande Área  
+**Tipo:** Gráfico de Pizza/Rosca  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ### grafico3.tsx
-**Título:** Distribuição de Bolsas, Auxílios e Total  
-**Tipo:** Gráfico de Barras Empilhadas  
+**Título:** Distribuição de Bolsas e Auxílios por Universidades  
+**Tipo:** Gráfico de Barras Agrupadas (com linha Total)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ---
@@ -26,13 +26,13 @@
 ## 💰 Auxílios
 
 ### grafico4.tsx
-**Título:** Distribuição de Bolsas e Auxílios  
+**Título:** Distribuição de Bolsas e Auxílios por Instituições  
 **Tipo:** Gráfico de Barras Agrupadas (com linha Total)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ### grafico5.tsx
-**Título:** Distribuição Geral  
-**Tipo:** Gráfico de Pizza/Rosca  
+**Título:** Quantidade de Auxílios por ano  
+**Tipo:** Gráfico de Barras Verticais  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ### grafico6.tsx
@@ -69,33 +69,45 @@
 ## 👥 Sexo
 
 ### grafico10.tsx
-**Título:** Distribuição Total de Fomento por Sexo  
+**Título:** Distribuição Total de Bolsas e Auxílios por Sexo  
 **Tipo:** Gráfico de Pizza (dinâmico)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
 
 ### grafico11.tsx
-**Título:** Valor de Fomento por Sexo e Ano  
-**Tipo:** Gráfico de Barras Agrupadas  
+**Título:** Valor total de Bolsas e Auxílios por Sexo e Ano  
+**Tipo:** Gráfico de Linha (3 séries)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico12.tsx
-**Título:** Valor total de fomentos da FAPERJ por sexo e ano  
-**Tipo:** Gráfico de Barras Horizontais Empilhadas  
+**Título:** Quantidade de Bolsas e Auxílios por Sexo e Ano  
+**Tipo:** Gráfico de Linha (3 séries)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico13.tsx
 **Título:** Quantidade de Bolsas por Sexo e Ano  
-**Tipo:** Gráfico de Barras Horizontais Empilhadas  
+**Tipo:** Gráfico de Linha (3 séries)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico14.tsx
 **Título:** Valor de Auxílios por Sexo e Ano  
-**Tipo:** Gráfico de Barras Empilhadas  
+**Tipo:** Gráfico de Barras Agrupadas (3 séries)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico15.tsx
 **Título:** Quantidade de Auxílios por Sexo e Ano  
-**Tipo:** Gráfico de Linha  
+**Tipo:** Gráfico de Linha (3 séries)  
+**Categorias:** Feminino, Masculino, Não definido  
+**Cores:** 🩷 Rosa (#ff69b4), 🔵 Azul (#5F93CF), 💛 Amarelo (#FBC02D)  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico16.tsx
@@ -109,8 +121,8 @@
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ### grafico17.tsx
-**Título:** Quantidade de Fomentos por Sexo e Ano  
-**Tipo:** Gráfico de Linha  
+**Título:** Quantidade de bolsas por Sexo e Ano  
+**Tipo:** Gráfico de Barras Agrupadas  
 **Fonte:** Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
 
 ---

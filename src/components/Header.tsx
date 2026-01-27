@@ -69,7 +69,7 @@ const Header: React.FC = () => {
         { text: "Bolsas", href: "/dashboard?categoria=bolsas" },
         { text: "Auxílios", href: "/dashboard?categoria=auxilios" },
         { text: "Área de Conhecimento", href: "/dashboard?categoria=area-de-conhecimento" },
-        { text: "Sexo", href: "/dashboard?categoria=sexo" },
+        { text: "Gênero", href: "/dashboard?categoria=sexo" },
         { text: "Regionalização", href: "/dashboard?categoria=regionalizacao" },
         { text: "Internacionalização", href: "/dashboard?categoria=internacionalizacao" },
       ],

@@ -134,7 +134,7 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição Total de Bolsas e Auxílios por Sexo
+        Distribuição Total de Bolsas e Auxílios por Gênero
       </Typography>
 
       <Box

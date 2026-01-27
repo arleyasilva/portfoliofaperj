@@ -40,10 +40,10 @@ import SEO from "@/components/SEO";
 
 // Mapeamento das categorias para os gráficos
 const chartCategories = {
-  'Bolsas': [Grafico3, Grafico4, Grafico9, Grafico9_1, Grafico16, Grafico17],
+  'Bolsas': [Grafico3, Grafico4, Grafico9, Grafico9_1, Grafico16, Grafico13],
   'Auxílios': [Grafico3, Grafico4, Grafico5, Grafico6, Grafico7, Grafico8, Grafico14, Grafico15],
-  'Área de Conhecimento': [Grafico2, Grafico6],
-  'Sexo': [Grafico10, Grafico11, Grafico12, Grafico13, Grafico14, Grafico15, Grafico16, Grafico16_1, Grafico17],
+  'Área de Conhecimento': [Grafico2],
+  'Gênero': [Grafico10, Grafico11, Grafico12, Grafico13, Grafico14, Grafico15, Grafico16, Grafico16_1],
   'Regionalização': [GraficoLineRace],
   'Internacionalização': [GraficoInt1, GraficoInt2, GraficoInt3, GraficoInt4, GraficoInt5],
 } as const;

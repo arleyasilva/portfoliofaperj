@@ -125,7 +125,7 @@ const Grafico13: React.FC = () => {
       flexDirection: "column",
     }}>
       <Typography variant="h6" fontWeight={700} color="#124b6c" sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}>
-        Quantidade de Bolsas por Sexo e Ano
+        Quantidade de Bolsas por Gênero e Ano
       </Typography>
 
       <Box sx={{ width: "100%", height: "1px", backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />

@@ -143,7 +143,7 @@ const Grafico15: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Quantidade de Auxílios por Sexo e Ano
+        Quantidade de Auxílios por Gênero e Ano
       </Typography>
 
       {/* LINHA */}

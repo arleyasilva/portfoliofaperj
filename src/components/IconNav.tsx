@@ -22,7 +22,7 @@ const IconNav: React.FC = () => {
     { label: 'Bolsas', href: '/dashboard?categoria=bolsas', Icon: SchoolIcon },
     { label: 'Auxílios', href: '/dashboard?categoria=auxilios', Icon: VolunteerActivismIcon },
     { label: 'Área de Conhecimento', href: '/dashboard?categoria=area-de-conhecimento', Icon: CategoryIcon },
-    { label: 'Sexo', href: '/dashboard?categoria=sexo', Icon: WcIcon },
+    { label: 'Gênero', href: '/dashboard?categoria=sexo', Icon: WcIcon },
     { label: 'Regionalização', href: '/dashboard?categoria=regionalizacao', Icon: MapIcon },
     { label: 'Internacionalização', href: '/dashboard?categoria=internacionalizacao', Icon: PublicIcon },
   ];

@@ -20,7 +20,6 @@ import Grafico14 from "@/components/dashboard/charts/grafico14";
 import Grafico15 from "@/components/dashboard/charts/grafico15";
 import Grafico16 from "@/components/dashboard/charts/grafico16";
 import Grafico16_1 from "@/components/dashboard/charts/grafico16_1";
-import Grafico17 from "@/components/dashboard/charts/grafico17";
 
 // ======================================================================
 // 🔹 PÁGINA PRINCIPAL
@@ -30,8 +29,8 @@ export default function IndicadoresSexo() {
   return (
     <>
       <SEO
-        title="Distribuição de Bolsas e Auxílios por Sexo – FAPERJ"
-        description="Análise comparativa de bolsas e auxílios concedidos pela FAPERJ segmentados por sexo ao longo dos anos."
+        title="Distribuição de Bolsas e Auxílios por Gênero – FAPERJ"
+        description="Análise comparativa de bolsas e auxílios concedidos pela FAPERJ segmentados por gênero ao longo dos anos."
         url="https://portfolio-faperj.vercel.app/indicadores-sexo"
         image="/images/seo-sexo.png"
       />
@@ -53,7 +52,7 @@ export default function IndicadoresSexo() {
             }}
           >
             <Typography variant="h4" fontWeight={700}>
-              Indicadores — Fomento por Sexo
+              Indicadores — Fomento por Gênero
             </Typography>
           </Card>
 
@@ -90,10 +89,6 @@ export default function IndicadoresSexo() {
 
             <Grid xs={12} md={6}>
               <Grafico16_1 />
-            </Grid>
-
-            <Grid xs={12} md={12}>
-              <Grafico17 />
             </Grid>
 
           </Grid>
