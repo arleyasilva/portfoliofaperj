@@ -1,9 +1,9 @@
 [
-  { "label": "2019", "feminino": 62517849, "masculino": 62131089 },
-  { "label": "2020", "feminino": 65865655, "masculino": 62068028 },
-  { "label": "2021", "feminino": 70653340, "masculino": 65599530 },
-  { "label": "2022", "feminino": 118253493, "masculino": 100599712 },
-  { "label": "2023", "feminino": 135453662, "masculino": 114736220 },
-  { "label": "2024", "feminino": 143025669, "masculino": 118346122 },
-  { "label": "2025", "feminino": 138042036, "masculino": 116936138 }
+  { "label": "2019", "feminino": 62517849, "masculino": 62131089, "naoDefinido": 236780 },
+  { "label": "2020", "feminino": 65865655, "masculino": 62068028, "naoDefinido": 245420 },
+  { "label": "2021", "feminino": 70653340, "masculino": 65599530, "naoDefinido": 251970 },
+  { "label": "2022", "feminino": 118253493, "masculino": 100599712, "naoDefinido": 431658 },
+  { "label": "2023", "feminino": 135453662, "masculino": 114736220, "naoDefinido": 677503 },
+  { "label": "2024", "feminino": 143025669, "masculino": 118346122, "naoDefinido": 1165096 },
+  { "label": "2025", "feminino": 138042036, "masculino": 116936138, "naoDefinido": 1323758 }
 ]

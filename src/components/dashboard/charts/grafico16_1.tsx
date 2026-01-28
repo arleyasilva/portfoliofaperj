@@ -40,22 +40,23 @@ const Grafico16_1: React.FC = () => {
         formatter: (params: any[]) => {
           const f = params.find((p) => p.seriesName === "Feminino")?.data;
           const m = params.find((p) => p.seriesName === "Masculino")?.data;
-          const naoDef = params.find((p) => p.seriesName === "Não Definido")?.data;
+          // const naoDef = params.find((p) => p.seriesName === "Não Definido")?.data;
 
           let html = `<strong>Ano ${f.label}</strong><br/>`;
           html += `BBP Feminino: <strong>R$ ${f.value.toLocaleString("pt-BR")}</strong><br/>`;
           html += `BBP Masculino: <strong>R$ ${m.value.toLocaleString("pt-BR")}</strong>`;
           
-          if (naoDef && naoDef.value > 0) {
-            html += `<br/>BBP Não Definido: <strong>R$ ${naoDef.value.toLocaleString("pt-BR")}</strong>`;
-          }
+          // Descomentar quando dados de "Não Definido" estiverem disponíveis
+          // if (naoDef && naoDef.value > 0) {
+          //   html += `<br/>BBP Não Definido: <strong>R$ ${naoDef.value.toLocaleString("pt-BR")}</strong>`;
+          // }
 
           return html;
         },
       },
 
       legend: {
-        data: ["Feminino", "Masculino", "Não Definido"],
+        data: ["Feminino", "Masculino"], // "Não Definido" - adicionar quando dados estiverem disponíveis
         top: 0,
       },
 
@@ -99,18 +100,19 @@ const Grafico16_1: React.FC = () => {
           })),
         },
 
-        {
-          name: "Não Definido",
-          type: "line",
-          smooth: true,
-          symbolSize: 7,
-          lineStyle: { width: 3, color: "#FBC02D" },
-          itemStyle: { color: "#FBC02D" },
-          data: data.map((i) => ({
-            value: i.naoDefinido || 0,
-            label: i.label,
-          })),
-        },
+        // SÉRIE "NÃO DEFINIDO" - Descomentar quando dados estiverem disponíveis
+        // {
+        //   name: "Não Definido",
+        //   type: "line",
+        //   smooth: true,
+        //   symbolSize: 7,
+        //   lineStyle: { width: 3, color: "#FBC02D" },
+        //   itemStyle: { color: "#FBC02D" },
+        //   data: data.map((i) => ({
+        //     value: i.naoDefinido || 0,
+        //     label: i.label,
+        //   })),
+        // },
       ],
     };
   }, [data]);
