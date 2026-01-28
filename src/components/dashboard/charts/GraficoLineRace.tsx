@@ -62,8 +62,8 @@ const GraficoLineRace: React.FC = () => {
             .map((r) => ({
               name: r.label,
               value: r.values[index],
-            }))
-            .sort((a, b) => b.value - a.value),
+            })),
+            // Mantém ordem do JSON (grafico18.json)
 
           itemStyle: {
             color: (params: BarItemParams) => regionColors[params.data.name],
