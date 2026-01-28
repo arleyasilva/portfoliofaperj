@@ -43,43 +43,50 @@ const GraficoLineRace: React.FC = () => {
     // Detectar se é mobile
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-    const timelineFrames = years.map((year: string, index: number) => ({
-      title: {
-        text: `Regionalização – Ano ${year}`,
-        left: "center",
-        top: 10,
-        textStyle: { 
-          fontSize: isMobile ? 14 : 16, 
-          fontWeight: 700, 
-          color: "#124b6c" 
-        },
-      },
+    const timelineFrames = years.map((year: string, index: number) => {
+      // Prepara os dados para este ano mantendo a ordem do JSON
+      const yearData = regions.map((r) => ({
+        name: r.label,
+        value: r.values[index],
+      }));
 
-      series: [
-        {
-          type: "bar",
-          data: regions
-            .map((r) => ({
-              name: r.label,
-              value: r.values[index],
-            })),
-            // Mantém ordem do JSON (grafico18.json)
-
-          itemStyle: {
-            color: (params: BarItemParams) => regionColors[params.data.name],
-            borderRadius: isMobile ? 4 : 6,
-          },
-
-          label: {
-            show: true,
-            position: "right",
-            color: "#124b6c",
-            fontSize: isMobile ? 9 : 12,
-            formatter: (p: BarItemParams) => formatValor(p.data.value),
+      return {
+        title: {
+          text: `Regionalização – Ano ${year}`,
+          left: "center",
+          top: 10,
+          textStyle: { 
+            fontSize: isMobile ? 14 : 16, 
+            fontWeight: 700, 
+            color: "#124b6c" 
           },
         },
-      ],
-    }));
+
+        yAxis: {
+          data: yearData.map((d) => d.name),
+        },
+
+        series: [
+          {
+            type: "bar",
+            data: yearData,
+
+            itemStyle: {
+              color: (params: BarItemParams) => regionColors[params.data.name],
+              borderRadius: isMobile ? 4 : 6,
+            },
+
+            label: {
+              show: true,
+              position: "right",
+              color: "#124b6c",
+              fontSize: isMobile ? 9 : 12,
+              formatter: (p: BarItemParams) => formatValor(p.data.value),
+            },
+          },
+        ],
+      };
+    });
 
     return {
       baseOption: {
