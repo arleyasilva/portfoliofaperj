@@ -29,12 +29,16 @@ const abreviarValor = (num: number): string => {
 const Grafico3: React.FC = () => {
   const { data, loading, error } = useFaperjData<Grafico3Data>("grafico3");
 
+  // Detectar mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const option = useMemo(() => {
     if (!data) return {};
 
     return {
       tooltip: {
         trigger: "axis",
+        textStyle: { fontSize: isMobile ? 11 : 13 },
         formatter: (params: TooltipFormatterParams) => {
           if (Array.isArray(params) && params.length > 0) {
             const item = params[0].data as unknown as Grafico3DataItem;
@@ -52,26 +56,32 @@ const Grafico3: React.FC = () => {
       legend: {
         top: 0,
         left: "center",
+        textStyle: { fontSize: isMobile ? 11 : 12 },
       },
 
       // Ajuste para o gráfico não estourar o container
       grid: {
-        top: 70,
-        left: 30,
-        right: 30,
-        bottom: 20,
+        top: isMobile ? 60 : 70,
+        left: isMobile ? 10 : 30,
+        right: isMobile ? 10 : 30,
+        bottom: isMobile ? 80 : 20,
         containLabel: true,
       },
 
       xAxis: {
         type: "category",
         data: data.map((item) => item.label),
-        axisLabel: { rotate: 20 },
+        axisLabel: { 
+          rotate: isMobile ? 45 : 20,
+          fontSize: isMobile ? 9 : 12,
+          interval: 0,
+        },
       },
 
       yAxis: {
         type: "value",
         axisLabel: {
+          fontSize: isMobile ? 10 : 12,
           formatter: (value: number) => abreviarValor(value),
         },
       },
@@ -94,16 +104,16 @@ const Grafico3: React.FC = () => {
           type: "line",
           smooth: true,
           symbol: "circle",
-          symbolSize: 8,
+          symbolSize: isMobile ? 6 : 8,
           lineStyle: {
             color: "#e67e22",
-            width: 3,
+            width: isMobile ? 2 : 3,
           },
           data: data.map((item) => item.total),
         },
       ],
     };
-  }, [data]);
+  }, [data, isMobile]);
 
   if (loading)
     return (

@@ -17,20 +17,24 @@ const abreviarValor = (v: number): string => {
 const Grafico7 = () => {
   const { data, loading, error } = useFaperjData<Grafico7Data>("grafico7");
 
+  // Detectar mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const option = useMemo(() => {
     if (!data) return {};
 
     return {
       grid: {
-        top: 60,
-        left: 70,
-        right: 30,
-        bottom: 60,
+        top: isMobile ? 50 : 60,
+        left: isMobile ? 10 : 70,
+        right: isMobile ? 10 : 30,
+        bottom: isMobile ? 40 : 60,
         containLabel: true,
       },
 
       tooltip: {
         trigger: "axis",
+        textStyle: { fontSize: isMobile ? 11 : 13 },
         formatter: (params: any[]) => {
           const item = params[0].data;
           return `
@@ -43,12 +47,16 @@ const Grafico7 = () => {
       xAxis: {
         type: "category",
         data: data.map((i) => i.label),
-        axisLabel: { rotate: 0, fontSize: 12 },
+        axisLabel: { 
+          rotate: isMobile ? 0 : 0,
+          fontSize: isMobile ? 10 : 12,
+        },
       },
 
       yAxis: {
         type: "value",
         axisLabel: {
+          fontSize: isMobile ? 10 : 12,
           formatter: (v: number) => abreviarValor(v),
         },
       },
@@ -61,12 +69,12 @@ const Grafico7 = () => {
             label: item.label,
             value: item.value,
           })),
-          barWidth: "55%",
+          barWidth: isMobile ? "50%" : "55%",
           itemStyle: { color: "#2989b5" }, // Cor original do gráfico 7
         },
       ],
     };
-  }, [data]);
+  }, [data, isMobile]);
 
   if (loading)
     return (

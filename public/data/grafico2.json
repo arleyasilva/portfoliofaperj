@@ -1,11 +1,11 @@
 [
-  { "label": "Ciências Agrárias", "value": 171065011, "color": "#f14b61" },
-  { "label": "Ciências Biológicas", "value": 695867342, "color": "#f6b343" },
-  { "label": "Ciências da Saúde", "value": 287295761, "color": "#2cb66d" },
-  { "label": "Ciências Exatas e da Terra", "value": 387647302, "color": "#5eb3e6" },
-  { "label": "Ciências Humanas", "value": 291647447, "color": "#2aa5c9" },
-  { "label": "Ciências Sociais Aplicadas", "value": 127091748, "color": "#9b7bd4" },
-  { "label": "Engenharias", "value": 336550269, "color": "#ef8636" },
-  { "label": "Linguística, Letras e Artes", "value": 58884325, "color": "#5fb0a9" },
-  { "label": "Outras Áreas", "value": 151232936, "color": "#C86E43" }
+  { "label": "Ciências Agrárias", "value":  109624751, "color": "#f14b61" },
+  { "label": "Ciências Biológicas", "value":  493270803, "color": "#f6b343" },
+  { "label": "Ciências da Saúde", "value":  239221147, "color": "#2cb66d" },
+  { "label": "Ciências Exatas e da Terra", "value":  247568300, "color": "#5eb3e6" },
+  { "label": "Ciências Humanas", "value":  110608078, "color": "#2aa5c9" },
+  { "label": "Ciências Sociais Aplicadas", "value":  64572470, "color": "#9b7bd4" },
+  { "label": "Engenharias", "value":  243675443, "color": "#ef8636" },
+  { "label": "Linguística, Letras e Artes", "value":  14522390, "color": "#5fb0a9" },
+  { "label": "Outras Áreas", "value":  106942327, "color": "#C86E43" }
 ]

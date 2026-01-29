@@ -59,22 +59,25 @@ const Grafico2: React.FC = () => {
       orient: isMobile ? "horizontal" : "vertical",
       ...(isMobile
         ? {
-            bottom: 0,
+            bottom: 5,
             left: "center",
-            textStyle: { fontSize: 10 },
+            textStyle: { fontSize: 9 },
+            itemWidth: 10,
+            itemHeight: 10,
+            itemGap: 5,
           }
         : {
             right: 10,
             top: "center",
-            textStyle: { fontSize: 15 },
+            textStyle: { fontSize: 13 },
           }),
     },
 
     series: [
       {
         type: "pie",
-        radius: isMobile ? "45%" : "70%",
-        center: isMobile ? ["50%", "35%"] : ["40%", "50%"],
+        radius: isMobile ? "40%" : "70%",
+        center: isMobile ? ["50%", "32%"] : ["40%", "50%"],
 
         data: data.map((item) => ({
           name: item.label,
@@ -86,9 +89,9 @@ const Grafico2: React.FC = () => {
         })),
 
         label: {
-          show: true, // Mostrar labels em todos os dispositivos
+          show: !isMobile, // Ocultar labels internos no mobile para evitar sobreposição
           color: "#000",
-          fontSize: isMobile ? 9 : 14,
+          fontSize: isMobile ? 8 : 14,
           formatter: (param: SeriesLabelFormatterParam) => param.data.label || param.name,
           overflow: 'truncate',
         },

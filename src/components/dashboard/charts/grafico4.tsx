@@ -17,6 +17,9 @@ const abreviarValor = (num: number): string => {
 const Grafico4: React.FC = () => {
   const { data, loading, error } = useFaperjData<Grafico4Data>("grafico4");
 
+  // Detectar mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   const option = useMemo(() => {
     // se não tem dados ainda, devolve opção vazia
     if (!data || data.length === 0) {
@@ -33,7 +36,7 @@ const Grafico4: React.FC = () => {
         backgroundColor: "#fff",
         borderColor: "#ccc",
         borderWidth: 1,
-        textStyle: { color: "#333" },
+        textStyle: { color: "#333", fontSize: isMobile ? 11 : 13 },
         borderRadius: 6,
         formatter: (params: TooltipFormatterParams) => {
           if (!Array.isArray(params)) return "";
@@ -59,25 +62,33 @@ const Grafico4: React.FC = () => {
       legend: {
         top: 0,
         data: ["Bolsas", "Auxílios", "Total"],
+        textStyle: { fontSize: isMobile ? 11 : 12 },
       },
 
       grid: {
-        top: 70,
-        left: 30,
-        right: 30,
-        bottom: 30,
+        top: isMobile ? 60 : 70,
+        left: isMobile ? 10 : 30,
+        right: isMobile ? 10 : 30,
+        bottom: isMobile ? 80 : 30,
         containLabel: true,
       },
 
       xAxis: {
         type: "category",
         data: data.map((item) => item.label),
-        axisLabel: { rotate: 20 },
+        axisLabel: { 
+          rotate: isMobile ? 45 : 20,
+          fontSize: isMobile ? 9 : 12,
+          interval: 0,
+        },
       },
 
       yAxis: {
         type: "value",
-        axisLabel: { formatter: (v: number) => abreviarValor(v) },
+        axisLabel: { 
+          fontSize: isMobile ? 10 : 12,
+          formatter: (v: number) => abreviarValor(v) 
+        },
       },
 
       series: [
@@ -104,16 +115,16 @@ const Grafico4: React.FC = () => {
           type: "line",
           smooth: true,
           symbol: "circle",
-          symbolSize: 8,
+          symbolSize: isMobile ? 6 : 8,
           lineStyle: {
             color: "#e67e22",
-            width: 3,
+            width: isMobile ? 2 : 3,
           },
           data: data.map((item) => item.bolsas + item.auxilios),
         },
       ],
     };
-  }, [data]);
+  }, [data, isMobile]);
 
   if (loading) {
     return (

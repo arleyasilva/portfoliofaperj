@@ -9,6 +9,9 @@ import { TooltipFormatterParams } from "@/types/echarts";
 const Grafico1 = () => {
   const { data, loading, error } = useFaperjData<Grafico1Item[]>("grafico1");
 
+  // Detectar mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
   if (loading)
     return (
       <Box p={3} textAlign="center">
@@ -32,7 +35,7 @@ const Grafico1 = () => {
       backgroundColor: "#fff",
       borderColor: "#ccc",
       borderWidth: 1,
-      textStyle: { color: "#333" },
+      textStyle: { color: "#333", fontSize: isMobile ? 11 : 13 },
       formatter: (params: TooltipFormatterParams) => {
         if (Array.isArray(params) && params.length > 0) {
           const p = params[0];
@@ -46,22 +49,27 @@ const Grafico1 = () => {
     },
 
     grid: {
-      top: 70,
-      left: 30,
-      right: 30,
-      bottom: 30,
+      top: isMobile ? 50 : 70,
+      left: isMobile ? 10 : 30,
+      right: isMobile ? 10 : 30,
+      bottom: isMobile ? 90 : 30,
       containLabel: true,
     },
 
     xAxis: {
       type: "category",
       data: categorias,
-      axisLabel: { rotate: 20 },
+      axisLabel: { 
+        rotate: isMobile ? 45 : 20,
+        fontSize: isMobile ? 9 : 12,
+        interval: 0, // Mostrar todos os labels
+      },
     },
 
     yAxis: {
       type: "value",
       axisLabel: {
+        fontSize: isMobile ? 10 : 12,
         formatter: (v: number) => {
           if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + "B";
           if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + "M";
@@ -76,7 +84,7 @@ const Grafico1 = () => {
         type: "bar",
         data: valores,
         itemStyle: { color: "#2989b5" },
-        barWidth: "55%",
+        barWidth: isMobile ? "45%" : "55%",
       },
     ],
   };

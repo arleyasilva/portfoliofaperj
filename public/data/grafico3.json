@@ -1,12 +1,12 @@
 [
-  { "label": "UFRJ", "bolsas": 406995018, "auxilios": 563774442, "total": 970769460 },
-  { "label": "UERJ", "bolsas": 213345069, "auxilios": 200642373, "total": 413987442 },
-  { "label": "UFF", "bolsas": 139015289, "auxilios": 162288326, "total": 301303615 },
-  { "label": "UENF", "bolsas": 67995061, "auxilios": 57699871, "total": 125694932 },
-  { "label": "PUC-RIO", "bolsas": 62305074, "auxilios": 69405314, "total": 131710388 },
-  { "label": "UFRRJ", "bolsas": 32885147, "auxilios": 36973920, "total": 69859067 },
-  { "label": "UNIRIO", "bolsas": 20375709, "auxilios": 26545928, "total": 46921637 },
-  { "label": "FGV", "bolsas": 6576470, "auxilios": 2718635, "total": 9295105 },
-  { "label": "IFRJ", "bolsas": 5601314, "auxilios": 5796115, "total": 11397429 },
-  { "label": "IFF", "bolsas": 3880964, "auxilios": 4008225, "total": 7889189 }
+  { "label": "UFRJ", "bolsas": 423999293, "auxilios": 579828337, "total": 1003827630 },
+  { "label": "UERJ", "bolsas": 225978208, "auxilios": 232761570, "total": 458739778 },
+  { "label": "UFF", "bolsas": 146315239, "auxilios": 169767860, "total": 316083099 },
+  { "label": "UENF", "bolsas": 67751097, "auxilios": 61918023, "total": 129669120 },
+  { "label": "PUC-RIO", "bolsas": 65186574, "auxilios": 69897537, "total": 135084111 },
+  { "label": "UFRRJ", "bolsas": 34555597, "auxilios": 39972847, "total": 74528444 },
+  { "label": "UNIRIO", "bolsas": 21440959, "auxilios": 26545928, "total": 47986887 },
+  { "label": "FGV", "bolsas": 6981570, "auxilios": 2893632, "total": 9875202 },
+  { "label": "IFRJ", "bolsas": 5960064, "auxilios": 5179207, "total": 11139271 },
+  { "label": "IFF", "bolsas": 3980389, "auxilios": 3559170, "total": 7539559 }
 ]

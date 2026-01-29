@@ -1,12 +1,12 @@
 [
-  { "label": "FIOCRUZ", "bolsas": 81275062, "auxilios": 2718635 },
-  { "label": "FAPERJ", "bolsas": 62582874, "auxilios": 677769 },
-  { "label": "IECPN", "bolsas": 484825, "auxilios": 35416763 },
-  { "label": "CBPF", "bolsas": 8291075, "auxilios": 18198812 },
-  { "label": "FAETEC", "bolsas": 20271442, "auxilios": 11245348 },
-  { "label": "IMPA", "bolsas": 10429130, "auxilios": 10041543 },
-  { "label": "INCA", "bolsas": 5477000, "auxilios": 15033115 },
-  { "label": "PESAGRO", "bolsas": 7646280, "auxilios": 18792 },
-  { "label": "INMETRO", "bolsas": 2483230, "auxilios": 11451871 },
-  { "label": "EMBRAPA", "bolsas": 6594160, "auxilios": 10097204 }
+  { "label": "FIOCRUZ", "bolsas": 84691862, "auxilios": 94499937, "total": 179191799 },
+  { "label": "FAPERJ", "bolsas": 66896710, "auxilios": 759143, "total": 67655854 },
+  { "label": "IECPN", "bolsas": 517775, "auxilios": 35416763, "total": 35934538 },
+  { "label": "CBPF", "bolsas": 8695075, "auxilios": 18986108, "total": 27681183 },
+  { "label": "FAETEC", "bolsas": 21276012, "auxilios": 11336093, "total": 32612105 },
+  { "label": "IMPA", "bolsas": 10776530, "auxilios": 10591562, "total": 21368092 },
+  { "label": "INCA", "bolsas": 5665100, "auxilios": 15033115, "total": 20698215 },
+  { "label": "PESAGRO", "bolsas": 7842280, "auxilios": 18792, "total": 7861072 },
+  { "label": "INMETRO", "bolsas": 2523130, "auxilios": 11451871, "total": 13975001 },
+  { "label": "EMBRAPA", "bolsas": 5173795, "auxilios": 6493333, "total": 11667128 }
 ]
