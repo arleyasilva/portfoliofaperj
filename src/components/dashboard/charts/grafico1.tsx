@@ -107,7 +107,7 @@ const Grafico1 = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-                Distribuição total de auxílios por Grande Área
+                Total em $ de Bolsas e Auxílios por Grande Área
       </Typography>
 
       {/* LINHA SUAVE */}

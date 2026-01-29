@@ -48,20 +48,22 @@ const Sobre = () => {
           <Box sx={{ mb: 4 }}>
             <Typography variant="body1" sx={{ mb: 2 }}>
               O <strong>Portfólio FAPERJ em Rede</strong> é uma plataforma digital
-              desenvolvida pela FAPERJ para dar visibilidade aos projetos
-              financiados pela Fundação e valorizar o investimento público em
+              desenvolvida pela FAPERJ para dar visibilidade e transparência aos recursos públicos destinados a projetos
+              financiados pela Fundação e valorizar o investimento em
               ciência, tecnologia e inovação no Estado do Rio de Janeiro.
             </Typography>
 
             <Typography variant="body1" sx={{ mb: 2 }}>
-              A plataforma reúne dados atualizados sobre bolsas, auxílios e
-              investimentos do Sistema de Bolsas e Auxílios (SBA), organizados
-              de forma interativa e acessível.
+              A plataforma centraliza dados atualizados sobre bolsas, auxílios e
+              investimentos provenientes do Sistema de Bolsas e Auxílios (SBA) e
+              informações sobre internacionalização da Assessoria Internacional (ASSINT),
+              apresentados de forma e acessível para facilitar consultas 
+              e análises estratégicas.
             </Typography>
 
             <Typography variant="body1">
               É possível explorar indicadores por ano, instituição, área do
-              conhecimento e tipo de fomento, além de visualizar os resultados
+              conhecimento, gênero, região e tipo de fomento, além de visualizar  programas, editais e os resultados
               alcançados pelas iniciativas apoiadas.
             </Typography>
           </Box>
@@ -69,7 +71,7 @@ const Sobre = () => {
           {/* SEÇÃO 2 */}
           <Box sx={{ mb: 4 }}>
             <Typography variant="body1" sx={{ mb: 2 }}>
-              O Portfólio é um canal de inteligência científica e institucional,
+              O Portfólio é um canal de inteligência institucional,
               que apoia pesquisadores, gestores e a sociedade na compreensão do
               impacto das ações da FAPERJ.
             </Typography>

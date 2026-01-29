@@ -1,97 +1,19 @@
-import React, { useMemo } from "react";
-import dynamic from "next/dynamic";
-import { Card, Typography, Box, CircularProgress, Alert } from "@mui/material";
-
+import React from "react";
+import ReactECharts from "echarts-for-react";
+import { Card, Typography, CircularProgress, Box, Alert } from "@mui/material";
 import useFaperjData from "@/hooks/useFaperjData";
-import { Grafico17Data } from "@/types/faperj";
+import { Grafico2Data } from "@/types/faperj";
+import { SeriesLabelFormatterParam } from "@/types/echarts";
 
-const ReactECharts = dynamic(() => import("echarts-for-react"), { ssr: false });
-
-// Abreviação institucional
-const abreviar = (v: number): string => {
-  if (v >= 1_000_000_000) return (v / 1_000_000_000).toFixed(1) + " bi";
-  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + " mi";
-  if (v >= 1_000) return (v / 1_000).toFixed(0) + " mil";
-  return v.toLocaleString("pt-BR");
-};
+interface PieTooltipParams {
+  data: {
+    label: string;
+    value: number;
+  };
+}
 
 const Grafico17: React.FC = () => {
-  const { data, loading, error } = useFaperjData<Grafico17Data>("grafico17");
-
-  const option = useMemo(() => {
-    if (!data) return {};
-
-    return {
-      grid: {
-        top: 70,
-        left: 30,
-        right: 30,
-        bottom: 30,
-        containLabel: true,
-      },
-
-      tooltip: {
-        trigger: "axis",
-        backgroundColor: "#ffffff",
-        borderColor: "rgba(0,0,0,0.15)",
-        borderWidth: 1,
-        extraCssText: "border-radius:6px; padding:10px;",
-        textStyle: { color: "#000", fontSize: 13 },
-
-        formatter: (params: any[]) => {
-          const f = params.find((p) => p.seriesName === "Feminino")?.data;
-          const m = params.find((p) => p.seriesName === "Masculino")?.data;
-
-          return `
-            <strong>Ano ${f.label}</strong><br/>
-            Fomentos Femininos: <strong>${f.value.toLocaleString("pt-BR")}</strong><br/>
-            Fomentos Masculinos: <strong>${m.value.toLocaleString("pt-BR")}</strong>
-          `;
-        },
-      },
-
-      legend: {
-        data: ["Feminino", "Masculino"],
-        top: 0,
-      },
-
-      xAxis: {
-        type: "category",
-        data: data.map((i) => i.label),
-        axisLabel: { fontSize: 12 },
-      },
-
-      yAxis: {
-        type: "value",
-        axisLabel: {
-          formatter: (v: number) => abreviar(v),
-        },
-      },
-
-      series: [
-        {
-          name: "Feminino",
-          type: "bar",
-          barWidth: "45%",
-          itemStyle: { color: "#FBC02D" },
-          data: data.map((i) => ({
-            value: i.feminino,
-            label: i.label,
-          })),
-        },
-        {
-          name: "Masculino",
-          type: "bar",
-          barWidth: "45%",
-          itemStyle: { color: "#5F93CF" },
-          data: data.map((i) => ({
-            value: i.masculino,
-            label: i.label,
-          })),
-        },
-      ],
-    };
-  }, [data]);
+  const { data, loading, error } = useFaperjData<Grafico2Data>("grafico17");
 
   if (loading)
     return (
@@ -100,8 +22,90 @@ const Grafico17: React.FC = () => {
       </Box>
     );
 
-  if (error) return <Alert severity="error">Erro ao carregar os dados.</Alert>;
-  if (!data) return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+  if (error)
+    return <Alert severity="error">Erro ao carregar dados do gráfico 17.</Alert>;
+
+  if (!data || data.length === 0)
+    return <Alert severity="warning">Nenhum dado encontrado.</Alert>;
+
+  // Detectar se é mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  const option = {
+    animationDuration: 800,
+
+    tooltip: {
+      trigger: "item",
+      backgroundColor: "#fff",
+      borderColor: "rgba(0,0,0,0.15)",
+      borderWidth: 1,
+      borderRadius: 8,
+      padding: isMobile ? 8 : 12,
+      textStyle: { color: "#000", fontSize: isMobile ? 11 : 15 },
+      confine: true, // Mantém tooltip dentro dos limites do gráfico
+      position: function (point: number[], params: any, dom: any, rect: any, size: any) {
+        // Ajusta posição para não sair da tela
+        const x = point[0] < size.viewSize[0] / 2 ? point[0] + 10 : point[0] - size.contentSize[0] - 10;
+        const y = point[1] < size.viewSize[1] / 2 ? point[1] + 10 : point[1] - size.contentSize[1] - 10;
+        return [x, y];
+      },
+      formatter: (p: PieTooltipParams) => `
+        <strong style="font-size: ${isMobile ? '12px' : '16px'}">${p.data.label}</strong><br/>
+        <span style="font-size: ${isMobile ? '10px' : '14px'}">Investimento: <strong>R$ ${p.data.value.toLocaleString("pt-BR")}</strong></span>
+      `,
+    },
+
+    legend: {
+      orient: isMobile ? "horizontal" : "vertical",
+      ...(isMobile
+        ? {
+            bottom: 5,
+            left: "center",
+            textStyle: { fontSize: 9 },
+            itemWidth: 10,
+            itemHeight: 10,
+            itemGap: 5,
+          }
+        : {
+            right: 10,
+            top: "center",
+            textStyle: { fontSize: 13 },
+          }),
+    },
+
+    series: [
+      {
+        type: "pie",
+        radius: isMobile ? "40%" : "70%",
+        center: isMobile ? ["50%", "32%"] : ["40%", "50%"],
+
+        data: data.map((item) => ({
+          name: item.label,
+          value: item.value,
+          label: item.label,
+          itemStyle: {
+            color: item.color ?? "#2989b5", // fallback seguro
+          },
+        })),
+
+        label: {
+          show: !isMobile, // Ocultar labels internos no mobile para evitar sobreposição
+          color: "#000",
+          fontSize: isMobile ? 8 : 14,
+          formatter: (param: SeriesLabelFormatterParam) => param.data.label || param.name,
+          overflow: 'truncate',
+        },
+
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 15,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0,0,0,0.25)",
+          },
+        },
+      },
+    ],
+  };
 
   return (
     <Card
@@ -109,22 +113,20 @@ const Grafico17: React.FC = () => {
         p: 3,
         borderRadius: 3,
         boxShadow: 3,
-        height: 430,
+        height: { xs: 500, sm: 430 },
         display: "flex",
         flexDirection: "column",
       }}
     >
-      {/* TÍTULO */}
       <Typography
         variant="h6"
         fontWeight={700}
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Quantidade de bolsas por Gênero e Ano
+        Total em $ de Bolsas por Grande Área
       </Typography>
 
-      {/* LINHA */}
       <Box
         sx={{
           width: "100%",
@@ -134,17 +136,19 @@ const Grafico17: React.FC = () => {
         }}
       />
 
-      {/* GRÁFICO */}
       <Box sx={{ flexGrow: 1 }}>
         <ReactECharts option={option} style={{ width: "100%", height: "100%" }} />
       </Box>
 
-      {/* FONTE */}
       <Typography
         variant="caption"
-        sx={{ mt: 1, color: "rgba(0,0,0,0.6)", fontStyle: "italic" }}
+        sx={{
+          mt: 1,
+          color: "rgba(0,0,0,0.6)",
+          fontStyle: "italic",
+        }}
       >
-        Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ (2019–2025)
+        Fonte: Sistema de Bolsas e Auxílios – SBA / FAPERJ [2019 – 2025]
       </Typography>
     </Card>
   );

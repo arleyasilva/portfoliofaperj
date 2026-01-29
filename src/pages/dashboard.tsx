@@ -54,6 +54,8 @@ type ChartComponent = React.FC;
 const chartCategories = {
   Bolsas: [Grafico3, Grafico4, Grafico9, Grafico9_1, Grafico16, Grafico13],
   Auxílios: [
+    Grafico2,
+    Grafico1,
     Grafico3,
     Grafico4,
     Grafico5,
@@ -63,16 +65,16 @@ const chartCategories = {
     Grafico14,
     Grafico15,
   ],
-  "Área de Conhecimento": [Grafico2, Grafico1],
+  "Área de Conhecimento": [Grafico2, Grafico17, Grafico1],
   Gênero: [
     Grafico10,
+    Grafico16_1,
     Grafico11,
+    Grafico14,
+    Grafico16,
     Grafico12,
     Grafico13,
-    Grafico14,
     Grafico15,
-    Grafico16,
-    Grafico16_1,
   ],
   Regionalização: [GraficoLineRace],
   Internacionalização: [
@@ -140,12 +142,20 @@ const Dashboard: React.FC = () => {
             activeCategory === "Internacionalização" &&
             ChartComponent === GraficoIntSankey;
 
-          // ⭐ DESTAQUE PARA ÁREA DE CONHECIMENTO NO DESKTOP
+          // ⭐ DESTAQUE PARA ÁREA DE CONHECIMENTO, AUXÍLIOS E GÊNERO NO DESKTOP
           const isAreaConhecimento = activeCategory === "Área de Conhecimento";
+          const isAuxilios = activeCategory === "Auxílios";
+          const isGenero = activeCategory === "Gênero";
           const isFirstChart = index === 0;
+          const isSecondChart = index === 1;
+          const isThirdChart = index === 2;
+          const isFifthChart = index === 4;
+          const isSixthChart = index === 5;
           
-          // Primeiro gráfico de Área de Conhecimento = largura total no desktop
-          const fullWidthDesktop = isAreaConhecimento && isFirstChart;
+          // Primeiro e segundo gráficos de Área de Conhecimento = largura total no desktop
+          // Primeiro gráfico de Auxílios = largura total no desktop
+          // Terceiro gráfico (Grafico11) e sexto gráfico (Grafico12) de Gênero = largura total no desktop
+          const fullWidthDesktop = (isAreaConhecimento && (isFirstChart || isSecondChart)) || (isAuxilios && isFirstChart) || (isGenero && (isThirdChart || isSixthChart));
           
           const fullWidth = count === 1 || isSankey;
 

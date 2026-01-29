@@ -143,7 +143,7 @@ const Grafico16: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor Total de Bolsas por Gênero e Ano
+        Bolsas por Gênero e Ano (Total)
       </Typography>
 
       {/* LINHA SUAVE */}

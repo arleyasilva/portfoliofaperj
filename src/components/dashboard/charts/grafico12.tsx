@@ -126,7 +126,7 @@ const Grafico12: React.FC = () => {
   return (
     <Card sx={{ p: 3, borderRadius: 3, boxShadow: 3, height: 430, display: "flex", flexDirection: "column" }}>
       <Typography variant="h6" fontWeight={700} color="#124b6c" sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}>
-        Quantidade de Bolsas e Auxílios por Gênero e Ano
+        Quantidade de Bolsas e Auxílios por Gênero e Ano (Total)
       </Typography>
 
       <Box sx={{ width: "100%", height: "1px", backgroundColor: "rgba(0,0,0,0.1)", mb: 2 }} />

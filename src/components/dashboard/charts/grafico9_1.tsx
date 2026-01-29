@@ -31,9 +31,11 @@ const Grafico9_1: React.FC = () => {
 
       tooltip: {
         trigger: "axis",
-        backgroundColor: "rgba(18, 75, 108, 0.9)",
-        textStyle: { color: "#fff" },
+        backgroundColor: "#ffffff",
+        borderColor: "rgba(0,0,0,0.15)",
+        borderWidth: 1,
         borderRadius: 6,
+        textStyle: { color: "#000", fontSize: 13 },
         formatter: (params: any[]) => {
           const p = params[0].data;
           return `

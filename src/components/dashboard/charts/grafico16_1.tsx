@@ -145,7 +145,7 @@ const Grafico16_1: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor das Bolsas de Bancada (BBP) por Gênero e Ano
+        Bolsas de Bancada (BBP) por Gênero e Ano (Total)
       </Typography>
 
       {/* LINHA SUAVE */}

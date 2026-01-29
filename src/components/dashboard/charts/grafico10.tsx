@@ -58,17 +58,17 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
       },
 
       legend: {
-        orient: "vertical",
-        right: isMobile ? 5 : 10,
-        top: "center",
-        textStyle: { fontSize: isMobile ? 11 : 15 },
+        orient: "horizontal",
+        bottom: 10,
+        left: "center",
+        textStyle: { fontSize: isMobile ? 11 : 13 },
       },
 
       series: [
         {
           type: "pie",
           radius: isMobile ? ["40%", "70%"] : ["45%", "80%"],
-          center: isMobile ? ["35%", "50%"] : ["40%", "48%"],
+          center: ["50%", "45%"],
 
           data: finalData.map((item) => {
             let color = "#2989b5"; // Masculino (azul)
@@ -134,7 +134,7 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição Total de Bolsas e Auxílios por Gênero
+        Distribuição de Bolsas e Auxílios por Gênero (Total)
       </Typography>
 
       <Box

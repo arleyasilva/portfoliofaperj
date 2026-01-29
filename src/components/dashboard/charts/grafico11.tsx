@@ -127,7 +127,7 @@ const Grafico11: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Valor total de Bolsas e Auxílios por Gênero e Ano
+        Bolsas e Auxílios por Gênero e Ano (Total)
       </Typography>
 
       {/* LINHA SUAVE */}

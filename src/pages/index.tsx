@@ -11,6 +11,7 @@ import Grafico1 from '../components/dashboard/charts/grafico1';
 import Grafico2 from '../components/dashboard/charts/grafico2';
 import Grafico3 from '../components/dashboard/charts/grafico3';
 import Grafico4 from '../components/dashboard/charts/grafico4';
+import Grafico17 from '../components/dashboard/charts/grafico17';
 
 import StatisticalCards from '../components/StatisticalCards';
 
@@ -58,7 +59,19 @@ export default function Dashboard() {
 
           <Grid container spacing={3} justifyContent="center">
             <Grid xs={12}>
+              <Grafico1 />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3} sx={{ mt: 3 }}>
+            <Grid xs={12}>
               <Grafico2 />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3} sx={{ mt: 3 }}>
+            <Grid xs={12}>
+              <Grafico17 />
             </Grid>
           </Grid>
 
@@ -68,12 +81,6 @@ export default function Dashboard() {
             </Grid>
             <Grid xs={12} md={6}>
               <Grafico4 />
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3} sx={{ mt: 3 }}>
-            <Grid xs={12}>
-              <Grafico1 />
             </Grid>
           </Grid>
 

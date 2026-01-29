@@ -159,7 +159,7 @@ const Grafico4: React.FC = () => {
         color="#124b6c"
         sx={{ mb: 1, fontSize: "18px", textAlign: "left" }}
       >
-        Distribuição de Bolsas e Auxílios por Instituições
+        Distribuição de Bolsas e Auxílios por Outras Instituições
       </Typography>
 
       <Box

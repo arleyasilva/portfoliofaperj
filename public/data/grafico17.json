@@ -1,9 +1,11 @@
 [
-  { "label": "2019", "feminino": 4473, "masculino": 3709 },
-  { "label": "2020", "feminino": 4100, "masculino": 3309 },
-  { "label": "2021", "feminino": 4581, "masculino": 3705 },
-  { "label": "2022", "feminino": 7166, "masculino": 5024 },
-  { "label": "2023", "feminino": 7658, "masculino": 5179 },
-  { "label": "2024", "feminino": 8008, "masculino": 5845 },
-  { "label": "2025", "feminino": 7044, "masculino": 5018 }
+  { "label": "Ciências Agrárias", "value":  99940288, "color": "#f14b61" },
+  { "label": "Ciências Biológicas", "value":  336958802, "color": "#f6b343" },
+  { "label": "Ciências da Saúde", "value":  127601677, "color": "#2cb66d" },
+  { "label": "Ciências Exatas e da Terra", "value":  205118079, "color": "#5eb3e6" },
+  { "label": "Ciências Humanas", "value":  237007788, "color": "#2aa5c9" },
+  { "label": "Ciências Sociais Aplicadas", "value":  89570095, "color": "#9b7bd4" },
+  { "label": "Engenharias", "value":  142317748, "color": "#ef8636" },
+  { "label": "Linguística, Letras e Artes", "value":  58418878, "color": "#5fb0a9" },
+  { "label": "Outras Áreas", "value":  81627373, "color": "#C86E43" }
 ]

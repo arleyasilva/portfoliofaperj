@@ -146,10 +146,6 @@ export default function PoliticaDeDados() {
                 A versão atualizada estará sempre disponível nesta aba e conterá a data de sua última atualização.
               </Typography>
             </Box>
-
-            <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-              📌 Última atualização: [inserir data]
-            </Typography>
           </Box>
         </Container>
       </Layout>

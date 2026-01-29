@@ -131,7 +131,7 @@ const Grafico6: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Evolução de Quantidade e Valor
+        Evolução de Quantidade e Valor de Auxílios por Ano
       </Typography>
 
       {/* Linha suave */}

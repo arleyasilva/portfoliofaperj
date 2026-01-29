@@ -105,7 +105,7 @@ const Grafico9: React.FC = () => {
           fontSize: "18px",
         }}
       >
-        Valor Total de Bolsas por Ano
+        Valor de Bolsas por Ano (Total)
       </Typography>
 
       {/* LINHA SUAVE */}

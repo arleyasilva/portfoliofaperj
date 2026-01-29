@@ -10,10 +10,10 @@
 export const STATS_DATA = {
   valorTotal: 3008566439,
   cardData: [
-    { value: 1630005710, label: "Auxílios Contemplados", isCurrency: true },
-    { value: 1378560728, label: "Total em Bolsas", isCurrency: true },
-    { value: 75071, label: "Bolsas" },
-    { value: 9686, label: "Auxílios" },
+    { value: 1630005710, label: "Auxílios em $", isCurrency: true },
+    { value: 1378560728, label: "Bolsas em $", isCurrency: true },
+    { value: 75071, label: "Bolsas em números" },
+    { value: 9686, label: "Auxílios em números" },
     { value: 1064, label: "Editais Lançados" },
   ],
   sourceText:

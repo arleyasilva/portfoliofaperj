@@ -124,7 +124,7 @@ const Grafico2: React.FC = () => {
         color="#124b6c"
         sx={{ textAlign: "left", mb: 1, fontSize: "18px" }}
       >
-        Distribuição do total de recursos por Grande Área
+        Total em $ de Auxílios por Grande Área
       </Typography>
 
       <Box
