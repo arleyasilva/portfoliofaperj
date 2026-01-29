@@ -95,7 +95,12 @@ const Grafico10: React.FC<Grafico10Props> = ({ title, data: dataFromProps }) => 
             },
           },
 
-          label: { show: false },
+          label: {
+            show: true,
+            color: "#000",
+            fontSize: isMobile ? 10 : 13,
+            formatter: (param: any) => param.data.label || param.name,
+          },
         },
       ],
     };

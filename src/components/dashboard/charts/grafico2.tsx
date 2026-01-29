@@ -89,9 +89,9 @@ const Grafico2: React.FC = () => {
         })),
 
         label: {
-          show: !isMobile, // Ocultar labels internos no mobile para evitar sobreposição
+          show: true,
           color: "#000",
-          fontSize: isMobile ? 8 : 14,
+          fontSize: isMobile ? 10 : 14,
           formatter: (param: SeriesLabelFormatterParam) => param.data.label || param.name,
           overflow: 'truncate',
         },
