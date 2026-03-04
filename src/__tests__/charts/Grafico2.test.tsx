@@ -69,7 +69,7 @@ describe("Grafico2 Component", () => {
 
     // título
     expect(
-      screen.getByText(/Distribuição do Valor Total por Microáreas/i)
+      screen.getByText(/Total em \$ de Auxílios por Grande Área/i)
     ).toBeInTheDocument();
 
     // mock do gráfico

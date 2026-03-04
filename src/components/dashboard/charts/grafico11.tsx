@@ -51,7 +51,7 @@ const Grafico11: React.FC = () => {
         },
       },
 
-      legend: { data: ["Feminino", "Masculino", "Não definido"], top: 0 },
+  legend: { data: ["Feminino", "Masculino", "Não definido"], top: 0 },
 
       xAxis: {
         type: "category",

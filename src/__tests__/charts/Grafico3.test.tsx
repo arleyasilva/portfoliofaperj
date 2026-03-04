@@ -35,7 +35,7 @@ describe("Grafico3 Component", () => {
 
   it("deve renderizar o título do gráfico", () => {
     render(<Grafico3 />);
-    const title = screen.getByRole("heading", { name: /Distribuição de Bolsas, Auxílios e Total/i });
+    const title = screen.getByRole("heading", { name: /Distribuição de Bolsas e Auxílios por Universidades/i });
     expect(title).toBeInTheDocument();
   });
 

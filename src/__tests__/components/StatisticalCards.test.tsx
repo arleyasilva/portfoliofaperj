@@ -27,7 +27,8 @@ describe("StatisticalCards component", () => {
       { label: "TOTAL", value: 123 },
       { label: "ATIVOS", value: 45 },
     ];
-    const { container } = render(<StatisticalCards items={items as any} />);
+  // render via React.createElement to avoid TSX prop-type checking in tests
+  const { container } = render(React.createElement(StatisticalCards as any, { items }));
 
     // if the component uses the items prop the labels/values should be present;
     // otherwise ensure the component at least rendered something.

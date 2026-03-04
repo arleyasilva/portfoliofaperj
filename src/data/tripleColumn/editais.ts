@@ -11,6 +11,8 @@ export interface EditalItem {
   linkEdital: string;
   linkResultado?: string;
   status: "aberto" | "encerrado" | "resultado" | "em-avaliacao";
+  // rótulo amigável (preenchido pela API quando disponível)
+  statusLabel?: string;
   observacoes?: string;
 }
 

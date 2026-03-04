@@ -30,7 +30,7 @@ describe("📊 Grafico13 – Testes", () => {
   it("deve renderizar o componente Grafico13", () => {
     render(<Grafico13 />);
     expect(
-      screen.getByRole("heading", { name: /Quantidade de Bolsas por Sexo e Ano/i })
+      screen.getByRole("heading", { name: /Quantidade de Bolsas por Gênero e Ano/i })
     ).toBeInTheDocument();
   });
 

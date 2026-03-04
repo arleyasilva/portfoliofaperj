@@ -328,14 +328,16 @@ const TripleColumnNav = () => {
     return isNaN(d.getTime()) ? undefined : d;
   };
 
-  const getStatus = (item: EditalItem): "aberto" | "resultado" | "em-avaliacao" | "encerrado" => {
+  const getStatus = (item: EditalItem): "aberto" | "em-avaliacao" | "encerrado" => {
     // Preferir status vindo do dado quando existir e for válido
     const now = new Date();
     const s: any = (item as any).status;
-    if (s === "aberto" || s === "resultado" || s === "em-avaliacao" || s === "encerrado") return s;
+    // Normaliza: tratar 'resultado' como 'encerrado' (fechado)
+    if (s === "aberto" || s === "em-avaliacao" || s === "encerrado") return s;
+    if (s === "resultado") return "encerrado";
     // Fallback: se tiver link de resultado, considerar "resultado"
     // @ts-ignore
-    if ((item as any).linkResultado) return "resultado";
+    if ((item as any).linkResultado) return "encerrado";
     const deadline = parseLastDateInText((item as any).submissao);
     if (deadline && deadline.getTime() >= now.getTime()) return "aberto";
     // Se passou o prazo mas não tem resultado, está em avaliação
@@ -360,6 +362,7 @@ const TripleColumnNav = () => {
         const json = await resp.json();
         const items: EditalItem[] = json?.items || [];
         if (!cancelled && items.length) {
+          // Usar a ordenação fornecida pela API (fonte de verdade)
           setEditais(items);
         }
       } catch (e) {
@@ -506,138 +509,140 @@ const TripleColumnNav = () => {
                   pr: 1,
                 }}
               >
-              {editais.slice(
-                0,
-                expanded["Editais"] ? editais.length : DEFAULT_ITEMS_LIMIT
-              ).map((item) => (
-                <Box key={item.id}>
-                    <MuiLink
-                      component="button"
-                      underline="none"
-                      color="inherit"
-                      onClick={() => toggleItem(item.id)}
-                    sx={{
-                      p: 1,
-                      pl: 2,
-                        width: "100%",
-                        textAlign: "left",
-                      display: "flex",
-                      alignItems: "center",
-                        gap: 1.25,
-                        borderLeft: getStatus(item) === "aberto" 
-                          ? "4px solid #2e7d32" 
-                          : getStatus(item) === "em-avaliacao"
-                          ? "4px solid #e65100"
-                          : undefined,
-                        backgroundColor: getStatus(item) === "aberto" 
-                          ? "rgba(46,125,50,0.06)" 
-                          : getStatus(item) === "em-avaliacao"
-                          ? "rgba(230,81,0,0.06)"
-                          : undefined,
-                         borderRadius: 1,
-                      "&:hover": { backgroundColor: "rgba(0,0,0,0.05)" },
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: 32 }}>
-                        <Box
-                          sx={{
-                            transition: "0.3s",
-                            transform: openItem[item.id]
-                              ? "rotate(45deg)"
-                              : "rotate(0deg)",
-                            fontSize: 18,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          +
-                        </Box>
-                    </ListItemIcon>
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Typography variant="body2" fontWeight={600}>
-                          {item.numero}
-                        </Typography>
-                        <Typography variant="body2" sx={{ fontSize: "0.875rem" }}>
-                          {item.titulo}
-                        </Typography>
-                      </Box>
-                      {/* Selo compacto de status sempre visível */}
-                      {(() => {
-                        const st = getStatus(item);
-                        const chipProps =
-                          st === "aberto"
-                            ? { label: "ABERTO", sx: { bgcolor: "#e8f5e9", color: "#2e7d32", fontWeight: 700 } }
-                            : st === "resultado"
-                            ? { label: "RESULTADO", sx: { bgcolor: "#e3f2fd", color: "#1565c0", fontWeight: 700 } }
-                            : st === "em-avaliacao"
-                            ? { label: "EM AVALIAÇÃO", sx: { bgcolor: "#fff3e0", color: "#e65100", fontWeight: 700 } }
-                            : { label: "ENCERRADO", sx: { bgcolor: "#eeeeee", color: "#616161", fontWeight: 700 } };
-                        return <Chip size="small" {...chipProps} />;
-                      })()}
-                    </MuiLink>
-                    <Collapse in={openItem[item.id]}>
-                      <Box sx={{ p: 2, pt: 1, backgroundColor: "rgba(0,0,0,0.02)" }}>
-                        {item.publicacao && (
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
-                            <strong>Publicação:</strong> {item.publicacao}
-                          </Typography>
-                        )}
-                        {item.submissao && (
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
-                            <strong>Submissão:</strong> {item.submissao}
-                          </Typography>
-                        )}
-                        {item.resultadoPrevisao && (
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
-                            <strong>Resultado:</strong> {item.resultadoPrevisao}
-                          </Typography>
-                        )}
-                        {item.observacoes && (
-                          <Typography variant="body2" color="error" gutterBottom sx={{ mt: 1 }}>
-                            {item.observacoes}
-                          </Typography>
-                        )}
-                        <Box sx={{ mt: 2, display: "flex", gap: 1, flexWrap: "wrap" }}>
-                          <MuiLink
-                            href={item.linkEdital}
-                            target="_blank"
-                            rel="noopener"
-                            sx={{
-                              px: 2,
-                              py: 0.5,
-                              backgroundColor: "primary.main",
-                              color: "white",
-                              borderRadius: 1,
-                              textDecoration: "none",
-                              fontSize: "0.75rem",
-                              "&:hover": { backgroundColor: "primary.dark" },
-                            }}
-                          >
-                            📄 Ver Edital
-                          </MuiLink>
-                          {item.linkResultado && (
+              {(() => {
+                const visible = editais.slice(0, expanded["Editais"] ? editais.length : DEFAULT_ITEMS_LIMIT);
+                // Agrupa por status consecutivo (a API já vem ordenada por prioridade)
+                type Group = { key: string; items: EditalItem[] };
+                const groups: Group[] = [];
+
+                const now = new Date();
+
+                const effectiveStatus = (it: EditalItem): 'aberto' | 'em-avaliacao' | 'encerrado' => {
+                  const s: any = (it as any).status;
+                  if (s === 'aberto' || s === 'em-avaliacao' || s === 'encerrado') return s;
+                  if (s === 'resultado') return 'encerrado';
+                  // se tiver linkResultado, considerar encerrado
+                  if ((it as any).linkResultado) return 'encerrado';
+
+                  // tenta extrair a última data presente em item.submissao (string que pode conter 'Submissão: dd/mm/yyyy')
+                  const possible = (it as any).submissao as string | undefined;
+                  const deadline = parseLastDateInText(possible);
+                  if (deadline && deadline.getTime() >= now.getTime()) return 'aberto';
+                  if (deadline && deadline.getTime() < now.getTime()) return 'em-avaliacao';
+
+                  // fallback: se não há dados, manter 'em-avaliacao' para não perder atenção
+                  return 'em-avaliacao';
+                };
+
+                visible.forEach((it) => {
+                  const key = effectiveStatus(it);
+                  const last = groups[groups.length - 1];
+                  if (!last || last.key !== key) groups.push({ key, items: [it] });
+                  else last.items.push(it);
+                });
+
+                return groups.map((g) => {
+                  const isOpenGroup = g.key === 'aberto' || g.key === 'em-avaliacao';
+                  const borderColor = g.key === 'aberto' ? '#2e7d32' : g.key === 'em-avaliacao' ? '#e65100' : undefined;
+                  const bgColor = g.key === 'aberto' ? 'rgba(46,125,50,0.06)' : g.key === 'em-avaliacao' ? 'rgba(230,81,0,0.06)' : undefined;
+
+                  return (
+                    <Box key={g.key} sx={{ mb: 1 }}>
+                      <Box sx={{
+                        p: isOpenGroup ? 1.25 : 0,
+                        borderRadius: isOpenGroup ? 1.5 : 0,
+                        backgroundColor: isOpenGroup ? bgColor : 'transparent',
+                        borderLeft: borderColor ? `6px solid ${borderColor}` : undefined,
+                        overflow: 'hidden'
+                      }}>
+                        {g.items.map((item) => (
+                          <Box key={item.id} sx={{ mb: 0.5 }}>
                             <MuiLink
-                              href={item.linkResultado}
-                              target="_blank"
-                              rel="noopener"
+                              component="button"
+                              underline="none"
+                              color="inherit"
+                              onClick={() => toggleItem(item.id)}
                               sx={{
-                                px: 2,
-                                py: 0.5,
-                                backgroundColor: "secondary.main",
-                                color: "white",
+                                p: 1,
+                                pl: 2,
+                                width: '100%',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1.25,
                                 borderRadius: 1,
-                                textDecoration: "none",
-                                fontSize: "0.75rem",
-                                "&:hover": { backgroundColor: "secondary.dark" },
+                                '&:hover': { backgroundColor: 'rgba(0,0,0,0.03)' },
+                                backgroundColor: 'transparent'
                               }}
                             >
-                              📊 Ver Resultado
+                              <ListItemIcon sx={{ minWidth: 32 }}>
+                                <Box sx={{ transition: '0.3s', transform: openItem[item.id] ? 'rotate(45deg)' : 'rotate(0deg)', fontSize: 18, fontWeight: 'bold' }}>+</Box>
+                              </ListItemIcon>
+                              <Box sx={{ flex: 1, minWidth: 0 }}>
+                                <Typography variant="body2" fontWeight={600}>{item.numero}</Typography>
+                                <Typography variant="body2" sx={{ fontSize: '0.875rem' }}>{item.titulo}</Typography>
+                              </Box>
+                              {/* Selo compacto de status sempre visível */}
+                              {(() => {
+                                const apiLabel = (item as any).statusLabel as string | undefined;
+                                const eff = effectiveStatus(item);
+                                let key: string | undefined;
+                                let label: string | undefined;
+
+                                if (apiLabel) {
+                                  const up = apiLabel.toUpperCase();
+                                  if (up === 'FECHADO') { key = 'encerrado'; label = 'ENCERRADO'; }
+                                  else if (up === 'ABERTO') { key = 'aberto'; label = 'ABERTO'; }
+                                  else if (up === 'EM AVALIAÇÃO' || up === 'EM AVALIACAO') { key = 'em-avaliacao'; label = 'EM AVALIAÇÃO'; }
+                                  else { key = up.toLowerCase(); label = up; }
+                                } else if ((item as any).linkResultado) {
+                                  key = 'encerrado'; label = 'ENCERRADO';
+                                } else {
+                                  key = eff;
+                                  label = eff === 'aberto' ? 'ABERTO' : eff === 'em-avaliacao' ? 'EM AVALIAÇÃO' : 'ENCERRADO';
+                                }
+
+                                const chipProps =
+                                  key === 'aberto'
+                                    ? { label, sx: { bgcolor: '#e8f5e9', color: '#2e7d32', fontWeight: 700 } }
+                                    : key === 'resultado'
+                                    ? { label, sx: { bgcolor: '#e3f2fd', color: '#1565c0', fontWeight: 700 } }
+                                    : key === 'em-avaliacao'
+                                    ? { label, sx: { bgcolor: '#fff3e0', color: '#e65100', fontWeight: 700 } }
+                                    : { label, sx: { bgcolor: '#eeeeee', color: '#616161', fontWeight: 700 } };
+
+                                return <Chip size="small" {...chipProps} />;
+                              })()}
                             </MuiLink>
-                          )}
-                        </Box>
+                            <Collapse in={openItem[item.id]}>
+                              <Box sx={{ p: 2, pt: 1, backgroundColor: 'rgba(0,0,0,0.02)' }}>
+                                {item.publicacao && (<Typography variant="body2" color="text.secondary" gutterBottom><strong>Publicação:</strong> {item.publicacao}</Typography>)}
+                                {item.submissao && (() => {
+                                  // evitar duplicação de rótulo: se a string já contiver 'Submissão:' no começo,
+                                  // removemos antes de exibir com o rótulo padrão
+                                  const raw = String(item.submissao);
+                                  const cleaned = raw.replace(/^\s*Submiss[aã]o:\s*/i, '');
+                                  return (<Typography variant="body2" color="text.secondary" gutterBottom><strong>Submissão:</strong> {cleaned}</Typography>);
+                                })()}
+                                {item.resultadoPrevisao && (() => {
+                                  const raw = String(item.resultadoPrevisao);
+                                  const cleaned = raw.replace(/^\s*Resultado:\s*/i, '');
+                                  return (<Typography variant="body2" color="text.secondary" gutterBottom><strong>Resultado:</strong> {cleaned}</Typography>);
+                                })()}
+                                {item.observacoes && (<Typography variant="body2" color="error" gutterBottom sx={{ mt: 1 }}>{item.observacoes}</Typography>)}
+                                <Box sx={{ mt: 2, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                  <MuiLink href={item.linkEdital} target="_blank" rel="noopener" sx={{ px: 2, py: 0.5, backgroundColor: 'primary.main', color: 'white', borderRadius: 1, textDecoration: 'none', fontSize: '0.75rem', '&:hover': { backgroundColor: 'primary.dark' } }}>📄 Ver Edital</MuiLink>
+                                  {item.linkResultado && (<MuiLink href={item.linkResultado} target="_blank" rel="noopener" sx={{ px: 2, py: 0.5, backgroundColor: 'secondary.main', color: 'white', borderRadius: 1, textDecoration: 'none', fontSize: '0.75rem', '&:hover': { backgroundColor: 'secondary.dark' } }}>📊 Ver Resultado</MuiLink>)}
+                                </Box>
+                              </Box>
+                            </Collapse>
+                          </Box>
+                        ))}
                       </Box>
-                    </Collapse>
-                </Box>
-              ))}
+                    </Box>
+                  );
+                });
+              })()}
               </List>
 
               {/* Fade no rodapé quando estiver colapsado (somente desktop) */}
